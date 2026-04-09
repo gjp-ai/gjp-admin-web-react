@@ -1,0 +1,6 @@
+/* User Management Micro-Frontend styles */
+
+/* 
+ * All styling is now handled through Material-UI's sx prop system
+ * in the component files for better theme integration and maintainability.
+ */

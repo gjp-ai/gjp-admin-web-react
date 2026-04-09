@@ -1,0 +1,300 @@
+import i18n from '../../../../shared-lib/src/i18n/i18n';
+
+// Shell-specific translations (dashboard) - cleaned up to contain only used translations
+const shellResources = {
+  en: {
+    translation: {
+      dashboard: {
+        welcome: 'Welcome back',
+        userInfo: {
+          title: 'User Information',
+          basicInfo: 'Basic Information',
+          displayName: 'Display Name',
+          username: 'Username',
+          email: 'Email',
+          mobile: 'Mobile',
+          accountStatus: 'Account Status',
+          loginActivity: 'Login Activity',
+          lastLogin: 'Last Login',
+          lastLoginIp: 'Last Login IP',
+          failedAttempts: 'Failed Login Attempts',
+          lastFailedLogin: 'Last Failed Login',
+          roles: 'User Roles',
+          never: 'Never',
+          notAvailable: 'Not available',
+          userPreferences: 'User Preferences',
+          language: 'Language',
+          colorTheme: 'Color Theme',
+          themeMode: 'Theme Mode',
+        },
+      },
+      navigation: {
+        dashboard: 'Dashboard',
+        profile: 'Profile',
+        settings: 'Settings',
+        logout: 'Logout',
+        users: 'Users',
+        roles: 'Roles',
+        accessControl: 'Access',
+        content: 'CMS',
+        media: 'Media',
+        system: 'System'
+      },
+      settings: {
+        title: 'System Settings',
+        description: 'System environment variables and global configuration settings',
+        envVariables: {
+          title: 'Environment Variables',
+          subtitle: 'Vite runtime environment variables',
+        },
+        globalConfig: {
+          title: 'Global Configuration',
+          subtitle: 'APP_CONFIG application configuration',
+        },
+        buildInfo: {
+          title: 'Build Information',
+          subtitle: 'Runtime environment and build details',
+          environment: 'Environment',
+          development: 'Development',
+          production: 'Production',
+          version: 'Version',
+          yes: 'Yes',
+          no: 'No',
+        },
+        table: {
+          variable: 'Variable',
+          value: 'Value',
+        },
+      },
+      auditLogs: {
+        title: 'Audit Logs',
+      },
+      websites: {
+        title: 'Websites',
+      },
+      logos: {
+        title: 'Logos',
+      },
+      files: {
+        title: 'Files',
+      },
+      appSettings: {
+        title: 'App Settings',
+      },
+      images: {
+        title: 'Images',
+      },
+      articles: {
+        title: 'Articles',
+      },
+      questions: {
+        title: 'Questions',
+      },
+      audios: {
+        title: 'Audios',
+      },
+      videos: {
+        title: 'Videos',
+      },
+      vocabularies: {
+        title: 'Vocabulary',
+      },
+      multipleChoiceQuestionRus: {
+        title: 'MCQ',
+      },
+      freeTextQuestionRus: {
+        title: 'FTQ',
+      },
+      fillBlankQuestionRus: {
+        title: 'FBQ',
+      },
+      trueFalseQuestionRus: {
+        title: 'T/FQ',
+      },
+      imageRus: {
+        title: 'Images',
+      },
+      videoRus: {
+        title: 'Videos',
+      },
+      audioRus: {
+        title: 'Audios',
+      },
+      articleRus: {
+        title: 'Articles',
+      },
+      expressionRus: {
+        title: 'Expressions',
+      },
+      sentenceRus: {
+        title: 'Sentences',
+      },
+      common: {
+        goBack: 'Go Back',
+        goHome: 'Go Home',
+        userMenu: 'User Menu',
+        collapseSidebar: 'Collapse Sidebar',
+        expandSidebar: 'Expand Sidebar',
+      },
+      errors: {
+        notFound: 'Page Not Found',
+        pageNotFoundMessage: 'The page you are looking for does not exist.',
+        unauthorized: '401',
+        unauthorizedTitle: 'Unauthorized Access',
+        unauthorizedMessage: 'You do not have permission to access this page.',
+      },
+    }
+  },
+  zh: {
+    translation: {
+      dashboard: {
+        welcome: '欢迎回来',
+        userInfo: {
+          title: '用户信息',
+          basicInfo: '基本信息',
+          displayName: '显示名称',
+          username: '用户名',
+          email: '电子邮件',
+          mobile: '手机号码',
+          accountStatus: '账户状态',
+          loginActivity: '登录活动',
+          lastLogin: '最近登录',
+          lastLoginIp: '最近登录IP',
+          failedAttempts: '登录失败次数',
+          lastFailedLogin: '最近登录失败',
+          roles: '用户角色',
+          never: '从未',
+          notAvailable: '不可用',
+          userPreferences: '用户偏好设置',
+          language: '语言',
+          colorTheme: '颜色主题',
+          themeMode: '主题模式',
+        },
+      },
+      navigation: {
+        dashboard: '仪表板',
+        profile: '个人资料',
+        settings: '设置',
+        logout: '退出登录',
+        users: '用户管理',
+        roles: '角色管理',
+        accessControl: '访问控制',
+        content: '内容管理',
+        media: '媒体库',
+        system: '系统设置',
+      },
+      settings: {
+        title: '系统设置',
+        description: '系统环境变量和全局配置设置',
+        envVariables: {
+          title: '环境变量',
+          subtitle: 'Vite运行时环境变量',
+        },
+        globalConfig: {
+          title: '全局配置',
+          subtitle: 'APP_CONFIG应用程序配置',
+        },
+        buildInfo: {
+          title: '构建信息',
+          subtitle: '运行时环境和构建详细信息',
+          environment: '环境',
+          development: '开发环境',
+          production: '生产环境',
+          version: '版本',
+          yes: '是',
+          no: '否',
+        },
+        table: {
+          variable: '变量',
+          value: '值',
+        },
+      },
+      auditLogs: {
+        title: '审计日志',
+      },
+      websites: {
+        title: '网站管理',
+      },
+      logos: {
+        title: '徽标管理',
+      },
+      files: {
+        title: '文件管理',
+      },
+      appSettings: {
+        title: '应用设置',
+      },
+      images: {
+        title: '图片管理',
+      },
+      articles: {
+        title: '文章管理',
+      },
+      questions: {
+        title: '问题管理',
+      },
+      audios: {
+        title: '音频管理',
+      },
+      videos: {
+        title: '视频管理',
+      },
+      vocabularies: {
+        title: '词汇管理',
+      },
+      multipleChoiceQuestionRus: {
+        title: '选择题',
+      },
+      freeTextQuestionRus: {
+        title: '填空题',
+      },
+      fillBlankQuestionRus: {
+        title: '填空题',
+      },
+      trueFalseQuestionRus: {
+        title: '判断题',
+      },
+      imageRus: {
+        title: '图片管理',
+      },
+      videoRus: {
+        title: '视频管理',
+      },
+      audioRus: {
+        title: '音频管理',
+      },
+      articleRus: {
+        title: '文章管理',
+      },
+      expressionRus: {
+        title: '表达方式管理',
+      },
+      sentenceRus: {
+        title: '句子管理',
+      },
+      common: {
+        goBack: '返回',
+        goHome: '回到首页',
+        userMenu: '用户菜单',
+        collapseSidebar: '收起侧边栏',
+        expandSidebar: '展开侧边栏',
+      },
+      errors: {
+        notFound: '页面未找到',
+        pageNotFoundMessage: '您要查找的页面不存在。',
+        unauthorized: '401',
+        unauthorizedTitle: '未授权访问',
+        unauthorizedMessage: '您没有权限访问此页面。',
+      },
+    }
+  }
+};
+
+// Add shell-specific resources to the shared i18n instance
+Object.entries(shellResources).forEach(([lng, namespaces]) => {
+  Object.entries(namespaces).forEach(([ns, resources]) => {
+    i18n.addResourceBundle(lng, ns, resources, true, true);
+  });
+});
+
+export default i18n;

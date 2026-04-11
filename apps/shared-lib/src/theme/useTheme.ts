@@ -21,14 +21,14 @@ interface UseThemeOptions {
   enableDebugging?: boolean;
 }
 
-export const useTheme = ({ 
-  appName, 
+export const useTheme = ({
+  appName,
   enableSystemPreferenceSync = true,
-  enableDebugging = false 
+  enableDebugging = false
 }: UseThemeOptions) => {
   // Initialize communication service
   const communication = MicrofrontendThemeCommunication.getInstance(appName);
-  
+
   // Theme state
   const [themeState, setThemeState] = useState<ThemeState>(() => ({
     themeMode: getInitialThemeMode(),
@@ -46,35 +46,35 @@ export const useTheme = ({
   useEffect(() => {
     const handleStorageChange = (event?: StorageEvent) => {
       debug('Storage change detected', event?.key, event?.newValue);
-      
+
       // Only update if the storage event is for theme-related keys
-      if (event && !['gjpb_theme', 'gjpb_color_theme', 'gjpb_language'].includes(event.key || '')) {
+      if (event && !['gjp_theme', 'gjp_color_theme', 'gjp_language'].includes(event.key || '')) {
         debug('Ignoring storage event for key:', event.key);
         return;
       }
-      
+
       // Read current values from storage
-      const currentThemeInStorage = localStorage.getItem('gjpb_theme') as ThemeMode | null;
-      const currentColorInStorage = localStorage.getItem('gjpb_color_theme') as ColorTheme | null;
-      const currentLanguageInStorage = localStorage.getItem('gjpb_language') as Language | null;
-      
+      const currentThemeInStorage = localStorage.getItem('gjp_theme') as ThemeMode | null;
+      const currentColorInStorage = localStorage.getItem('gjp_color_theme') as ColorTheme | null;
+      const currentLanguageInStorage = localStorage.getItem('gjp_language') as Language | null;
+
       const newThemeMode = currentThemeInStorage || getInitialThemeMode();
       const newColorTheme = currentColorInStorage || getInitialColorTheme();
       const newLanguage = currentLanguageInStorage || getInitialLanguage();
-      
+
       debug('Reading from localStorage:', {
         theme: newThemeMode,
         color: newColorTheme,
         language: newLanguage
       });
-      
+
       // Update state if values changed
       setThemeState(prev => {
-        const needsUpdate = 
+        const needsUpdate =
           prev.themeMode !== newThemeMode ||
           prev.colorTheme !== newColorTheme ||
           prev.language !== newLanguage;
-          
+
         if (needsUpdate) {
           debug('Updating theme state:', { newThemeMode, newColorTheme, newLanguage });
           return {
@@ -83,14 +83,14 @@ export const useTheme = ({
             language: newLanguage
           };
         }
-        
+
         return prev;
       });
     };
 
     // Listen for storage changes
     window.addEventListener('storage', handleStorageChange);
-    
+
     // Initial check on mount
     handleStorageChange();
 
@@ -105,9 +105,9 @@ export const useTheme = ({
 
     const cleanup = createSystemPreferenceListener((prefersDark) => {
       debug('System theme preference changed to:', prefersDark ? 'dark' : 'light');
-      
+
       // Only update if user hasn't explicitly set a theme
-      const hasUserTheme = localStorage.getItem('gjpb_theme');
+      const hasUserTheme = localStorage.getItem('gjp_theme');
       if (!hasUserTheme) {
         const systemTheme: ThemeMode = prefersDark ? 'dark' : 'light';
         debug('No user preference saved, updating to system preference:', systemTheme);
@@ -123,13 +123,13 @@ export const useTheme = ({
   // Theme mode handlers
   const setThemeMode = useCallback((newThemeMode: ThemeMode) => {
     debug('Setting theme mode:', newThemeMode);
-    
+
     // Update local state
     setThemeState(prev => ({ ...prev, themeMode: newThemeMode }));
-    
+
     // Apply to DOM and localStorage
     applyThemeMode(newThemeMode);
-    
+
     // Communicate with shell
     communication.requestThemeChange(newThemeMode);
   }, [communication, debug]);
@@ -142,13 +142,13 @@ export const useTheme = ({
   // Color theme handlers
   const setColorTheme = useCallback((newColorTheme: ColorTheme) => {
     debug('Setting color theme:', newColorTheme);
-    
+
     // Update local state
     setThemeState(prev => ({ ...prev, colorTheme: newColorTheme }));
-    
+
     // Apply to DOM and localStorage
     applyColorTheme(newColorTheme);
-    
+
     // Communicate with shell
     communication.requestColorThemeChange(newColorTheme);
   }, [communication, debug]);
@@ -156,13 +156,13 @@ export const useTheme = ({
   // Language handlers
   const setLanguage = useCallback((newLanguage: Language) => {
     debug('Setting language:', newLanguage);
-    
+
     // Update local state
     setThemeState(prev => ({ ...prev, language: newLanguage }));
-    
+
     // Apply to localStorage
     applyLanguage(newLanguage);
-    
+
     // Communicate with shell
     communication.requestLanguageChange(newLanguage);
   }, [communication, debug]);
@@ -173,13 +173,13 @@ export const useTheme = ({
     colorTheme: themeState.colorTheme,
     language: themeState.language,
     isDarkMode: themeState.themeMode === 'dark',
-    
+
     // Handlers
     setThemeMode,
     toggleThemeMode,
     setColorTheme,
     setLanguage,
-    
+
     // Utilities
     communication,
     isThemeCommunicationAvailable: communication.isThemeCommunicationAvailable()

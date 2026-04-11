@@ -42,11 +42,11 @@ class AuthService {
    */
   public hasRole(roleCodes: string | string[]): boolean {
     const userRoles = this.getUserRoles();
-    
+
     if (!userRoles || userRoles.length === 0) {
       return false;
     }
-    
+
     const requiredRoles = Array.isArray(roleCodes) ? roleCodes : [roleCodes];
     return requiredRoles.some(role => userRoles.includes(role));
   }
@@ -56,7 +56,7 @@ class AuthService {
    */
   private getUserRoles(): string[] {
     try {
-      const userInfo = localStorage.getItem('gjpb_user_info');
+      const userInfo = localStorage.getItem('gjp_user_info');
       if (userInfo) {
         const { roleCodes } = JSON.parse(userInfo);
         return roleCodes ?? [];
@@ -73,7 +73,7 @@ class AuthService {
    */
   public getUserInfo(): UserInfo | null {
     try {
-      const userInfo = localStorage.getItem('gjpb_user_info');
+      const userInfo = localStorage.getItem('gjp_user_info');
       if (userInfo) {
         const userData = JSON.parse(userInfo);
         return {

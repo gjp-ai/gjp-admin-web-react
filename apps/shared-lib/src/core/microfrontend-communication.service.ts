@@ -80,8 +80,8 @@ export class MicrofrontendThemeCommunication implements MicrofrontendCommunicati
    * Check if theme communication is available
    */
   isThemeCommunicationAvailable(): boolean {
-    return typeof window !== 'undefined' && 
-           (!!window.onThemeModeChange || !!window.onColorThemeChange || !!window.onLanguageChange);
+    return typeof window !== 'undefined' &&
+      (!!window.onThemeModeChange || !!window.onColorThemeChange || !!window.onLanguageChange);
   }
 
   /**
@@ -121,7 +121,7 @@ export class MicrofrontendThemeCommunication implements MicrofrontendCommunicati
    */
   private handleThemeLocally(themeMode: ThemeMode): void {
     console.log(`[${this.appName}] 🎨 Handling theme locally: ${themeMode}`);
-    localStorage.setItem('gjpb_theme', themeMode);
+    localStorage.setItem('gjp_theme', themeMode);
     document.documentElement.setAttribute('data-theme', themeMode);
   }
 
@@ -130,7 +130,7 @@ export class MicrofrontendThemeCommunication implements MicrofrontendCommunicati
    */
   private handleColorThemeLocally(colorTheme: ColorTheme): void {
     console.log(`[${this.appName}] 🎨 Handling color theme locally: ${colorTheme}`);
-    localStorage.setItem('gjpb_color_theme', colorTheme);
+    localStorage.setItem('gjp_color_theme', colorTheme);
     document.documentElement.setAttribute('data-color-theme', colorTheme);
   }
 
@@ -139,7 +139,7 @@ export class MicrofrontendThemeCommunication implements MicrofrontendCommunicati
    */
   private handleLanguageLocally(language: Language): void {
     console.log(`[${this.appName}] 🌍 Handling language locally: ${language}`);
-    localStorage.setItem('gjpb_language', language);
+    localStorage.setItem('gjp_language', language);
   }
 }
 

@@ -51,7 +51,7 @@ const ImageCreateDialog = ({
   const { t, i18n } = useTranslation();
   const availableTags = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return [];
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -67,7 +67,7 @@ const ImageCreateDialog = ({
   }, [i18n.language]);
   const availableLangOptions = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return LANGUAGE_OPTIONS;
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -160,7 +160,7 @@ const ImageCreateDialog = ({
           )}
 
           <TextField label={t('images.form.filename')} value={formData.filename} onChange={(e) => onFormChange('filename', e.target.value)} fullWidth error={!!getFieldError('filename')} helperText={getFieldError('filename')} placeholder="image.jpg" />
-          
+
           <FormControl fullWidth error={!!getFieldError('tags')}>
             <FormLabel sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}>{t('images.form.tags')}</FormLabel>
             <Select<string[]> multiple value={formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : []} onChange={(e) => {
@@ -196,7 +196,7 @@ const ImageCreateDialog = ({
               ))}
             </Select>
           </FormControl>
-          
+
           <TextField label={t('images.form.displayOrder')} value={formData.displayOrder} onChange={(e) => onFormChange('displayOrder', parseInt(e.target.value) || 0)} type="number" fullWidth error={!!getFieldError('displayOrder')} helperText={getFieldError('displayOrder')} />
           <FormControlLabel control={<Switch checked={formData.isActive} onChange={(e) => onFormChange('isActive', e.target.checked)} />} label={t('images.form.isActive')} />
 
@@ -229,7 +229,7 @@ const ImageCreateDialog = ({
           {t('images.actions.save')}
         </Button>
       </DialogActions>
-  <Backdrop sx={{ position: 'absolute', zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(4px)', display: 'flex', flexDirection: 'column', gap: 2 }} open={loading || localSaving}>
+      <Backdrop sx={{ position: 'absolute', zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(4px)', display: 'flex', flexDirection: 'column', gap: 2 }} open={loading || localSaving}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, p: 4, borderRadius: 2, backgroundColor: 'background.paper', boxShadow: 3 }}>
           <CircularProgress size={60} thickness={4} />
           <Box sx={{ textAlign: 'center' }}>

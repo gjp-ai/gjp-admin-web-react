@@ -1,5 +1,5 @@
 /**
- * Environment configuration for GJPB Admin Console
+ * Environment configuration for GJP AI Admin Console
  */
 
 export const APP_ENV = {
@@ -18,14 +18,14 @@ export const APP_CONFIG = {
   DEFAULT_PAGE_TITLE: import.meta.env.VITE_DEFAULT_PAGE_TITLE ?? 'Dashboard',
   DEFAULT_PAGE_TITLE_KEY: 'navigation.dashboard', // Internal i18n key - not configurable
   TOKEN: {
-    ACCESS_TOKEN_KEY: 'gjpb_access_token',
-    REFRESH_TOKEN_KEY: 'gjpb_refresh_token',
-    TOKEN_TYPE_KEY: 'gjpb_token_type',
+    ACCESS_TOKEN_KEY: 'gjp_access_token',
+    REFRESH_TOKEN_KEY: 'gjp_refresh_token',
+    TOKEN_TYPE_KEY: 'gjp_token_type',
   },
   THEME: {
     DEFAULT_THEME: import.meta.env.VITE_DEFAULT_THEME ?? 'light',
     DEFAULT_COLOR_THEME: import.meta.env.VITE_DEFAULT_COLOR_THEME ?? 'blue',
-    STORAGE_KEY: 'gjpb_theme',
+    STORAGE_KEY: 'gjp_theme',
   },
   ROUTES: {
     HOME: '/',

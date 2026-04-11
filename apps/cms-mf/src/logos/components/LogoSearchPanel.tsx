@@ -41,12 +41,12 @@ export const LogoSearchPanel: React.FC<LogoSearchPanelProps> = ({
   // Get logo tags from local storage filtered by current language
   const availableTags = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return [];
 
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
-      
+
       const logoTagsSetting = appSettings.find(
         (setting) => setting.name === 'logo_tags' && setting.lang === currentLang
       );
@@ -59,19 +59,19 @@ export const LogoSearchPanel: React.FC<LogoSearchPanelProps> = ({
       return [];
     }
   }, [i18n.language]);
-  
+
   return (
-    <Card 
-      elevation={0} 
-      sx={{ 
-        borderRadius: 3, 
-        background: theme.palette.mode === 'dark' 
+    <Card
+      elevation={0}
+      sx={{
+        borderRadius: 3,
+        background: theme.palette.mode === 'dark'
           ? 'linear-gradient(135deg, rgba(18, 18, 18, 0.95) 0%, rgba(32, 32, 32, 0.98) 50%, rgba(24, 24, 24, 0.95) 100%)'
           : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 50%, rgba(241, 245, 249, 0.95) 100%)',
         backdropFilter: 'blur(10px)',
         border: '1px solid',
-        borderColor: theme.palette.mode === 'dark' 
-          ? 'rgba(255, 255, 255, 0.12)' 
+        borderColor: theme.palette.mode === 'dark'
+          ? 'rgba(255, 255, 255, 0.12)'
           : 'rgba(25, 118, 210, 0.15)',
         mb: 2,
         position: 'relative',
@@ -106,11 +106,11 @@ export const LogoSearchPanel: React.FC<LogoSearchPanelProps> = ({
     >
       <CardContent sx={{ position: 'relative', zIndex: 2, p: 3 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography 
-            variant="subtitle1" 
-            sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
+          <Typography
+            variant="subtitle1"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
               gap: 1,
               fontWeight: 600,
               color: 'primary.main',
@@ -148,7 +148,7 @@ export const LogoSearchPanel: React.FC<LogoSearchPanelProps> = ({
             >
               {t('logos.clearFilters')}
             </Button>
-            
+
             <Button
               variant="contained"
               size="small"
@@ -173,14 +173,14 @@ export const LogoSearchPanel: React.FC<LogoSearchPanelProps> = ({
           </Box>
         </Box>
 
-        <Box sx={{ 
-          display: 'grid', 
-          gridTemplateColumns: { 
-            xs: '1fr', 
-            sm: 'repeat(2, 1fr)', 
-            md: 'repeat(4, 1fr)' 
-          }, 
-          gap: 2.5 
+        <Box sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: '1fr',
+            sm: 'repeat(2, 1fr)',
+            md: 'repeat(4, 1fr)'
+          },
+          gap: 2.5
         }}>
           {/* Name */}
           <Box>
@@ -197,18 +197,18 @@ export const LogoSearchPanel: React.FC<LogoSearchPanelProps> = ({
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 2,
-                  backgroundColor: theme.palette.mode === 'dark' 
-                    ? 'rgba(255, 255, 255, 0.05)' 
+                  backgroundColor: theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.05)'
                     : 'rgba(255, 255, 255, 0.8)',
                   transition: 'all 0.2s ease',
                   '&:hover': {
-                    backgroundColor: theme.palette.mode === 'dark' 
-                      ? 'rgba(255, 255, 255, 0.08)' 
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.08)'
                       : 'rgba(255, 255, 255, 1)',
                   },
                   '&.Mui-focused': {
-                    backgroundColor: theme.palette.mode === 'dark' 
-                      ? 'rgba(255, 255, 255, 0.1)' 
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.1)'
                       : 'rgba(255, 255, 255, 1)',
                   },
                 },
@@ -229,18 +229,18 @@ export const LogoSearchPanel: React.FC<LogoSearchPanelProps> = ({
                 displayEmpty
                 sx={{
                   borderRadius: 2,
-                  backgroundColor: theme.palette.mode === 'dark' 
-                    ? 'rgba(255, 255, 255, 0.05)' 
+                  backgroundColor: theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.05)'
                     : 'rgba(255, 255, 255, 0.8)',
                   transition: 'all 0.2s ease',
                   '&:hover': {
-                    backgroundColor: theme.palette.mode === 'dark' 
-                      ? 'rgba(255, 255, 255, 0.08)' 
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.08)'
                       : 'rgba(255, 255, 255, 1)',
                   },
                   '&.Mui-focused': {
-                    backgroundColor: theme.palette.mode === 'dark' 
-                      ? 'rgba(255, 255, 255, 0.1)' 
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.1)'
                       : 'rgba(255, 255, 255, 1)',
                   },
                 }}
@@ -290,18 +290,18 @@ export const LogoSearchPanel: React.FC<LogoSearchPanelProps> = ({
                 }}
                 sx={{
                   borderRadius: 2,
-                  backgroundColor: theme.palette.mode === 'dark' 
-                    ? 'rgba(255, 255, 255, 0.05)' 
+                  backgroundColor: theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.05)'
                     : 'rgba(255, 255, 255, 0.8)',
                   transition: 'all 0.2s ease',
                   '&:hover': {
-                    backgroundColor: theme.palette.mode === 'dark' 
-                      ? 'rgba(255, 255, 255, 0.08)' 
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.08)'
                       : 'rgba(255, 255, 255, 1)',
                   },
                   '&.Mui-focused': {
-                    backgroundColor: theme.palette.mode === 'dark' 
-                      ? 'rgba(255, 255, 255, 0.1)' 
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.1)'
                       : 'rgba(255, 255, 255, 1)',
                   },
                 }}
@@ -336,18 +336,18 @@ export const LogoSearchPanel: React.FC<LogoSearchPanelProps> = ({
                 displayEmpty
                 sx={{
                   borderRadius: 2,
-                  backgroundColor: theme.palette.mode === 'dark' 
-                    ? 'rgba(255, 255, 255, 0.05)' 
+                  backgroundColor: theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.05)'
                     : 'rgba(255, 255, 255, 0.8)',
                   transition: 'all 0.2s ease',
                   '&:hover': {
-                    backgroundColor: theme.palette.mode === 'dark' 
-                      ? 'rgba(255, 255, 255, 0.08)' 
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.08)'
                       : 'rgba(255, 255, 255, 1)',
                   },
                   '&.Mui-focused': {
-                    backgroundColor: theme.palette.mode === 'dark' 
-                      ? 'rgba(255, 255, 255, 0.1)' 
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.1)'
                       : 'rgba(255, 255, 255, 1)',
                   },
                 }}

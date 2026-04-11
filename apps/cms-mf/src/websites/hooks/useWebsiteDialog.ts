@@ -44,7 +44,7 @@ export const useWebsiteDialog = () => {
 
   const getDefaultLang = () => {
     if (typeof window !== 'undefined') {
-      let localLang = localStorage.getItem('gjpb_language');
+      let localLang = localStorage.getItem('gjp_language');
       if (localLang) {
         localLang = localLang.trim().toUpperCase();
         const validLang = LANGUAGE_OPTIONS.find(opt => opt.value === localLang);
@@ -63,7 +63,7 @@ export const useWebsiteDialog = () => {
     description: '',
     tags: '',
     lang: getDefaultLang(),
-  displayOrder: 999,
+    displayOrder: 999,
     isActive: true,
     logoUploadMethod: 'url',
     logoFile: null,

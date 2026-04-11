@@ -728,7 +728,7 @@ When contributing to this module:
 
 ## License
 
-Internal use only - Part of GJPB Admin Console
+Internal use only - Part of GJP AI Admin Console
 
 ---
 

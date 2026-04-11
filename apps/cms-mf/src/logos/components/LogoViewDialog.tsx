@@ -40,7 +40,7 @@ export const LogoViewDialog = ({
   // Get logo base URL from local storage and construct full logo URL
   const logoUrl = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings || !logo.filename) return null;
 
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
@@ -50,10 +50,10 @@ export const LogoViewDialog = ({
 
       if (!logoBaseUrlSetting) return null;
 
-      const baseUrl = logoBaseUrlSetting.value.endsWith('/') 
-        ? logoBaseUrlSetting.value 
+      const baseUrl = logoBaseUrlSetting.value.endsWith('/')
+        ? logoBaseUrlSetting.value
         : `${logoBaseUrlSetting.value}/`;
-      
+
       return `${baseUrl}${logo.filename}`;
     } catch (error) {
       console.error('[LogoViewDialog] Error constructing logo URL:', error);
@@ -105,9 +105,9 @@ export const LogoViewDialog = ({
       <DialogContent sx={{ pt: 3, mt: 2 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {/* Header Card with Logo and Name */}
-          <Card 
+          <Card
             elevation={0}
-            sx={{ 
+            sx={{
               background: (theme) => theme.palette.mode === 'dark'
                 ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
                 : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
@@ -126,8 +126,8 @@ export const LogoViewDialog = ({
                   />
                 ) : (
                   <Avatar
-                    sx={{ 
-                      width: 64, 
+                    sx={{
+                      width: 64,
                       height: 64,
                       bgcolor: 'primary.main',
                     }}
@@ -147,9 +147,9 @@ export const LogoViewDialog = ({
                           href={logoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          sx={{ 
-                            display: 'flex', 
-                            alignItems: 'center', 
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
                             gap: 0.5,
                             textDecoration: 'none',
                             color: 'primary.main',
@@ -162,8 +162,8 @@ export const LogoViewDialog = ({
                           <Typography variant="body2">{logoUrl}</Typography>
                         </Link>
                         <Tooltip title={copiedField === 'imageUrl' ? t('logos.messages.filenameCopied') : 'Copy'}>
-                          <IconButton 
-                            size="small" 
+                          <IconButton
+                            size="small"
                             onClick={() => handleCopy(logoUrl, 'imageUrl')}
                             sx={{ ml: 0.5 }}
                           >
@@ -196,9 +196,9 @@ export const LogoViewDialog = ({
                   <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}>
                     {t('logos.viewDialog.id')}
                   </Typography>
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
+                  <Typography
+                    variant="body2"
+                    sx={{
                       fontFamily: 'monospace',
                       fontSize: '0.875rem',
                       wordBreak: 'break-all',
@@ -221,8 +221,8 @@ export const LogoViewDialog = ({
                         {logo.filename}
                       </Typography>
                       <Tooltip title={copiedField === 'filename' ? t('logos.messages.filenameCopied') : 'Copy'}>
-                        <IconButton 
-                          size="small" 
+                        <IconButton
+                          size="small"
                           onClick={() => handleCopy(logo.filename, 'filename')}
                         >
                           {copiedField === 'filename' ? <Check size={16} /> : <Copy size={16} />}
@@ -236,8 +236,8 @@ export const LogoViewDialog = ({
                     <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}>
                       {t('logos.viewDialog.extension')}
                     </Typography>
-                    <Chip 
-                      label={logo.extension} 
+                    <Chip
+                      label={logo.extension}
                       size="small"
                       variant="outlined"
                       sx={{ fontWeight: 600 }}
@@ -249,8 +249,8 @@ export const LogoViewDialog = ({
                     <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}>
                       {t('logos.viewDialog.language')}
                     </Typography>
-                    <Chip 
-                      label={t(`logos.languages.${logo.lang}`)} 
+                    <Chip
+                      label={t(`logos.languages.${logo.lang}`)}
                       size="small"
                       sx={{ fontWeight: 600 }}
                     />
@@ -280,9 +280,9 @@ export const LogoViewDialog = ({
                           href={logo.originalUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          sx={{ 
-                            display: 'flex', 
-                            alignItems: 'center', 
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
                             gap: 0.5,
                             textDecoration: 'none',
                             color: 'primary.main',
@@ -298,8 +298,8 @@ export const LogoViewDialog = ({
                           </Typography>
                         </Link>
                         <Tooltip title={copiedField === 'originalUrl' ? t('logos.messages.filenameCopied') : 'Copy'}>
-                          <IconButton 
-                            size="small" 
+                          <IconButton
+                            size="small"
                             onClick={() => handleCopy(logo.originalUrl || '', 'originalUrl')}
                           >
                             {copiedField === 'originalUrl' ? <Check size={16} /> : <Copy size={16} />}
@@ -377,9 +377,9 @@ export const LogoViewDialog = ({
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                     <User size={16} />
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
+                    <Typography
+                      variant="body2"
+                      sx={{
                         fontFamily: 'monospace',
                         fontSize: '0.875rem',
                         wordBreak: 'break-all'
@@ -397,9 +397,9 @@ export const LogoViewDialog = ({
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                     <User size={16} />
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
+                    <Typography
+                      variant="body2"
+                      sx={{
                         fontFamily: 'monospace',
                         fontSize: '0.875rem',
                         wordBreak: 'break-all'

@@ -1,7 +1,9 @@
-/* Global styles for GJPB Admin Console */
+/* Global styles for GJP AI Admin Console */
 
 /* Reset and base styles */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 

@@ -50,7 +50,7 @@ export const WebsiteUpdateDialog = ({
 
   const availableTags = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return [];
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -88,7 +88,7 @@ export const WebsiteUpdateDialog = ({
         <Edit size={20} />
         <Typography variant="h6" component="span">{t('websites.edit')}</Typography>
       </DialogTitle>
-      <DialogContent sx={{ pt: 3}}>
+      <DialogContent sx={{ pt: 3 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pt: 2 }}>
           <Box>
             <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>{t('websites.form.basicInformation') || 'Basic Information'}</Typography>
@@ -145,7 +145,7 @@ export const WebsiteUpdateDialog = ({
           </Box>
           {Object.keys(formErrors).length > 0 && (
             <Alert severity="error" sx={{ mt: 2 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>{t('websites.form.correctErrors')}</Typography>
+              <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>{t('websites.form.correctErrors')}</Typography>
               <Box component="ul" sx={{ pl: 2, m: 0 }}>
                 {Object.entries(formErrors).map(([field, error]) => (
                   <li key={field}><Typography variant="body2">{Array.isArray(error) ? error.join(', ') : error}</Typography></li>

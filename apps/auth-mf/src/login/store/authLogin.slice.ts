@@ -38,7 +38,7 @@ export const performLogin = createAsyncThunk<
   { rejectValue: string; state: { authLogin: AuthLoginState } }
 >('authLogin/performLogin', async (credentials, { rejectWithValue, getState }) => {
   const state = getState();
-  
+
   // Check if account is locked
   if (state.authLogin.isLocked) {
     const lockoutExpiry = state.authLogin.lockoutExpiresAt;
@@ -49,16 +49,16 @@ export const performLogin = createAsyncThunk<
 
   try {
     const response = await authenticationService.authenticate(credentials);
-    
+
     // Communicate success to shell after successful authentication
     if (typeof window !== 'undefined' && window.onAuthLoginSuccess) {
       window.onAuthLoginSuccess(response);
     }
-    
+
     return response;
   } catch (error: unknown) {
     console.error('[AuthLoginSlice] Login error:', error);
-    
+
     // Determine error message
     let errorMessage: string;
     if (error instanceof ApiError) {
@@ -68,12 +68,12 @@ export const performLogin = createAsyncThunk<
     } else {
       errorMessage = 'Login failed: Unknown error occurred';
     }
-    
+
     // Communicate failure to shell
     if (typeof window !== 'undefined' && window.onAuthLoginFailure) {
       window.onAuthLoginFailure(errorMessage);
     }
-    
+
     return rejectWithValue(errorMessage);
   }
 });
@@ -115,19 +115,19 @@ const authLoginSlice = createSlice({
         state.isLocked = false;
         state.lockoutExpiresAt = null;
         state.lastSuccessfulLogin = new Date().toISOString();
-        
+
         // Store remember me preference in localStorage
         if (state.rememberMe) {
-          localStorage.setItem('gjpb_remember_me', 'true');
+          localStorage.setItem('gjp_remember_me', 'true');
         } else {
-          localStorage.removeItem('gjpb_remember_me');
+          localStorage.removeItem('gjp_remember_me');
         }
       })
       .addCase(performLogin.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload ?? 'Login failed';
         state.loginAttempts += 1;
-        
+
         // Lock account if max attempts reached
         if (state.loginAttempts >= state.maxLoginAttempts) {
           state.isLocked = true;
@@ -141,11 +141,11 @@ const authLoginSlice = createSlice({
 });
 
 // Export actions
-export const { 
-  clearError, 
-  setRememberMe, 
-  resetLoginAttempts, 
-  clearLoginState 
+export const {
+  clearError,
+  setRememberMe,
+  resetLoginAttempts,
+  clearLoginState
 } = authLoginSlice.actions;
 
 // Selectors
@@ -158,7 +158,7 @@ export const selectRememberMe = (state: RootState) => state.authLogin?.rememberM
 export const selectLastSuccessfulLogin = (state: RootState) => state.authLogin?.lastSuccessfulLogin ?? null;
 
 // Computed selectors
-export const selectRemainingAttempts = (state: RootState) => 
+export const selectRemainingAttempts = (state: RootState) =>
   (state.authLogin?.maxLoginAttempts ?? 5) - (state.authLogin?.loginAttempts ?? 0);
 
 export const selectIsLockoutActive = (state: RootState) => {

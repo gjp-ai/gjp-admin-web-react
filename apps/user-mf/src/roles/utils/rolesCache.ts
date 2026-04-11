@@ -24,7 +24,7 @@ export interface ApiRole {
   updatedBy: string | null;
 }
 
-const ROLES_CACHE_KEY = 'gjpb_roles';
+const ROLES_CACHE_KEY = 'gjp_roles';
 
 class RolesCache {
   private loadingPromise: Promise<CachedRole[]> | null = null;
@@ -35,7 +35,7 @@ class RolesCache {
   private getCachedRolesFromStorage(): CachedRole[] {
     try {
       const cachedData = localStorage.getItem(ROLES_CACHE_KEY);
-      
+
       if (cachedData) {
         const parsed = JSON.parse(cachedData);
         return parsed;
@@ -67,7 +67,7 @@ class RolesCache {
       console.log('=== RolesCache: Force refresh - clearing cache ===');
       this.clearCache();
     }
-    
+
     // Check if already cached in localStorage
     const cachedRoles = this.getCachedRolesFromStorage();
     if (cachedRoles.length > 0) {
@@ -81,7 +81,7 @@ class RolesCache {
 
     // Start loading
     this.loadingPromise = this.fetchAndCacheRoles(fetchFn);
-    
+
     try {
       const result = await this.loadingPromise;
       return result;
@@ -96,28 +96,28 @@ class RolesCache {
   private async fetchAndCacheRoles(fetchFn: () => Promise<ApiRole[]>): Promise<CachedRole[]> {
     try {
       const apiRoles = await fetchFn();
-      
+
       // Check if apiRoles is valid
       if (!apiRoles || !Array.isArray(apiRoles)) {
         console.error('=== RolesCache: Invalid API response - not an array ===', apiRoles);
         throw new Error('Invalid API response: expected array of roles');
       }
-      
+
       if (apiRoles.length === 0) {
         // Still save empty array to cache to prevent repeated API calls
         this.saveCachedRolesToStorage([]);
         return [];
       }
-      
+
       // Transform API roles to cached format (only code and name)
       const simplifiedRoles: CachedRole[] = apiRoles.map((role) => ({
         code: role.code,
         name: role.name
       }));
-      
+
       // Save to localStorage
       this.saveCachedRolesToStorage(simplifiedRoles);
-      
+
       return simplifiedRoles;
     } catch (error) {
       console.error('=== RolesCache: Failed to fetch and cache roles ===', error);

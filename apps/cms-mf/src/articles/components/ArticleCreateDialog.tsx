@@ -55,7 +55,7 @@ const ArticleCreateDialog = ({
 
   const availableTags = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return [] as string[];
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -70,7 +70,7 @@ const ArticleCreateDialog = ({
 
   const availableLangOptions = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return LANGUAGE_OPTIONS;
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -265,7 +265,7 @@ const ArticleCreateDialog = ({
             />
             {getFieldError('summary') && <FormHelperText error>{getFieldError('summary')}</FormHelperText>}
           </Box>
-          
+
           <TextField
             label={t('articles.form.sourceName')}
             value={formData.sourceName || ''}
@@ -278,9 +278,9 @@ const ArticleCreateDialog = ({
             onChange={(e) => onFormChange('originalUrl', e.target.value)}
             fullWidth
           />
-          
 
-  <FormControl fullWidth>
+
+          <FormControl fullWidth>
             <Select value={formData.lang || ''} onChange={handleLangChange}>
               {availableLangOptions.map((opt) => (
                 <MenuItem key={opt.value} value={opt.value}>

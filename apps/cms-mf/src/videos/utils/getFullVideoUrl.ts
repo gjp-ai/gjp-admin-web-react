@@ -13,9 +13,9 @@ export function getFullVideoUrl(videoPath?: string | null): string {
   if (videoPath.startsWith('http')) {
     return videoPath;
   }
- 
+
   try {
-    const settings = localStorage.getItem('gjpb_app_settings');
+    const settings = localStorage.getItem('gjp_app_settings');
     if (settings) {
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string }>;
       const baseSetting = appSettings.find((setting) => setting.name === 'video_base_url');

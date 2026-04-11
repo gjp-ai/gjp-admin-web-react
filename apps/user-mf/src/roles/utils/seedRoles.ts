@@ -12,7 +12,7 @@
 
 import type { CachedRole } from './rolesCache';
 
-const ROLES_CACHE_KEY = 'gjpb_roles';
+const ROLES_CACHE_KEY = 'gjp_roles';
 
 export const seedRolesData: CachedRole[] = [
   { "code": "SUPER_ADMIN", "name": "Super Administrator" },
@@ -68,29 +68,29 @@ if (typeof window !== 'undefined') {
     seedRolesToLocalStorage();
     console.log('✅ Roles have been seeded to localStorage. Refresh the page to see them in dropdowns.');
   };
-  
+
   (window as any).checkRoles = () => {
     const exists = checkRolesInLocalStorage();
     const rolesData = localStorage.getItem(ROLES_CACHE_KEY);
     const parsedRoles = rolesData ? JSON.parse(rolesData) : null;
-    
+
     console.log('=== Roles Status ===');
     console.log('Roles exist:', exists);
     console.log('Roles count:', parsedRoles?.length || 0);
     console.log('Roles data:', parsedRoles);
-    
+
     return {
       exists,
       count: parsedRoles?.length || 0,
       data: parsedRoles
     };
   };
-  
+
   (window as any).clearRoles = () => {
     localStorage.removeItem(ROLES_CACHE_KEY);
     console.log('✅ Roles cleared from localStorage');
   };
-  
+
   // Show available commands on load
   console.log('🎯 Roles Management Commands Available:');
   console.log('  seedRoles()  - Add test roles to localStorage');

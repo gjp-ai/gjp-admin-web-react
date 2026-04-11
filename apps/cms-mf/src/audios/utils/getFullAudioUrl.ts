@@ -11,9 +11,9 @@ export function getFullAudioUrl(audioPath?: string | null): string {
   if (audioPath.startsWith('http')) {
     return audioPath;
   }
- 
+
   try {
-    const settings = localStorage.getItem('gjpb_app_settings');
+    const settings = localStorage.getItem('gjp_app_settings');
     if (settings) {
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string }>;
       const baseSetting = appSettings.find((setting) => setting.name === 'audio_base_url');

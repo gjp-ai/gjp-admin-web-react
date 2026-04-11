@@ -12,18 +12,18 @@ export const getInitialThemeMode = (): ThemeMode => {
   if (typeof window === 'undefined') {
     return APP_CONFIG.THEME.DEFAULT_THEME as ThemeMode;
   }
-  
+
   // 1st priority: User's previously saved preference
   const savedTheme = localStorage.getItem(APP_CONFIG.THEME.STORAGE_KEY);
   if (savedTheme === 'light' || savedTheme === 'dark') {
     return savedTheme;
   }
-  
+
   // 2nd priority: System/OS dark mode preference
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     return 'dark';
   }
-  
+
   // 3rd priority: Application configured default
   return APP_CONFIG.THEME.DEFAULT_THEME as ThemeMode;
 };
@@ -36,13 +36,13 @@ export const getInitialColorTheme = (): ColorTheme => {
   if (typeof window === 'undefined') {
     return APP_CONFIG.THEME.DEFAULT_COLOR_THEME as ColorTheme;
   }
-  
+
   // 1st priority: User's previously saved preference
-  const savedColorTheme = localStorage.getItem('gjpb_color_theme');
+  const savedColorTheme = localStorage.getItem('gjp_color_theme');
   if (savedColorTheme === 'blue' || savedColorTheme === 'purple' || savedColorTheme === 'green' || savedColorTheme === 'orange' || savedColorTheme === 'red') {
     return savedColorTheme;
   }
-  
+
   // 2nd priority: Application configured default
   return APP_CONFIG.THEME.DEFAULT_COLOR_THEME as ColorTheme;
 };
@@ -55,19 +55,19 @@ export const getInitialLanguage = (): Language => {
   if (typeof window === 'undefined') {
     return APP_CONFIG.DEFAULT_LANGUAGE as Language;
   }
-  
+
   // 1st priority: User's previously saved preference
-  const savedLanguage = localStorage.getItem('gjpb_language');
+  const savedLanguage = localStorage.getItem('gjp_language');
   if (savedLanguage === 'en' || savedLanguage === 'zh') {
     return savedLanguage;
   }
-  
+
   // 2nd priority: Browser/system language preference
   const browserLang = navigator.language.split('-')[0];
   if (browserLang === 'zh') {
     return 'zh';
   }
-  
+
   // 3rd priority: Application configured default
   return APP_CONFIG.DEFAULT_LANGUAGE as Language;
 };
@@ -87,7 +87,7 @@ export const applyThemeMode = (themeMode: ThemeMode): void => {
  */
 export const applyColorTheme = (colorTheme: ColorTheme): void => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem('gjpb_color_theme', colorTheme);
+    localStorage.setItem('gjp_color_theme', colorTheme);
     document.documentElement.setAttribute('data-color-theme', colorTheme);
   }
 };
@@ -97,7 +97,7 @@ export const applyColorTheme = (colorTheme: ColorTheme): void => {
  */
 export const applyLanguage = (language: Language): void => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem('gjpb_language', language);
+    localStorage.setItem('gjp_language', language);
   }
 };
 
@@ -124,9 +124,9 @@ export const getLanguageOptions = (): LanguageOption[] => [
  * Check if system prefers dark mode
  */
 export const systemPrefersDarkMode = (): boolean => {
-  return typeof window !== 'undefined' && 
-         window.matchMedia && 
-         window.matchMedia('(prefers-color-scheme: dark)').matches;
+  return typeof window !== 'undefined' &&
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches;
 };
 
 /**
@@ -136,12 +136,12 @@ export const createSystemPreferenceListener = (
   callback: (prefersDark: boolean) => void
 ): (() => void) | null => {
   if (typeof window === 'undefined') return null;
-  
+
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   const handler = (e: MediaQueryListEvent) => callback(e.matches);
-  
+
   mediaQuery.addEventListener('change', handler);
-  
+
   // Return cleanup function
   return () => mediaQuery.removeEventListener('change', handler);
 };

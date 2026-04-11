@@ -20,7 +20,7 @@ const buildErrorMessage = (baseMessage: string, error: any): string => {
   if (error.response?.data?.status?.errors?.error) {
     return error.response.data.status.errors.error;
   }
-  
+
   if (error.response?.data?.status?.message) {
     const statusMessage = error.response.data.status.message;
     if (statusMessage === 'Business error') {
@@ -28,22 +28,22 @@ const buildErrorMessage = (baseMessage: string, error: any): string => {
     }
     return `${baseMessage}: ${statusMessage}`;
   }
-  
+
   if (error.message) {
     return `${baseMessage}: ${error.message}`;
   }
-  
+
   return baseMessage;
 };
 
 // Helper function to update local storage user info
 const updateLocalStorageUserInfo = (updatedData: Partial<User>) => {
   try {
-    const currentUserInfo = localStorage.getItem('gjpb_user_info');
+    const currentUserInfo = localStorage.getItem('gjp_user_info');
     if (currentUserInfo) {
       const userData = JSON.parse(currentUserInfo);
       const updatedUserData = { ...userData, ...updatedData };
-      localStorage.setItem('gjpb_user_info', JSON.stringify(updatedUserData));
+      localStorage.setItem('gjp_user_info', JSON.stringify(updatedUserData));
     }
   } catch {
     // Silently handle localStorage errors - not critical for app functionality
@@ -84,7 +84,7 @@ export const useProfileHandlers = ({
       };
 
       const response = await profileService.updateProfile(updateData);
-      
+
       if (response.status.code === 200) {
         updateLocalStorageUserInfo({
           nickname: data.nickname,
@@ -92,12 +92,12 @@ export const useProfileHandlers = ({
           mobileCountryCode: data.mobileCountryCode || '',
           mobileNumber: data.mobileNumber || '',
         });
-        
+
         const updatedFields = getUpdatedFields(data);
-        const successMessage = updatedFields.length > 0 
+        const successMessage = updatedFields.length > 0
           ? `${t('profile.updateSuccess')}: ${updatedFields.join(', ')}`
           : t('profile.updateSuccess');
-          
+
         showSuccess(successMessage);
       } else {
         let errorMessage = t('profile.updateError');
@@ -133,14 +133,14 @@ export const useProfileHandlers = ({
       };
 
       const response = await profileService.changePassword(passwordData);
-      
+
       if (response.status.code === 200) {
         passwordForm.reset({
           currentPassword: '',
           newPassword: '',
           confirmPassword: '',
         });
-        
+
         showSuccess(`${t('profile.passwordChangeSuccess')} ${t('profile.passwordChangeSecurityNote')}`);
       } else {
         let errorMessage = t('profile.passwordChangeError');

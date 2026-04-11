@@ -31,7 +31,7 @@ interface VideoCreateDialogProps {
 	onClose: () => void;
 	formData: VideoFormData;
 	onFormChange: (field: keyof VideoFormData, value: any) => void;
-		// onSubmit not used here; submit handled internally
+	// onSubmit not used here; submit handled internally
 	loading?: boolean;
 	formErrors?: Record<string, string[] | string>;
 	onReset?: () => void;
@@ -54,7 +54,7 @@ const VideoCreateDialog = ({
 
 	const availableTags = useMemo(() => {
 		try {
-			const settings = localStorage.getItem('gjpb_app_settings');
+			const settings = localStorage.getItem('gjp_app_settings');
 			if (!settings) return [] as string[];
 			const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
 			const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -69,7 +69,7 @@ const VideoCreateDialog = ({
 
 	const availableLangOptions = useMemo(() => {
 		try {
-			const settings = localStorage.getItem('gjpb_app_settings');
+			const settings = localStorage.getItem('gjp_app_settings');
 			if (!settings) return LANGUAGE_OPTIONS;
 			const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
 			const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -87,11 +87,11 @@ const VideoCreateDialog = ({
 		}
 	}, [i18n.language]);
 
-		const getFieldError = (field: string) => {
-			const err = formErrors[field];
-			if (Array.isArray(err)) return err.join(', ');
-			return typeof err === 'string' ? err : '';
-		};
+	const getFieldError = (field: string) => {
+		const err = formErrors[field];
+		if (Array.isArray(err)) return err.join(', ');
+		return typeof err === 'string' ? err : '';
+	};
 
 	// handlers
 	const handleTagsChange = (e: any) => {
@@ -116,22 +116,22 @@ const VideoCreateDialog = ({
 		}
 	};
 
-		const handleSubmit = async () => {
+	const handleSubmit = async () => {
 		setErrorMsg(null);
 		setLocalSaving(true);
 		try {
 			// build request expected by createVideoByUpload
-				if (!formData.file) throw new Error('No video file selected');
-				const file = formData.file;
-				await videoService.createVideoByUpload({
-					file,
-					name: formData.name,
-					filename: formData.filename,
-					coverImageFilename: formData.coverImageFilename,
-					coverImageFile: formData.coverImageFile || undefined,
-					sourceName: (formData as any).sourceName,
-					originalUrl: (formData as any).originalUrl,
-					description: formData.description,
+			if (!formData.file) throw new Error('No video file selected');
+			const file = formData.file;
+			await videoService.createVideoByUpload({
+				file,
+				name: formData.name,
+				filename: formData.filename,
+				coverImageFilename: formData.coverImageFilename,
+				coverImageFile: formData.coverImageFile || undefined,
+				sourceName: (formData as any).sourceName,
+				originalUrl: (formData as any).originalUrl,
+				description: formData.description,
 				tags: formData.tags,
 				lang: formData.lang,
 				displayOrder: formData.displayOrder,
@@ -156,16 +156,16 @@ const VideoCreateDialog = ({
 	};
 
 	return (
-			<Dialog
-				open={open}
-				onClose={(_event, reason) => {
-					if (reason === 'backdropClick' || reason === 'escapeKeyDown') return;
-					onClose();
-				}}
-				disableEscapeKeyDown
-				maxWidth="md"
-				fullWidth
-			>
+		<Dialog
+			open={open}
+			onClose={(_event, reason) => {
+				if (reason === 'backdropClick' || reason === 'escapeKeyDown') return;
+				onClose();
+			}}
+			disableEscapeKeyDown
+			maxWidth="md"
+			fullWidth
+		>
 			{(loading || localSaving) && (
 				<Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1 }}>
 					<LinearProgress />
@@ -179,7 +179,7 @@ const VideoCreateDialog = ({
 					<TextField label={t('videos.form.name') || 'Name'} value={formData.name} onChange={(e) => onFormChange('name', e.target.value)} fullWidth error={!!getFieldError('name')} helperText={getFieldError('name')} />
 					<TextField label={t('videos.form.sourceName') || 'Source Name'} value={(formData as any).sourceName || ''} onChange={(e) => onFormChange('sourceName' as any, e.target.value)} fullWidth />
 					<TextField label={t('videos.form.originalUrl') || 'Original URL'} value={(formData as any).originalUrl || ''} onChange={(e) => onFormChange('originalUrl' as any, e.target.value)} fullWidth />
-                    <Box>
+					<Box>
 						<Typography variant="subtitle2">{t('videos.form.videoFile') || 'Video File'}</Typography>
 						<input type="file" accept="video/*" onChange={(e) => handleFileChange('file', e)} />
 					</Box>
@@ -188,7 +188,7 @@ const VideoCreateDialog = ({
 						<Typography variant="subtitle2">{t('videos.form.coverImageFile') || 'Cover Image File'}</Typography>
 						<input type="file" accept="image/*" onChange={(e) => handleFileChange('coverImageFile', e)} />
 					</Box>
-					<TextField label={t('videos.form.coverImageFilename') || 'Cover Image Filename'} value={formData.coverImageFilename || ''} onChange={(e) => onFormChange('coverImageFilename', e.target.value)} fullWidth />    
+					<TextField label={t('videos.form.coverImageFilename') || 'Cover Image Filename'} value={formData.coverImageFilename || ''} onChange={(e) => onFormChange('coverImageFilename', e.target.value)} fullWidth />
 					<Box>
 						<Typography variant="subtitle2">{t('videos.form.description') || 'Description'}</Typography>
 						<TextareaAutosize
@@ -224,7 +224,7 @@ const VideoCreateDialog = ({
 				</Box>
 			</DialogContent>
 			<DialogActions>
-			<Button onClick={() => { if (onReset) { onReset(); } onClose(); }} disabled={loading || localSaving}>{t('videos.actions.cancel') || 'Cancel'}</Button>
+				<Button onClick={() => { if (onReset) { onReset(); } onClose(); }} disabled={loading || localSaving}>{t('videos.actions.cancel') || 'Cancel'}</Button>
 				<Button variant="contained" onClick={handleSubmit} disabled={loading || localSaving} startIcon={(loading || localSaving) ? <CircularProgress size={16} color="inherit" /> : undefined}>{t('videos.actions.save') || 'Save'}</Button>
 			</DialogActions>
 			<Backdrop sx={{ position: 'absolute', zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: 'rgba(0,0,0,0.6)' }} open={loading || localSaving}>

@@ -94,21 +94,21 @@ interface LogoTableProps {
 // Column helper
 const columnHelper = createColumnHelper<Logo>();
 
-export const LogoTable = memo(({ 
-  logos, 
-  loading = false, 
-  pagination, 
-  onPageChange, 
-  onPageSizeChange, 
+export const LogoTable = memo(({
+  logos,
+  loading = false,
+  pagination,
+  onPageChange,
+  onPageSizeChange,
   onLogoAction,
-  onCopyFilename 
+  onCopyFilename
 }: LogoTableProps) => {
   const { t } = useTranslation();
 
   // Get logo base URL from local storage
   const logoBaseUrl = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return null;
 
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
@@ -118,8 +118,8 @@ export const LogoTable = memo(({
 
       if (!logoBaseUrlSetting) return null;
 
-      return logoBaseUrlSetting.value.endsWith('/') 
-        ? logoBaseUrlSetting.value 
+      return logoBaseUrlSetting.value.endsWith('/')
+        ? logoBaseUrlSetting.value
         : `${logoBaseUrlSetting.value}/`;
     } catch (error) {
       console.error('[LogoTable] Error loading logo base URL:', error);

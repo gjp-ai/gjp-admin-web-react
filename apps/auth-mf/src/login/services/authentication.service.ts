@@ -78,7 +78,7 @@ class AuthenticationService {
 
       // Store user info in localStorage for convenience (all fields from backend response)
       localStorage.setItem(
-        "gjpb_user_info",
+        "gjp_user_info",
         JSON.stringify({
           username: authResponse.username,
           email: authResponse.email,

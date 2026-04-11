@@ -22,10 +22,10 @@ class ShellAuthService {
       removeCookie(APP_CONFIG.TOKEN.ACCESS_TOKEN_KEY);
       removeCookie(APP_CONFIG.TOKEN.REFRESH_TOKEN_KEY);
       removeCookie(APP_CONFIG.TOKEN.TOKEN_TYPE_KEY);
-      
+
       // Clear user info from localStorage
-      localStorage.removeItem('gjpb_user_info');
-      
+      localStorage.removeItem('gjp_user_info');
+
       // Clear all application caches
       clearAllCaches();
     } catch (error) {
@@ -45,14 +45,14 @@ class ShellAuthService {
    */
   public async refreshToken(): Promise<AuthTokens> {
     const refreshToken = getCookie(APP_CONFIG.TOKEN.REFRESH_TOKEN_KEY);
-    
+
     if (!refreshToken) {
       throw new Error('No refresh token available');
     }
-    
+
     try {
       let tokenResponse: AuthTokens;
-      
+
       // Use mock API in development mode
       if (useMockAPI) {
         tokenResponse = await mockApiService.refreshToken(refreshToken) as AuthTokens;
@@ -61,21 +61,21 @@ class ShellAuthService {
           APP_CONFIG.AUTH.REFRESH_TOKEN_URL,
           { refreshToken }
         );
-        
+
         if (response.status.code === 200 && response.data) {
           tokenResponse = response.data;
         } else {
           throw new Error('Token refresh failed');
         }
       }
-      
+
       const { accessToken, refreshToken: newRefreshToken, tokenType, expiresIn } = tokenResponse;
-      
+
       // Store new tokens with explicit SameSite protection
       setCookie(APP_CONFIG.TOKEN.ACCESS_TOKEN_KEY, accessToken, expiresIn, '/', import.meta.env.PROD, 'Lax');
       setCookie(APP_CONFIG.TOKEN.REFRESH_TOKEN_KEY, newRefreshToken, undefined, '/', import.meta.env.PROD, 'Lax');
       setCookie(APP_CONFIG.TOKEN.TOKEN_TYPE_KEY, tokenType, undefined, '/', import.meta.env.PROD, 'Lax');
-      
+
       return tokenResponse;
     } catch (error) {
       console.error('[ShellAuthService] Token refresh error:', error);
@@ -90,10 +90,10 @@ class ShellAuthService {
     if (!this.isAuthenticated()) {
       return null;
     }
-    
+
     try {
       // Get user info from localStorage (stored during login)
-      const userInfo = localStorage.getItem('gjpb_user_info');
+      const userInfo = localStorage.getItem('gjp_user_info');
       if (userInfo) {
         const userData = JSON.parse(userInfo);
         return {
@@ -144,7 +144,7 @@ class ShellAuthService {
    */
   public shouldRefreshToken(): boolean {
     const accessToken = getCookie(APP_CONFIG.TOKEN.ACCESS_TOKEN_KEY);
-    
+
     if (!accessToken) {
       return false;
     }
@@ -155,7 +155,7 @@ class ShellAuthService {
       const expiryTime = payload.exp * 1000; // Convert to milliseconds
       const currentTime = Date.now();
       const bufferTime = APP_CONFIG.AUTH.TOKEN_EXPIRY_BUFFER * 1000; // Convert to milliseconds
-      
+
       // Return true if token expires within the buffer time
       return (expiryTime - currentTime) <= bufferTime;
     } catch (error) {
@@ -170,7 +170,7 @@ class ShellAuthService {
    */
   public getUserRoles(): string[] {
     try {
-      const userInfo = localStorage.getItem('gjpb_user_info');
+      const userInfo = localStorage.getItem('gjp_user_info');
       if (userInfo) {
         const { roleCodes } = JSON.parse(userInfo);
         return roleCodes ?? [];
@@ -187,11 +187,11 @@ class ShellAuthService {
    */
   public hasRole(roleCodes: string | string[]): boolean {
     const userRoles = this.getUserRoles();
-    
+
     if (!userRoles || userRoles.length === 0) {
       return false;
     }
-    
+
     const requiredRoles = Array.isArray(roleCodes) ? roleCodes : [roleCodes];
     return requiredRoles.some(role => userRoles.includes(role));
   }

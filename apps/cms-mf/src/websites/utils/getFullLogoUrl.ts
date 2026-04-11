@@ -3,7 +3,7 @@ export function getFullLogoUrl(logoUrl: string): string {
   if (!logoUrl) return '';
   if (logoUrl.startsWith('http')) return logoUrl;
   try {
-    const settings = localStorage.getItem('gjpb_app_settings');
+    const settings = localStorage.getItem('gjp_app_settings');
     if (settings) {
       const appSettings = JSON.parse(settings);
       const logoBaseUrlSetting = appSettings.find(

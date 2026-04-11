@@ -54,7 +54,7 @@ const AudioCreateDialog = ({
 
   const availableTags = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return [] as string[];
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -69,7 +69,7 @@ const AudioCreateDialog = ({
 
   const availableLangOptions = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return LANGUAGE_OPTIONS;
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -124,7 +124,7 @@ const AudioCreateDialog = ({
       const file = formData.file;
       await audioService.createAudioByUpload({
         // cast to any to avoid needing to supply filename/coverImageFilename in this helper
-        ...( {
+        ...({
           file,
           name: formData.name,
           // include subtitle from the rich-text editor
@@ -140,7 +140,7 @@ const AudioCreateDialog = ({
           lang: formData.lang,
           displayOrder: formData.displayOrder,
           isActive: formData.isActive,
-        } as any ),
+        } as any),
       } as any);
 
       if (onReset) onReset();
@@ -209,7 +209,7 @@ const AudioCreateDialog = ({
             </Select>
           </FormControl>
           <TextField label={t('audios.form.displayOrder') || 'Display Order'} type="number" value={String(formData.displayOrder)} onChange={(e) => onFormChange('displayOrder', Number(e.target.value) || 0)} fullWidth />
-          
+
           <Box>
             <Typography variant="subtitle2">{t('audios.form.subtitle') || 'Subtitle'}</Typography>
             <TiptapTextEditor value={(formData as any).subtitle || ''} onChange={(html: string) => onFormChange('subtitle' as any, html)} placeholder={t('audios.form.subtitle') || 'Subtitle'} />

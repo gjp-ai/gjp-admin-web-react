@@ -53,12 +53,12 @@ export const LogoCreateDialog = ({
   // Get logo tags from local storage filtered by current language
   const availableTags = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return [];
 
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
-      
+
       const logoTagsSetting = appSettings.find(
         (setting) => setting.name === 'logo_tags' && setting.lang === currentLang
       );
@@ -122,15 +122,15 @@ export const LogoCreateDialog = ({
               value={formData.uploadMethod}
               onChange={(e) => onFormChange('uploadMethod', e.target.value as 'url' | 'file')}
             >
-              <FormControlLabel 
-                value="url" 
-                control={<Radio />} 
-                label={t('logos.form.byUrl')} 
+              <FormControlLabel
+                value="url"
+                control={<Radio />}
+                label={t('logos.form.byUrl')}
               />
-              <FormControlLabel 
-                value="file" 
-                control={<Radio />} 
-                label={t('logos.form.uploadFile')} 
+              <FormControlLabel
+                value="file"
+                control={<Radio />}
+                label={t('logos.form.uploadFile')}
               />
             </RadioGroup>
           </FormControl>
@@ -311,8 +311,8 @@ export const LogoCreateDialog = ({
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="h6" sx={{ mb: 0.5, display: 'flex', alignItems: 'center', gap: 1 }}>
               <ImageIcon size={20} />
-              {formData.uploadMethod === 'file' 
-                ? t('logos.messages.uploadingImage') 
+              {formData.uploadMethod === 'file'
+                ? t('logos.messages.uploadingImage')
                 : t('logos.messages.savingLogo')}
             </Typography>
             <Typography variant="body2" color="text.secondary">

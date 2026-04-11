@@ -21,7 +21,7 @@ const VideoEditDialog: React.FC<VideoEditDialogProps> = ({ open, formData, onFor
 
 	const availableTags = useMemo(() => {
 		try {
-			const settings = localStorage.getItem('gjpb_app_settings');
+			const settings = localStorage.getItem('gjp_app_settings');
 			if (!settings) return [] as string[];
 			const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
 			const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -36,7 +36,7 @@ const VideoEditDialog: React.FC<VideoEditDialogProps> = ({ open, formData, onFor
 
 	const availableLangOptions = useMemo(() => {
 		try {
-			const settings = localStorage.getItem('gjpb_app_settings');
+			const settings = localStorage.getItem('gjp_app_settings');
 			if (!settings) return LANGUAGE_OPTIONS;
 			const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
 			const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -83,7 +83,7 @@ const VideoEditDialog: React.FC<VideoEditDialogProps> = ({ open, formData, onFor
 				<Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1200 }}>
 					<LinearProgress />
 				</Box>
-				)}
+			)}
 			<DialogTitle>{t('videos.edit') || 'Edit Video'}</DialogTitle>
 			<DialogContent>
 				<Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
@@ -95,13 +95,13 @@ const VideoEditDialog: React.FC<VideoEditDialogProps> = ({ open, formData, onFor
 						<Typography variant="subtitle2">{t('videos.form.coverImageFile') || 'Cover Image File'}</Typography>
 						<input type="file" accept="image/*" onChange={handleCoverFileChange} />
 					</Box>
-					<TextField label={t('videos.form.coverImageFilename') || 'Cover Image Filename'} value={formData.coverImageFilename || ''} onChange={e => onFormChange('coverImageFilename' as any, e.target.value)} fullWidth />    
+					<TextField label={t('videos.form.coverImageFilename') || 'Cover Image Filename'} value={formData.coverImageFilename || ''} onChange={e => onFormChange('coverImageFilename' as any, e.target.value)} fullWidth />
 					<Box>
 						<Typography variant="subtitle2">{t('videos.form.description') || 'Description'}</Typography>
 						<TextareaAutosize minRows={2} style={{ width: '100%', padding: '8.5px 14px', borderRadius: 4, border: '1px solid rgba(0,0,0,0.23)', fontFamily: 'inherit' }} value={formData.description || ''} onChange={e => onFormChange('description', e.target.value)} aria-label={t('videos.form.description') || 'Description'} />
 					</Box>
 
-                    <FormControl fullWidth>
+					<FormControl fullWidth>
 						<Select multiple value={formData.tags ? formData.tags.split(',').filter(Boolean) : []} onChange={handleTagsChange} input={<OutlinedInput />} renderValue={(selected) => (
 							<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
 								{Array.isArray(selected) && selected.map((v) => (<Chip key={v} label={v} size="small" />))}
@@ -121,23 +121,23 @@ const VideoEditDialog: React.FC<VideoEditDialogProps> = ({ open, formData, onFor
 					<FormControlLabel control={<Checkbox checked={formData.isActive} onChange={e => onFormChange('isActive', e.target.checked)} />} label={t('videos.form.isActive') || 'Active'} />
 				</Box>
 			</DialogContent>
-							<DialogActions>
-								<Button onClick={onClose} disabled={loading || localSaving}>{t('videos.actions.cancel') || 'Cancel'}</Button>
-								<Button variant="contained" onClick={async () => {
-									setLocalSaving(true);
-									try {
-										await onSubmit(Boolean(formData.coverImageFile));
-									} finally {
-										setLocalSaving(false);
-									}
-								}} disabled={loading || localSaving}>{t('videos.actions.save') || 'Save'}</Button>
-							</DialogActions>
-							<Backdrop sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, color: '#fff' }} open={loading || localSaving}>
-								<Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center' }}>
-									<CircularProgress color="inherit" />
-									<Typography>{t('videos.messages.pleaseWait') || 'Please wait...'}</Typography>
-								</Box>
-							</Backdrop>
+			<DialogActions>
+				<Button onClick={onClose} disabled={loading || localSaving}>{t('videos.actions.cancel') || 'Cancel'}</Button>
+				<Button variant="contained" onClick={async () => {
+					setLocalSaving(true);
+					try {
+						await onSubmit(Boolean(formData.coverImageFile));
+					} finally {
+						setLocalSaving(false);
+					}
+				}} disabled={loading || localSaving}>{t('videos.actions.save') || 'Save'}</Button>
+			</DialogActions>
+			<Backdrop sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, color: '#fff' }} open={loading || localSaving}>
+				<Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center' }}>
+					<CircularProgress color="inherit" />
+					<Typography>{t('videos.messages.pleaseWait') || 'Please wait...'}</Typography>
+				</Box>
+			</Backdrop>
 		</Dialog>
 	);
 };

@@ -51,7 +51,7 @@ const FileCreateDialog = ({
 
   const availableTags = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return [];
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -68,7 +68,7 @@ const FileCreateDialog = ({
 
   const availableLangOptions = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return LANGUAGE_OPTIONS;
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -107,9 +107,9 @@ const FileCreateDialog = ({
     if (formData.uploadMethod === 'url' && formData.originalUrl && !formData.filename) {
       try {
         const parsed = new URL(formData.originalUrl);
-  const segments = parsed.pathname.split('/').filter(Boolean);
-  const last = segments.at(-1) || '';
-  const decoded = last ? decodeURIComponent(last) : '';
+        const segments = parsed.pathname.split('/').filter(Boolean);
+        const last = segments.at(-1) || '';
+        const decoded = last ? decodeURIComponent(last) : '';
         if (decoded) {
           onFormChange('filename', decoded);
         }

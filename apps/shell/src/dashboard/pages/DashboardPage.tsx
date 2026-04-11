@@ -23,22 +23,22 @@ const DashboardPage = () => {
   const user = useAppSelector(selectCurrentUser);
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Firebase Performance tracking for dashboard page
   useFirebasePerformance('dashboard', user?.username);
-  
+
   // Sync user data from localStorage on component mount to reflect profile updates
   useEffect(() => {
     const syncUserData = () => {
       try {
-        const storedUserInfo = localStorage.getItem('gjpb_user_info');
+        const storedUserInfo = localStorage.getItem('gjp_user_info');
         if (storedUserInfo && user) {
           const userData = JSON.parse(storedUserInfo);
           // Check if stored data is different from current Redux state
-          if (userData.nickname !== user.nickname || 
-              userData.email !== user.email || 
-              userData.mobileCountryCode !== user.mobileCountryCode ||
-              userData.mobileNumber !== user.mobileNumber) {
+          if (userData.nickname !== user.nickname ||
+            userData.email !== user.email ||
+            userData.mobileCountryCode !== user.mobileCountryCode ||
+            userData.mobileNumber !== user.mobileNumber) {
             // Update Redux store with latest data from localStorage
             dispatch(updateUserProfile({
               nickname: userData.nickname,
@@ -96,9 +96,9 @@ const DashboardPage = () => {
   const displayName = user.nickname ?? user.username;
 
   return (
-    <Box sx={{ 
-      width: '100%', 
-      minHeight: '100vh', 
+    <Box sx={{
+      width: '100%',
+      minHeight: '100vh',
       p: { xs: 1, sm: 1, md: 1 },
     }}>
       {/* Welcome Section */}
@@ -106,11 +106,11 @@ const DashboardPage = () => {
 
       {/* User Information Section */}
       <Box>
-        <Box sx={{ 
-          display: 'flex', 
-          flexDirection: { xs: 'column', md: 'row' }, 
-          gap: 3, 
-          mb: 3 
+        <Box sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 3,
+          mb: 3
         }}>
           {/* Basic Information Card */}
           <Box sx={{ flex: 1 }}>
@@ -124,11 +124,11 @@ const DashboardPage = () => {
 
         </Box>
 
-        <Box sx={{ 
-          display: 'flex', 
-          flexDirection: { xs: 'column', md: 'row' }, 
-          gap: 3, 
-          mb: 3 
+        <Box sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 3,
+          mb: 3
         }}>
           {/* User Preferences Card */}
           <Box sx={{ flex: 1 }}>

@@ -16,31 +16,31 @@ interface UiState {
 // Get initial theme mode from localStorage, system preference, or use default
 const getInitialTheme = (): ThemeMode => {
   console.log('[Shell Redux] 🎨 Getting initial theme...');
-  
+
   // Server-side rendering safety check
   if (typeof window === 'undefined') {
     console.log('[Shell Redux] 🎨 Server-side rendering, using default:', APP_CONFIG.THEME.DEFAULT_THEME);
     return APP_CONFIG.THEME.DEFAULT_THEME as ThemeMode;
   }
-  
+
   // 1st priority: User's previously saved preference
   const savedTheme = localStorage.getItem(APP_CONFIG.THEME.STORAGE_KEY);
   console.log('[Shell Redux] 🎨 Saved theme from localStorage:', savedTheme);
-  
+
   if (savedTheme === 'light' || savedTheme === 'dark') {
     console.log('[Shell Redux] 🎨 Using saved theme:', savedTheme);
     return savedTheme;
   }
-  
+
   // 2nd priority: System/OS dark mode preference
   const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   console.log('[Shell Redux] 🎨 System prefers dark mode:', systemPrefersDark);
-  
+
   if (systemPrefersDark) {
     console.log('[Shell Redux] 🎨 Using system preference: dark');
     return 'dark';
   }
-  
+
   // 3rd priority: Application configured default
   console.log('[Shell Redux] 🎨 Using app default:', APP_CONFIG.THEME.DEFAULT_THEME);
   return APP_CONFIG.THEME.DEFAULT_THEME as ThemeMode;
@@ -52,19 +52,19 @@ const getInitialLanguage = (): Language => {
   if (typeof window === 'undefined') {
     return APP_CONFIG.DEFAULT_LANGUAGE as Language;
   }
-  
+
   // 1st priority: User's previously saved preference
-  const savedLang = localStorage.getItem('gjpb_language');
+  const savedLang = localStorage.getItem('gjp_language');
   if (savedLang === 'en' || savedLang === 'zh') {
     return savedLang;
   }
-  
+
   // 2nd priority: Browser/system language preference
   const browserLang = navigator.language.split('-')[0];
   if (browserLang === 'zh') {
     return 'zh';
   }
-  
+
   // 3rd priority: Application configured default
   return APP_CONFIG.DEFAULT_LANGUAGE as Language;
 };
@@ -75,13 +75,13 @@ const getInitialColorTheme = (): ColorTheme => {
   if (typeof window === 'undefined') {
     return APP_CONFIG.THEME.DEFAULT_COLOR_THEME as ColorTheme;
   }
-  
+
   // 1st priority: User's previously saved preference
-  const savedColorTheme = localStorage.getItem('gjpb_color_theme');
+  const savedColorTheme = localStorage.getItem('gjp_color_theme');
   if (savedColorTheme === 'blue' || savedColorTheme === 'purple' || savedColorTheme === 'green' || savedColorTheme === 'orange' || savedColorTheme === 'red') {
     return savedColorTheme;
   }
-  
+
   // 2nd priority: Application configured default
   return APP_CONFIG.THEME.DEFAULT_COLOR_THEME as ColorTheme;
 };
@@ -111,13 +111,13 @@ const uiSlice = createSlice({
         newTheme: action.payload,
         caller: new Error().stack?.split('\n')[2]?.trim()
       });
-      
+
       state.themeMode = action.payload;
       if (typeof window !== 'undefined') {
-        console.log(`[Shell Redux] 🎨 Setting localStorage gjpb_theme to: ${action.payload}`);
+        console.log(`[Shell Redux] 🎨 Setting localStorage gjp_theme to: ${action.payload}`);
         localStorage.setItem(APP_CONFIG.THEME.STORAGE_KEY, action.payload);
         document.documentElement.setAttribute('data-theme', action.payload);
-        
+
         // Verify the storage was set
         const verifyStorage = localStorage.getItem(APP_CONFIG.THEME.STORAGE_KEY);
         console.log(`[Shell Redux] 🎨 Verified localStorage value: ${verifyStorage}`);
@@ -134,14 +134,14 @@ const uiSlice = createSlice({
     setLanguage: (state, action: PayloadAction<Language>) => {
       state.language = action.payload;
       if (typeof window !== 'undefined') {
-        localStorage.setItem('gjpb_language', action.payload);
+        localStorage.setItem('gjp_language', action.payload);
         document.documentElement.setAttribute('lang', action.payload);
       }
     },
     setColorTheme: (state, action: PayloadAction<ColorTheme>) => {
       state.colorTheme = action.payload;
       if (typeof window !== 'undefined') {
-        localStorage.setItem('gjpb_color_theme', action.payload);
+        localStorage.setItem('gjp_color_theme', action.payload);
         document.documentElement.setAttribute('data-color-theme', action.payload);
       }
     },

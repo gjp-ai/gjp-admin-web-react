@@ -13,7 +13,7 @@ export function getFullFileUrl(imagePath?: string | null): string {
   }
 
   try {
-    const settings = localStorage.getItem('gjpb_app_settings');
+    const settings = localStorage.getItem('gjp_app_settings');
     if (settings) {
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string }>;
       const baseSetting = appSettings.find((setting) => setting.name === 'file_base_url');

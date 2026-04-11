@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 const UserPreferencesCard = () => {
   const { t } = useTranslation();
-  
+
   // State for localStorage values
   const [localStorageData, setLocalStorageData] = useState({
     language: '',
@@ -16,9 +16,9 @@ const UserPreferencesCard = () => {
   useEffect(() => {
     const loadLocalStorageData = () => {
       setLocalStorageData({
-        language: localStorage.getItem('gjpb_language') || 'Not set',
-        colorTheme: localStorage.getItem('gjpb_color_theme') || 'Not set',
-        themeMode: localStorage.getItem('gjpb_theme') || 'Not set',
+        language: localStorage.getItem('gjp_language') || 'Not set',
+        colorTheme: localStorage.getItem('gjp_color_theme') || 'Not set',
+        themeMode: localStorage.getItem('gjp_theme') || 'Not set',
       });
     };
 
@@ -57,7 +57,7 @@ const UserPreferencesCard = () => {
   };
 
   return (
-    <Card sx={{ 
+    <Card sx={{
       boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
       borderRadius: 2,
     }}>
@@ -65,7 +65,7 @@ const UserPreferencesCard = () => {
         <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
           {t('dashboard.userInfo.userPreferences', 'User Preferences')}
         </Typography>
-        
+
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
           <Box>
             <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
@@ -75,7 +75,7 @@ const UserPreferencesCard = () => {
               {getLanguageDisplay(localStorageData.language)}
             </Typography>
           </Box>
-          
+
           <Box>
             <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
               {t('dashboard.userInfo.colorTheme', 'Color Theme')}
@@ -86,7 +86,7 @@ const UserPreferencesCard = () => {
               </Typography>
             </Box>
           </Box>
-          
+
           <Box>
             <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
               {t('dashboard.userInfo.themeMode', 'Theme Mode')}

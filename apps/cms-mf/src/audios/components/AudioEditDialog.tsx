@@ -26,7 +26,7 @@ const AudioEditDialog: React.FC<AudioEditDialogProps> = ({ open, formData, onFor
 
   const availableTags = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return [] as string[];
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -41,7 +41,7 @@ const AudioEditDialog: React.FC<AudioEditDialogProps> = ({ open, formData, onFor
 
   const availableLangOptions = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return LANGUAGE_OPTIONS;
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -75,16 +75,16 @@ const AudioEditDialog: React.FC<AudioEditDialogProps> = ({ open, formData, onFor
 
   return (
     <Dialog
-        open={open}
-        onClose={(_event, reason) => {
-          // prevent closing via backdrop click or Escape key — only allow explicit Cancel button
-          if (reason === 'backdropClick' || reason === 'escapeKeyDown') return;
-          onClose();
-        }}
-        disableEscapeKeyDown
-        maxWidth="lg"
-        fullWidth
-      >
+      open={open}
+      onClose={(_event, reason) => {
+        // prevent closing via backdrop click or Escape key — only allow explicit Cancel button
+        if (reason === 'backdropClick' || reason === 'escapeKeyDown') return;
+        onClose();
+      }}
+      disableEscapeKeyDown
+      maxWidth="lg"
+      fullWidth
+    >
       {(loading || localSaving) && (
         <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1200 }}>
           <LinearProgress />
@@ -95,7 +95,7 @@ const AudioEditDialog: React.FC<AudioEditDialogProps> = ({ open, formData, onFor
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
           <TextField label={t('audios.form.name') || 'Name'} value={formData.name} onChange={e => onFormChange('name', e.target.value)} fullWidth />
           <TextField label={t('audios.form.artist') || 'Artist'} value={(formData as any).artist || ''} onChange={e => onFormChange('artist' as any, e.target.value)} fullWidth />
-          <TextField label={t('audios.form.filename') || 'Filename'} value={(formData as any).filename || ''} onChange={e => onFormChange('filename' as any, e.target.value)} fullWidth  />  
+          <TextField label={t('audios.form.filename') || 'Filename'} value={(formData as any).filename || ''} onChange={e => onFormChange('filename' as any, e.target.value)} fullWidth />
           <Box>
             <Typography variant="subtitle2">{t('audios.form.coverImageFile') || 'Cover Image File'}</Typography>
             <input type="file" accept="image/*" onChange={handleCoverFileChange} />
@@ -117,7 +117,7 @@ const AudioEditDialog: React.FC<AudioEditDialogProps> = ({ open, formData, onFor
           </FormControl>
 
           <TextField label={t('audios.form.displayOrder') || 'Display Order'} type="number" value={String(formData.displayOrder)} onChange={e => onFormChange('displayOrder', Number(e.target.value) || 0)} fullWidth />
-            
+
           <Box>
             <Typography variant="subtitle2">{t('audios.form.subtitle') || 'Subtitle'}</Typography>
             <TiptapTextEditor value={(formData as any).subtitle || ''} onChange={(html: string) => onFormChange('subtitle' as any, html)} placeholder={t('audios.form.subtitle') || 'Subtitle'} />
@@ -133,7 +133,7 @@ const AudioEditDialog: React.FC<AudioEditDialogProps> = ({ open, formData, onFor
             <TextareaAutosize minRows={2} style={{ width: '100%', padding: '8.5px 14px', borderRadius: 4, border: '1px solid rgba(0,0,0,0.23)', fontFamily: 'inherit' }} value={formData.description || ''} onChange={e => onFormChange('description', e.target.value)} aria-label={t('audios.form.description') || 'Description'} />
           </Box>
 
-          
+
         </Box>
       </DialogContent>
       <DialogActions>

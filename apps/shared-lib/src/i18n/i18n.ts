@@ -115,6 +115,15 @@ const enResources = {
     unauthorized: "You are not authorized to access this page",
     sessionExpired: "Your session has expired, please log in again",
   },
+  dashboard: {
+    appSettings: {
+      title: "App Settings",
+      app_copyright: "App Copyright",
+      app_email: "App Email",
+      maintenance_mode: "Maintenance Mode",
+      pagination_size: "Pagination Size",
+    },
+  },
 };
 
 // Chinese translations
@@ -227,6 +236,15 @@ const zhResources = {
     unauthorized: "您无权访问此页面",
     sessionExpired: "会话已过期，请重新登录",
   },
+  dashboard: {
+    appSettings: {
+      title: "应用设置",
+      app_copyright: "应用版权",
+      app_email: "应用邮箱",
+      maintenance_mode: "维护模式",
+      pagination_size: "分页大小",
+    },
+  },
 };
 
 // Initialize i18next
@@ -250,7 +268,7 @@ i18n
     detection: {
       order: ["localStorage", "navigator"],
       caches: ["localStorage"],
-      lookupLocalStorage: "gjpb_language",
+      lookupLocalStorage: "gjp_language",
     },
     debug: import.meta.env.DEV, // Enable debug logs in development
     keySeparator: ".",

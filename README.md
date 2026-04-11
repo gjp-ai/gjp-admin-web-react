@@ -1,6 +1,6 @@
-# GJPB Admin Console
+# GJP AI Admin Console
 
-A modern, secure, and responsive admin console for GJPB, built with React.js 19.1, TypeScript, and Vite 6.3.5.
+A modern, secure, and responsive admin console for GJP AI, built with React.js 19.1, TypeScript, and Vite 6.3.5.
 
 ## 🚀 Features
 
@@ -60,8 +60,8 @@ A modern, secure, and responsive admin console for GJPB, built with React.js 19.
 
 1. **Clone the repository**:
 ```bash
-git clone https://github.com/ganjianping/gjpb-admin-console-web-react-ts-public.git
-cd gjpb-admin-console-web-react-ts-public
+git clone https://github.com/ganjianping/gjp-admin-console-web-react-ts-public.git
+cd gjp-admin-console-web-react-ts-public
 ```
 
 2. **Install dependencies**:
@@ -158,7 +158,7 @@ VITE_API_BASE_URL=/api
 **Mock User Accounts**:
 | Username | Email | Password | Role | Mobile |
 |----------|-------|----------|------|---------|
-| `gjpb` | gjpb@gmail.com | `123456` | SUPER_ADMIN | +65 89765432 |
+| `gjp` | gjp@gmail.com | `123456` | SUPER_ADMIN | +65 89765432 |
 | `admin` | admin@example.com | `123456` | ADMIN | +65 88887777 |
 | `user` | user@example.com | `123456` | USER | +65 99998888 |
 
@@ -173,7 +173,7 @@ echo "VITE_API_BASE_URL=/api" >> .env
 # Start development server
 npm run dev
 
-# Login with: gjpb / 123456
+# Login with: gjp / 123456
 ```
 
 2. **For production with real backend**:
@@ -274,7 +274,7 @@ This project is proprietary software. All rights reserved.
 
 ---
 
-**© 2025 GJPB. All Rights Reserved.**
+**© 2025 GJP AI. All Rights Reserved.**
 
 2. Install dependencies:
 
@@ -386,7 +386,7 @@ The application supports multiple environments:
 ## Project Structure
 
 ```
-gjpb-admin-console-web/
+gjp-admin-console-web/
 ├── apps/                # Micro-frontend architecture
 │   ├── shell/           # Main shell/host application
 │   │   ├── src/         # Shell application source code (entry point)
@@ -522,4 +522,4 @@ The application is built with accessibility in mind, following WCAG 2.1 AA compl
 
 This project is proprietary and confidential. All rights reserved.
 
-Copyright © 2025 GJPB
+Copyright © 2025 GJP AI

@@ -53,22 +53,22 @@ export const initializeAuth = createAsyncThunk<
   try {
     // Check if user has valid authentication tokens
     const isAuthenticated = shellAuthService.isAuthenticated();
-    
+
     if (isAuthenticated) {
       // Try to get user info from localStorage first (faster)
-      const storedUserInfo = localStorage.getItem('gjpb_user_info');
+      const storedUserInfo = localStorage.getItem('gjp_user_info');
       if (storedUserInfo) {
         const user = JSON.parse(storedUserInfo);
         return { isAuthenticated: true, user };
       }
-      
+
       // If no stored user info, fetch from API
       const user = await shellAuthService.getCurrentUser();
       if (user) {
         return { isAuthenticated: true, user };
       }
     }
-    
+
     return { isAuthenticated: false };
   } catch (error: unknown) {
     // If token is invalid or expired, treat as not authenticated
@@ -166,7 +166,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload ?? 'Failed to fetch user';
       });
-    
+
     // Logout user
     builder
       .addCase(logoutUser.fulfilled, (state) => {
@@ -175,7 +175,7 @@ const authSlice = createSlice({
         state.roles = [];
         state.error = null;
       });
-    
+
     // Initialize auth
     builder
       .addCase(initializeAuth.fulfilled, (state, action) => {
@@ -195,14 +195,14 @@ const authSlice = createSlice({
 });
 
 // Export actions and reducer
-export const { 
-  setCredentials, 
-  clearCredentials, 
-  setError, 
-  clearError, 
-  handleLoginSuccess, 
+export const {
+  setCredentials,
+  clearCredentials,
+  setError,
+  clearError,
+  handleLoginSuccess,
   handleLoginFailure,
-  updateUserProfile 
+  updateUserProfile
 } = authSlice.actions;
 
 // Custom selectors
@@ -216,7 +216,7 @@ export const selectUserRoles = (state: RootState) => state.auth.roles;
 export const selectHasRole = (state: RootState, role: string | string[]) => {
   const roles = state.auth.roles;
   if (!roles.length) return false;
-  
+
   const requiredRoles = Array.isArray(role) ? role : [role];
   return requiredRoles.some(r => roles.includes(r));
 };

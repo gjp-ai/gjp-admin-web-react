@@ -52,7 +52,7 @@ export const WebsiteCreateDialog = ({
 
   const availableTags = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return [];
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -100,7 +100,7 @@ export const WebsiteCreateDialog = ({
               {/* Website URL */}
               <TextField label={t('websites.form.url')} value={formData.url} onChange={(e) => onFormChange('url', e.target.value)} fullWidth variant="outlined" placeholder={t('websites.form.urlPlaceholder')} error={!!getFieldError('url')} helperText={getFieldError('url') || t('websites.form.urlHelper')} sx={{ '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }} />
               {/* Description */}
-              
+
               {/* Logo Upload Method (RadioGroup) */}
               <FormControl component="fieldset" sx={{ mb: 2 }}>
                 <FormLabel component="legend">{t('websites.form.logoUploadMethod')}</FormLabel>
@@ -184,7 +184,7 @@ export const WebsiteCreateDialog = ({
           </Box>
           {Object.keys(formErrors).length > 0 && (
             <Alert severity="error" sx={{ mt: 2 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>{t('websites.form.correctErrors')}</Typography>
+              <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>{t('websites.form.correctErrors')}</Typography>
               <Box component="ul" sx={{ pl: 2, m: 0 }}>
                 {Object.entries(formErrors).map(([field, error]) => (
                   <li key={field}><Typography variant="body2">{Array.isArray(error) ? error.join(', ') : error}</Typography></li>

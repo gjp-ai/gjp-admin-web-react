@@ -48,7 +48,7 @@ const ImageEditDialog = ({
   const { t, i18n } = useTranslation();
   const availableTags = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return [];
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -64,7 +64,7 @@ const ImageEditDialog = ({
   }, [i18n.language]);
   const availableLangOptions = useMemo(() => {
     try {
-      const settings = localStorage.getItem('gjpb_app_settings');
+      const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return LANGUAGE_OPTIONS;
       const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
       const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
@@ -114,8 +114,8 @@ const ImageEditDialog = ({
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, pt: 2 }}>
           <TextField label={t('images.form.name')} value={formData.name} onChange={(e) => onFormChange('name', e.target.value)} fullWidth error={!!getFieldError('name')} helperText={getFieldError('name')} />
           <TextField label={t('images.form.originalUrl')} value={formData.originalUrl} onChange={(e) => onFormChange('originalUrl', e.target.value)} fullWidth error={!!getFieldError('originalUrl')} helperText={getFieldError('originalUrl')} placeholder="https://example.com/image.jpg" />
-          <TextField label={t('images.form.filename')} value={formData.filename} onChange={(e) => onFormChange('filename', e.target.value)} fullWidth/>
-          <TextField label={t('images.form.thumbnailFilename')} value={formData.thumbnailFilename} onChange={(e) => onFormChange('thumbnailFilename', e.target.value)} fullWidth/>
+          <TextField label={t('images.form.filename')} value={formData.filename} onChange={(e) => onFormChange('filename', e.target.value)} fullWidth />
+          <TextField label={t('images.form.thumbnailFilename')} value={formData.thumbnailFilename} onChange={(e) => onFormChange('thumbnailFilename', e.target.value)} fullWidth />
 
           <FormControl fullWidth error={!!getFieldError('tags')}>
             <FormLabel sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}>{t('images.form.tags')}</FormLabel>
@@ -145,7 +145,7 @@ const ImageEditDialog = ({
             )}
           </FormControl>
           <TextField label={t('images.form.extension')} value={formData.extension} onChange={(e) => onFormChange('extension', e.target.value)} fullWidth error={!!getFieldError('extension')} helperText={getFieldError('extension')} />
-            <FormControl fullWidth>
+          <FormControl fullWidth>
             <FormLabel>{t('images.form.lang')}</FormLabel>
             <Select value={formData.lang} onChange={(e) => onFormChange('lang', e.target.value)} error={!!getFieldError('lang')}>
               {availableLangOptions.map((option) => (
@@ -156,7 +156,7 @@ const ImageEditDialog = ({
           <TextField label={t('images.form.displayOrder')} value={formData.displayOrder} onChange={(e) => onFormChange('displayOrder', parseInt(e.target.value) || 0)} type="number" fullWidth error={!!getFieldError('displayOrder')} helperText={getFieldError('displayOrder')} />
           <FormControlLabel control={<Switch checked={formData.isActive} onChange={(e) => onFormChange('isActive', e.target.checked)} />} label={t('images.form.isActive')} />
 
-          <TextField label={t('images.form.sourceName')} value={formData.sourceName} onChange={(e) => onFormChange('sourceName', e.target.value)} fullWidth error={!!getFieldError('sourceName')} helperText={getFieldError('sourceName')} />  
+          <TextField label={t('images.form.sourceName')} value={formData.sourceName} onChange={(e) => onFormChange('sourceName', e.target.value)} fullWidth error={!!getFieldError('sourceName')} helperText={getFieldError('sourceName')} />
           <TextField
             label={t('images.form.altText')}
             value={formData.altText}
@@ -173,7 +173,7 @@ const ImageEditDialog = ({
           <TextField label={t('images.form.sizeBytes')} value={formData.sizeBytes} onChange={(e) => onFormChange('sizeBytes', parseInt(e.target.value) || 0)} type="number" fullWidth error={!!getFieldError('sizeBytes')} helperText={getFieldError('sizeBytes')} disabled />
           <TextField label={t('images.form.width')} value={formData.width} onChange={(e) => onFormChange('width', parseInt(e.target.value) || 0)} type="number" fullWidth error={!!getFieldError('width')} helperText={getFieldError('width')} disabled />
           <TextField label={t('images.form.height')} value={formData.height} onChange={(e) => onFormChange('height', parseInt(e.target.value) || 0)} type="number" fullWidth error={!!getFieldError('height')} helperText={getFieldError('height')} disabled />
-          
+
         </Box>
       </DialogContent>
       <DialogActions>

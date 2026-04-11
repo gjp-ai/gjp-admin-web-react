@@ -1,4 +1,5 @@
 import { apiClient } from "../../../../shared-lib/src/api/api-client";
+import type { PaginatedResponse } from "../../../../shared-lib/src/api/api.types";
 
 export interface AppSetting {
   name: string;
@@ -26,17 +27,22 @@ class AppSettingsService {
    */
   public async fetchAppSettings(): Promise<AppSetting[]> {
     try {
-      const response = await apiClient.get<AppSetting[]>(
-        "/v1/public/app-settings",
+      const response = await apiClient.get<PaginatedResponse<AppSetting>>(
+        "/v1/app-settings",
       );
 
       if (response.status.code === 200 && response.data) {
+        // The endpoint returns a paginated response — extract the content array
+        const settings = Array.isArray(response.data)
+          ? (response.data as unknown as AppSetting[])
+          : response.data.content ?? [];
+
         // Store in localStorage
         localStorage.setItem(
-          "gjpb_app_settings",
-          JSON.stringify(response.data),
+          "gjp_app_settings",
+          JSON.stringify(settings),
         );
-        return response.data;
+        return settings;
       } else {
         throw new Error("Failed to fetch app settings");
       }
@@ -51,8 +57,13 @@ class AppSettingsService {
    */
   public getAppSettings(): AppSetting[] | null {
     try {
-      const settings = localStorage.getItem("gjpb_app_settings");
-      return settings ? JSON.parse(settings) : null;
+      const raw = localStorage.getItem("gjp_app_settings");
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      // Guard against stale paginated object being stored in localStorage
+      if (Array.isArray(parsed)) return parsed as AppSetting[];
+      if (parsed && Array.isArray(parsed.content)) return parsed.content as AppSetting[];
+      return null;
     } catch (error) {
       console.error("[AppSettingsService] Get settings error:", error);
       return null;

@@ -28,7 +28,7 @@ class AppSettingsService {
   public async fetchAppSettings(): Promise<AppSetting[]> {
     try {
       const response = await apiClient.get<PaginatedResponse<AppSetting>>(
-        "/v1/app-settings",
+        "/v1/app-settings?size=2000",
       );
 
       if (response.status.code === 200 && response.data) {

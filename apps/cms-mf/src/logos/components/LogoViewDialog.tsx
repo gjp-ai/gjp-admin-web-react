@@ -38,7 +38,7 @@ export const LogoViewDialog = ({
   const { t } = useTranslation();
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  const logoUrl = getFullLogoUrl(logo.fileUrl || logo.filename);
+  const logoUrl = logo.fileUrl;
 
   const handleCopy = async (text: string, fieldName: string) => {
     try {
@@ -100,9 +100,9 @@ export const LogoViewDialog = ({
                   <Avatar
                     src={logoUrl}
                     alt={logo.name}
-                    sx={{ 
-                      width: 80, 
-                      height: 80, 
+                    sx={{
+                      width: 80,
+                      height: 80,
                       boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                       border: (theme) => `2px solid ${theme.palette.background.paper}`
                     }}

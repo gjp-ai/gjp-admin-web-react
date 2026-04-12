@@ -129,7 +129,7 @@ class LogoService {
    * Delete a logo
    */
   async deleteLogo(id: string): Promise<ApiResponse<void>> {
-    return apiClient.delete<void>(`${this.crudUrl}/${id}`);
+    return apiClient.delete<void>(`${this.crudUrl}/${id}/permanent`);
   }
 }
 

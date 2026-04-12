@@ -1,7 +1,7 @@
 /**
  * Returns the full logo URL.
  * It handles absolute URLs, relative filenames, and normalizes backend URLs 
- * to use the '/ai-api' proxy path for better reliability in different environments.
+ * to use the '/gjp-api' proxy path for better reliability in different environments.
  * 
  * @param logoUrl The logo URL or filename stored in the database
  * @returns The normalized full URL for display
@@ -13,12 +13,12 @@ export function getFullLogoUrl(logoUrl: string): string {
 
   // 1. Handle absolute URLs from backend
   // If it points to our own backend (localhost or production), 
-  // we want to use the /ai-api relative path to go through the proxy.
+  // we want to use the /gjp-api relative path to go through the proxy.
   if (normalizedUrl.startsWith('http')) {
-    // Replace localhost:8083/api or ganjianping.com/ai-api with /ai-api
-    normalizedUrl = normalizedUrl.replace(/^https?:\/\/localhost:8083\/api/i, '/ai-api');
-    normalizedUrl = normalizedUrl.replace(/^https?:\/\/www\.ganjianping\.com\/ai-api/i, '/ai-api');
-    
+    // Replace localhost:8083/api or ganjianping.com/gjp-api with /gjp-api
+    normalizedUrl = normalizedUrl.replace(/^https?:\/\/localhost:8083\/api/i, '/gjp-api');
+    normalizedUrl = normalizedUrl.replace(/^https?:\/\/www\.ganjianping\.com\/gjp-api/i, '/gjp-api');
+
     if (normalizedUrl.startsWith('http')) return normalizedUrl;
   }
 
@@ -33,9 +33,9 @@ export function getFullLogoUrl(logoUrl: string): string {
       if (logoBaseUrlSetting && logoBaseUrlSetting.value) {
         let baseUrl = logoBaseUrlSetting.value;
         // Also normalize the base URL setting if it's absolute
-        baseUrl = baseUrl.replace(/^https?:\/\/localhost:8083\/api/i, '/ai-api');
-        baseUrl = baseUrl.replace(/^https?:\/\/www\.ganjianping\.com\/ai-api/i, '/ai-api');
-        
+        baseUrl = baseUrl.replace(/^https?:\/\/localhost:8083\/api/i, '/gjp-api');
+        baseUrl = baseUrl.replace(/^https?:\/\/www\.ganjianping\.com\/gjp-api/i, '/gjp-api');
+
         return baseUrl + (baseUrl.endsWith('/') ? '' : '/') + normalizedUrl;
       }
     }

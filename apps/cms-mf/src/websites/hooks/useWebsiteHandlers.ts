@@ -142,70 +142,69 @@ export const useWebsiteHandlers = ({
   }, [t]);
 
   /**
+   * Helper to save logo and get filename
+   */
+  const saveLogo = async (formData: WebsiteFormData): Promise<string> => {
+    let logoFilename = formData.logoUrl;
+    
+    if (formData.logoUploadMethod === 'none') {
+      logoFilename = formData.logoUrl || '';
+    } else {
+      const logoTags = formData.lang === 'EN' ? 'Website' : '网站';
+      if (formData.logoUploadMethod === 'url') {
+        const logoRes = await logoService.createLogo({
+          name: formData.name,
+          originalUrl: formData.logoUrl,
+          tags: logoTags,
+          lang: formData.lang,
+          displayOrder: formData.displayOrder,
+          isActive: formData.isActive,
+        });
+        if (logoRes.status.code === 200 || logoRes.status.code === 201) {
+          logoFilename = logoRes.data.filename;
+        } else {
+          throw new Error(logoRes.status.message || 'Failed to save logo');
+        }
+      } else if (formData.logoUploadMethod === 'file' && formData.logoFile) {
+        const logoRes = await logoService.createLogoByUpload({
+          file: formData.logoFile,
+          name: formData.name,
+          tags: logoTags,
+          lang: formData.lang,
+          displayOrder: formData.displayOrder,
+          isActive: formData.isActive,
+        });
+        if (logoRes.status.code === 200 || logoRes.status.code === 201) {
+          logoFilename = logoRes.data.filename;
+        } else {
+          throw new Error(logoRes.status.message || 'Failed to upload logo');
+        }
+      }
+    }
+    return logoFilename;
+  };
+
+  /**
    * Handle save operation (create or update)
    */
-  // Create Website Save: Step 1 Save logo, Step 2 Save website
   const handleCreateSave = useCallback(async (
     formData: WebsiteFormData,
     setFormErrors: (errors: Record<string, string[] | string>) => void
   ) => {
     const validationErrors = validateForm(formData);
-    // Logo validation
-    if (formData.logoUploadMethod === 'url') {
-      if (!formData.logoUrl?.trim()) {
-        validationErrors.logoUrl = 'Logo URL is required.';
-      }
-    } else if (formData.logoUploadMethod === 'file') {
-      if (!formData.logoFile) {
-        validationErrors.logoFile = 'Logo file is required.';
-      }
+    if (formData.logoUploadMethod === 'url' && !formData.logoUrl?.trim()) {
+      validationErrors.logoUrl = 'Logo URL is required.';
+    } else if (formData.logoUploadMethod === 'file' && !formData.logoFile) {
+      validationErrors.logoFile = 'Logo file is required.';
     }
+    
     if (Object.keys(validationErrors).length > 0) {
       setFormErrors(validationErrors);
       return false;
     }
+
     try {
-      // Step 1: Save logo (skip if method is 'none')
-      let logoFilename = formData.logoUrl;
-      
-      if (formData.logoUploadMethod === 'none') {
-        // Skip logo saving, use empty string or existing logoUrl
-        logoFilename = formData.logoUrl || '';
-      } else {
-        // Set logo tags value based on lang
-        const logoTags = formData.lang === 'EN' ? 'Website' : '网站';
-        if (formData.logoUploadMethod === 'url') {
-          const logoRes = await logoService.createLogo({
-            name: formData.name,
-            originalUrl: formData.logoUrl,
-            tags: logoTags,
-            lang: formData.lang,
-            displayOrder: formData.displayOrder,
-            isActive: formData.isActive,
-          });
-          if (logoRes.status.code === 200 || logoRes.status.code === 201) {
-            logoFilename = logoRes.data.filename;
-          } else {
-            throw new Error(logoRes.status.message || 'Failed to save logo');
-          }
-        } else if (formData.logoUploadMethod === 'file' && formData.logoFile) {
-          const logoRes = await logoService.createLogoByUpload({
-            file: formData.logoFile,
-            name: formData.name,
-            tags: logoTags,
-            lang: formData.lang,
-            displayOrder: formData.displayOrder,
-            isActive: formData.isActive,
-          });
-          if (logoRes.status.code === 200 || logoRes.status.code === 201) {
-            logoFilename = logoRes.data.filename;
-          } else {
-            throw new Error(logoRes.status.message || 'Failed to upload logo');
-          }
-        }
-      }
-      
-      // Step 2: Save website with logo filename
+      const logoFilename = await saveLogo(formData);
       const websiteFormData = { ...formData, logoUrl: logoFilename };
       const successMessage = await createWebsite(websiteFormData);
       onSuccess(successMessage);
@@ -224,23 +223,35 @@ export const useWebsiteHandlers = ({
     }
   }, [t, validateForm, createWebsite, onSuccess, onError, onRefresh]);
 
-  // Edit Website Save: Only call website API
   const handleEditSave = useCallback(async (
     formData: WebsiteFormData,
     selectedWebsite: Website | null,
     setFormErrors: (errors: Record<string, string[] | string>) => void
   ) => {
     const validationErrors = validateForm(formData);
-    if (!formData.logoUrl?.trim()) {
+    if (formData.logoUploadMethod === 'url' && !formData.logoUrl?.trim()) {
       validationErrors.logoUrl = 'Logo URL is required.';
+    } else if (formData.logoUploadMethod === 'file' && !formData.logoFile) {
+      validationErrors.logoFile = 'Logo file is required.';
     }
+
     if (Object.keys(validationErrors).length > 0) {
       setFormErrors(validationErrors);
       return false;
     }
+
     try {
       if (selectedWebsite) {
-        const successMessage = await updateWebsite(selectedWebsite.id, formData);
+        let logoFilename = formData.logoUrl;
+        // Only trigger logo save if method is not 'url' (which means it's likely a new file or none)
+        // OR if it's a new URL that's different from the original (though handleCreateSave always creates a new logo entry)
+        // To keep it simple and consistent with Create, we recreate the logo entry if not 'url' or if it's a new upload.
+        if (formData.logoUploadMethod !== 'url' || (formData.logoUrl !== selectedWebsite.logoUrl && !formData.logoUrl.startsWith('http'))) {
+           logoFilename = await saveLogo(formData);
+        }
+
+        const websiteFormData = { ...formData, logoUrl: logoFilename };
+        const successMessage = await updateWebsite(selectedWebsite.id, websiteFormData);
         onSuccess(successMessage);
         onRefresh();
         return true;

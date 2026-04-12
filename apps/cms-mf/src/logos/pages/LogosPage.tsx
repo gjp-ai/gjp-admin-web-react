@@ -46,7 +46,7 @@ const LogosPage = () => {
     const { handleSave, handleDelete: handleDeleteLogo } = useLogoHandlers({
       onSuccess: showSuccess,
       onError: showError,
-      onRefresh: () => {}, // Optionally reload logos if needed
+      onRefresh: () => loadLogos(), // Automatically reload logos after success
     });
   // =========================================================================
   // Dialog Management (UI State Only)
@@ -179,8 +179,6 @@ const LogosPage = () => {
       );
       if (success) {
         handleClose();
-        // Refresh logo table after create/update
-        await loadLogos({ sort: 'updateAt', direction: 'desc' });
       }
     } finally {
       setDialogLoading(false);
@@ -193,8 +191,6 @@ const LogosPage = () => {
       const success = await handleDeleteLogo(selectedLogo);
       if (success) {
         handleClose();
-        // Refresh logo table after delete
-        await loadLogos({ sort: 'updateAt', direction: 'desc' });
       }
     } finally {
       setDialogLoading(false);

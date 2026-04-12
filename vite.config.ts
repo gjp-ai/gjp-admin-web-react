@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
   const isDev = mode === 'development';
 
   return {
-    base: '/ai-admin/',
+    base: '/gjp-admin/',
     plugins: [react()],
     resolve: {
       alias: {
@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
       strictPort: true, // Force port 3000, fail if busy
       cors: true, // Enable CORS for the dev server
       proxy: {
-        '/ai-api': {
+        '/gjp-api': {
           target: 'http://localhost:8083',
           // target: 'https://www.ganjianping.com',
           changeOrigin: true,

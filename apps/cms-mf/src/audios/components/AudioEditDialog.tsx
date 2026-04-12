@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { AudioFormData } from '../types/audio.types';
 import { LANGUAGE_OPTIONS } from '../constants';
 import TiptapTextEditor from '../../../../shared-lib/src/ui-components/rich-text/tiptap/tiptapTextEditor';
+import { getFullAudioUrl } from '../utils/getFullAudioUrl';
 
 interface AudioEditDialogProps {
   open: boolean;

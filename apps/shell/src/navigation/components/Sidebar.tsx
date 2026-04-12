@@ -35,9 +35,6 @@ import {
   Folder,
   Lock,
   HelpCircle,
-  BookOpen,
-  Edit,
-  CheckSquare,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 

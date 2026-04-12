@@ -20,7 +20,6 @@ import { format, parseISO } from 'date-fns';
 import '../i18n/translations';
 import { Eye, Image, Tag, Hash, CheckCircle2, XCircle, ExternalLink, Calendar, User, Copy, Check } from 'lucide-react';
 import type { Logo } from '../types/logo.types';
-import { getFullLogoUrl } from '../../common/utils/getFullLogoUrl';
 
 interface LogoViewDialogProps {
   open: boolean;

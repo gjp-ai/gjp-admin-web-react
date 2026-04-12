@@ -4,6 +4,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, B
 import { useTranslation } from 'react-i18next';
 import type { VideoFormData } from '../types/video.types';
 import { LANGUAGE_OPTIONS } from '../constants';
+import { getFullVideoUrl } from '../utils/getFullVideoUrl';
 
 interface VideoEditDialogProps {
 	open: boolean;

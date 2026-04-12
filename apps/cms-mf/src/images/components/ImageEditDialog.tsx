@@ -25,6 +25,7 @@ import '../i18n/translations';
 import { Edit, ImageIcon } from 'lucide-react';
 import type { ImageFormData } from '../types/image.types';
 import { LANGUAGE_OPTIONS } from '../constants';
+import { getFullImageUrl } from '../utils/getFullImageUrl';
 
 interface ImageEditDialogProps {
   open: boolean;

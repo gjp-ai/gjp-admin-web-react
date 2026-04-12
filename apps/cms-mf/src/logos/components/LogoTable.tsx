@@ -1,5 +1,5 @@
 import { Box, Chip, Typography, Avatar } from '@mui/material';
-import { Image, Globe } from 'lucide-react';
+import { Image } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { memo, useMemo } from 'react';
 import '../i18n/translations';

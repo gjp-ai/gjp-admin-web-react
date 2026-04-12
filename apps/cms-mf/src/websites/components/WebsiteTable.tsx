@@ -47,32 +47,39 @@ export const WebsiteTable = memo(({
       cell: (info) => {
         const website = info.row.original;
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            {website.logoUrl ? (
-              (() => {
-                const logoSrc = getFullLogoUrl(website.logoUrl);
-                return (
-                  <Avatar
-                    src={logoSrc}
-                    alt={info.getValue()}
-                    sx={{ width: 32, height: 32 }}
-                    variant="rounded"
-                  />
-                );
-              })()
-            ) : (
-              <Avatar
-                sx={{ 
-                  width: 32, 
-                  height: 32,
-                  bgcolor: 'primary.main',
-                }}
-                variant="rounded"
-              >
-                <Globe size={16} />
-              </Avatar>
-            )}
-            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ width: 40, height: 40, flexShrink: 0 }}>
+              {website.logoUrl ? (
+                <Avatar
+                  src={getFullLogoUrl(website.logoUrl)}
+                  alt={info.getValue()}
+                  sx={{ 
+                    width: 40, 
+                    height: 40,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                    border: (theme) => `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+                    transition: 'transform 0.2s',
+                    '&:hover': {
+                      transform: 'scale(1.1)',
+                    }
+                  }}
+                  variant="rounded"
+                />
+              ) : (
+                <Avatar
+                  sx={{ 
+                    width: 40, 
+                    height: 40,
+                    bgcolor: 'primary.main',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  }}
+                  variant="rounded"
+                >
+                  <Globe size={20} />
+                </Avatar>
+              )}
+            </Box>
+            <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
               {info.getValue()}
             </Typography>
           </Box>

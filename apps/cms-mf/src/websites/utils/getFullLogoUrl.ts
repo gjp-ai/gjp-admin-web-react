@@ -1,7 +1,28 @@
-// Returns the full logo URL, prepending logo_base_url from localStorage if needed
+/**
+ * Returns the full logo URL.
+ * It handles absolute URLs, relative filenames, and normalizes backend URLs 
+ * to use the '/ai-api' proxy path for better reliability in different environments.
+ * 
+ * @param logoUrl The logo URL or filename stored in the database
+ * @returns The normalized full URL for display
+ */
 export function getFullLogoUrl(logoUrl: string): string {
   if (!logoUrl) return '';
-  if (logoUrl.startsWith('http')) return logoUrl;
+
+  let normalizedUrl = logoUrl;
+
+  // 1. Handle absolute URLs from backend
+  // If it points to our own backend (localhost or production), 
+  // we want to use the /ai-api relative path to go through the proxy.
+  if (normalizedUrl.startsWith('http')) {
+    // Replace localhost:8083/api or ganjianping.com/ai-api with /ai-api
+    normalizedUrl = normalizedUrl.replace(/^https?:\/\/localhost:8083\/api/i, '/ai-api');
+    normalizedUrl = normalizedUrl.replace(/^https?:\/\/www\.ganjianping\.com\/ai-api/i, '/ai-api');
+    
+    if (normalizedUrl.startsWith('http')) return normalizedUrl;
+  }
+
+  // 2. Handle relative filenames using app settings (fallback)
   try {
     const settings = localStorage.getItem('gjp_app_settings');
     if (settings) {
@@ -10,11 +31,17 @@ export function getFullLogoUrl(logoUrl: string): string {
         (setting: any) => setting.name === 'logo_base_url'
       );
       if (logoBaseUrlSetting && logoBaseUrlSetting.value) {
-        return logoBaseUrlSetting.value + '/' + logoUrl;
+        let baseUrl = logoBaseUrlSetting.value;
+        // Also normalize the base URL setting if it's absolute
+        baseUrl = baseUrl.replace(/^https?:\/\/localhost:8083\/api/i, '/ai-api');
+        baseUrl = baseUrl.replace(/^https?:\/\/www\.ganjianping\.com\/ai-api/i, '/ai-api');
+        
+        return baseUrl + (baseUrl.endsWith('/') ? '' : '/') + normalizedUrl;
       }
     }
   } catch (err) {
-    // fallback: use original logoUrl
+    // Fallback if settings parsing fails
   }
-  return logoUrl;
+
+  return normalizedUrl;
 }

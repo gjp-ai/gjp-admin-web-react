@@ -84,26 +84,34 @@ export const WebsiteViewDialog = ({
             <CardContent sx={{ p: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 {website.logoUrl ? (
-                  <Avatar
-                    src={getFullLogoUrl(website.logoUrl)}
-                    alt={website.name}
-                    sx={{ width: 64, height: 64 }}
-                    variant="rounded"
-                  />
+                  <Box sx={{ position: 'relative' }}>
+                    <Avatar
+                      src={getFullLogoUrl(website.logoUrl)}
+                      alt={website.name}
+                      sx={{ 
+                        width: 80, 
+                        height: 80, 
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        border: (theme) => `2px solid ${theme.palette.background.paper}`
+                      }}
+                      variant="rounded"
+                    />
+                  </Box>
                 ) : (
                   <Avatar
                     sx={{ 
-                      width: 64, 
-                      height: 64,
+                      width: 80, 
+                      height: 80,
                       bgcolor: 'primary.main',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                     }}
                     variant="rounded"
                   >
-                    <Globe size={32} />
+                    <Globe size={40} />
                   </Avatar>
                 )}
                 <Box sx={{ flex: 1 }}>
-                  <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
+                  <Typography variant="h4" sx={{ fontWeight: 800, mb: 0.5, letterSpacing: '-0.02em' }}>
                     {website.name}
                   </Typography>
                   <Link
@@ -111,23 +119,32 @@ export const WebsiteViewDialog = ({
                     target="_blank"
                     rel="noopener noreferrer"
                     sx={{ 
-                      display: 'flex', 
+                      display: 'inline-flex', 
                       alignItems: 'center', 
-                      gap: 0.5,
+                      gap: 0.75,
                       textDecoration: 'none',
                       color: 'primary.main',
-                      '&:hover': { textDecoration: 'underline' },
+                      fontWeight: 600,
+                      p: '4px 12px',
+                      borderRadius: '20px',
+                      bgcolor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+                      transition: 'all 0.2s',
+                      '&:hover': { 
+                        bgcolor: 'primary.main',
+                        color: 'white'
+                      },
                     }}
                   >
                     <Globe size={14} />
-                    <Typography variant="body2">{website.url}</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 'inherit' }}>{website.url}</Typography>
                   </Link>
                 </Box>
                 <Chip
                   icon={website.isActive ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
                   label={website.isActive ? t('websites.status.active') : t('websites.status.inactive')}
+                  variant={website.isActive ? 'filled' : 'outlined'}
                   color={website.isActive ? 'success' : 'default'}
-                  sx={{ fontWeight: 600 }}
+                  sx={{ fontWeight: 700, borderRadius: '8px', height: 32 }}
                 />
               </Box>
             </CardContent>

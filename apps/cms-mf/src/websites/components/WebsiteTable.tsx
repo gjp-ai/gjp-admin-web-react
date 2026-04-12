@@ -1,5 +1,5 @@
 import { Box, Chip, Typography, Avatar } from '@mui/material';
-import { getFullLogoUrl } from '../utils/getFullLogoUrl';
+import { getFullLogoUrl } from '../../common/utils/getFullLogoUrl';
 import { Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { memo, useMemo } from 'react';

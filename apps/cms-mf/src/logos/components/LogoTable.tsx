@@ -1,76 +1,5 @@
-// Cell renderers moved outside LogoTable for performance and lint compliance
-function NameCell({ info, logoBaseUrl }: { info: any, logoBaseUrl: string | null }) {
-  const logo = info.row.original;
-  const logoUrl = logoBaseUrl && logo.filename ? `${logoBaseUrl}${logo.filename}` : null;
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-      {logoUrl ? (
-        <Avatar src={logoUrl} alt={info.getValue()} sx={{ width: 32, height: 32 }} variant="rounded" />
-      ) : (
-        <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }} variant="rounded">
-          <Image size={16} />
-        </Avatar>
-      )}
-      <Typography variant="body2" sx={{ fontWeight: 500 }}>{info.getValue()}</Typography>
-    </Box>
-  );
-}
-
-function ExtensionCell({ info }: { info: any }) {
-  const value = info.getValue();
-  return (
-    <Chip
-      label={value || '-'}
-      size="small"
-      variant="outlined"
-      sx={{ fontSize: '0.75rem', height: 24 }}
-    />
-  );
-}
-
-function LangCell({ info }: { info: any }) {
-  return (
-    <Chip
-      label={info.getValue()}
-      size="small"
-      variant="outlined"
-      sx={{ fontSize: '0.75rem', height: 24 }}
-    />
-  );
-}
-
-function TagsCell({ info }: { info: any }) {
-  const tags = info.getValue();
-  return (
-    <Typography
-      variant="body2"
-      sx={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-      title={tags}
-    >
-      {tags || '-'}
-    </Typography>
-  );
-}
-
-function DisplayOrderCell({ info }: { info: any }) {
-  return <Typography variant="body2">{info.getValue()}</Typography>;
-}
-
-function IsActiveCell({ info }: { info: any }) {
-  const isActive = info.getValue();
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      {createStatusChip(isActive.toString(), STATUS_MAPS.active)}
-    </Box>
-  );
-}
-
-function UpdatedAtCell({ info }: { info: any }) {
-  const date = info.getValue();
-  return date ? format(parseISO(date), 'MMM dd, yyyy') : '-';
-}
 import { Box, Chip, Typography, Avatar } from '@mui/material';
-import { Image } from 'lucide-react';
+import { Image, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { memo, useMemo } from 'react';
 import '../i18n/translations';
@@ -80,6 +9,7 @@ import { format, parseISO } from 'date-fns';
 import { STATUS_MAPS } from '../constants';
 import { LogoTableSkeleton } from './LogoTableSkeleton';
 import { useLogoActionMenu } from '../hooks';
+import { getFullLogoUrl } from '../../common/utils/getFullLogoUrl';
 
 interface LogoTableProps {
   logos: Logo[];
@@ -105,28 +35,6 @@ export const LogoTable = memo(({
 }: LogoTableProps) => {
   const { t } = useTranslation();
 
-  // Get logo base URL from local storage
-  const logoBaseUrl = useMemo(() => {
-    try {
-      const settings = localStorage.getItem('gjp_app_settings');
-      if (!settings) return null;
-
-      const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
-      const logoBaseUrlSetting = appSettings.find(
-        (setting) => setting.name === 'logo_base_url'
-      );
-
-      if (!logoBaseUrlSetting) return null;
-
-      return logoBaseUrlSetting.value.endsWith('/')
-        ? logoBaseUrlSetting.value
-        : `${logoBaseUrlSetting.value}/`;
-    } catch (error) {
-      console.error('[LogoTable] Error loading logo base URL:', error);
-      return null;
-    }
-  }, []);
-
   // Get action menu items from hook
   const actionMenuItems = useLogoActionMenu({
     onView: (logo: Logo) => onLogoAction(logo, 'view'),
@@ -139,33 +47,111 @@ export const LogoTable = memo(({
   const columns = useMemo(() => [
     columnHelper.accessor('name', {
       header: t('logos.columns.name'),
-      cell: (info) => <NameCell info={info} logoBaseUrl={logoBaseUrl} />,
+      cell: (info) => {
+        const logo = info.row.original;
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ width: 40, height: 40, flexShrink: 0 }}>
+              {logo.fileUrl || logo.filename ? (
+                <Avatar
+                  src={getFullLogoUrl(logo.fileUrl || logo.filename)}
+                  alt={info.getValue()}
+                  sx={{ 
+                    width: 40, 
+                    height: 40,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                    border: (theme) => `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+                    transition: 'transform 0.2s',
+                    '&:hover': {
+                      transform: 'scale(1.1)',
+                    }
+                  }}
+                  variant="rounded"
+                />
+              ) : (
+                <Avatar
+                  sx={{ 
+                    width: 40, 
+                    height: 40,
+                    bgcolor: 'primary.main',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  }}
+                  variant="rounded"
+                >
+                  <Image size={20} />
+                </Avatar>
+              )}
+            </Box>
+            <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+              {info.getValue()}
+            </Typography>
+          </Box>
+        );
+      },
     }),
     columnHelper.accessor('extension', {
       header: t('logos.columns.extension'),
-      cell: (info) => <ExtensionCell info={info} />,
+      cell: (info) => {
+        const value = info.getValue();
+        return (
+          <Chip
+            label={value || '-'}
+            size="small"
+            variant="outlined"
+            sx={{ fontSize: '0.75rem', height: 24, fontWeight: 600 }}
+          />
+        );
+      },
     }),
     columnHelper.accessor('lang', {
       header: t('logos.columns.lang'),
-      cell: (info) => <LangCell info={info} />,
+      cell: (info) => (
+        <Chip
+          label={info.getValue()}
+          size="small"
+          variant="outlined"
+          sx={{ fontSize: '0.75rem', height: 24 }}
+        />
+      ),
     }),
     columnHelper.accessor('tags', {
       header: t('logos.columns.tags'),
-      cell: (info) => <TagsCell info={info} />,
+      cell: (info) => {
+        const tags = info.getValue();
+        return (
+          <Typography
+            variant="body2"
+            sx={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+            title={tags}
+          >
+            {tags || '-'}
+          </Typography>
+        );
+      },
     }),
     columnHelper.accessor('displayOrder', {
       header: t('logos.columns.displayOrder'),
-      cell: (info) => <DisplayOrderCell info={info} />,
+      cell: (info) => <Typography variant="body2">{info.getValue()}</Typography>,
     }),
     columnHelper.accessor('isActive', {
       header: t('logos.columns.isActive'),
-      cell: (info) => <IsActiveCell info={info} />,
+      cell: (info) => {
+        const isActive = info.getValue();
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            {createStatusChip(isActive.toString(), STATUS_MAPS.active)}
+          </Box>
+        );
+      },
     }),
     columnHelper.accessor('updatedAt', {
       header: t('logos.columns.updatedAt'),
-      cell: (info) => <UpdatedAtCell info={info} />,
+      cell: (info) => {
+        const date = info.getValue();
+        return date ? format(parseISO(date), 'MMM dd, yyyy') : '-';
+      },
     }),
-  ], [t, logoBaseUrl]);
+  ], [t]);
 
   // Show skeleton loader while loading
   if (loading && !logos.length) {

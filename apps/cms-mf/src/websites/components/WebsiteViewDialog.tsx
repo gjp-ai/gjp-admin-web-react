@@ -15,7 +15,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import '../i18n/translations'; // Initialize websites translations
 import { Eye, Globe, Tag, Hash, CheckCircle2, XCircle } from 'lucide-react';
-import { getFullLogoUrl } from '../utils/getFullLogoUrl';
+import { getFullLogoUrl } from '../../common/utils/getFullLogoUrl';
 import { LANGUAGE_OPTIONS } from '../constants';
 
 import type { Website } from '../types/website.types';

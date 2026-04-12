@@ -15,11 +15,12 @@ import {
   Tooltip,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import '../i18n/translations';
 import { Eye, Image, Tag, Hash, CheckCircle2, XCircle, ExternalLink, Calendar, User, Copy, Check } from 'lucide-react';
 import type { Logo } from '../types/logo.types';
+import { getFullLogoUrl } from '../../common/utils/getFullLogoUrl';
 
 interface LogoViewDialogProps {
   open: boolean;
@@ -37,29 +38,7 @@ export const LogoViewDialog = ({
   const { t } = useTranslation();
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  // Get logo base URL from local storage and construct full logo URL
-  const logoUrl = useMemo(() => {
-    try {
-      const settings = localStorage.getItem('gjp_app_settings');
-      if (!settings || !logo.filename) return null;
-
-      const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
-      const logoBaseUrlSetting = appSettings.find(
-        (setting) => setting.name === 'logo_base_url'
-      );
-
-      if (!logoBaseUrlSetting) return null;
-
-      const baseUrl = logoBaseUrlSetting.value.endsWith('/')
-        ? logoBaseUrlSetting.value
-        : `${logoBaseUrlSetting.value}/`;
-
-      return `${baseUrl}${logo.filename}`;
-    } catch (error) {
-      console.error('[LogoViewDialog] Error constructing logo URL:', error);
-      return null;
-    }
-  }, [logo.filename]);
+  const logoUrl = getFullLogoUrl(logo.fileUrl || logo.filename);
 
   const handleCopy = async (text: string, fieldName: string) => {
     try {
@@ -121,23 +100,29 @@ export const LogoViewDialog = ({
                   <Avatar
                     src={logoUrl}
                     alt={logo.name}
-                    sx={{ width: 64, height: 64 }}
+                    sx={{ 
+                      width: 80, 
+                      height: 80, 
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                      border: (theme) => `2px solid ${theme.palette.background.paper}`
+                    }}
                     variant="rounded"
                   />
                 ) : (
                   <Avatar
                     sx={{
-                      width: 64,
-                      height: 64,
+                      width: 80,
+                      height: 80,
                       bgcolor: 'primary.main',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                     }}
                     variant="rounded"
                   >
-                    <Image size={32} />
+                    <Image size={40} />
                   </Avatar>
                 )}
                 <Box sx={{ flex: 1 }}>
-                  <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
+                  <Typography variant="h4" sx={{ fontWeight: 800, mb: 0.5, letterSpacing: '-0.02em' }}>
                     {logo.name}
                   </Typography>
                   {
@@ -148,18 +133,24 @@ export const LogoViewDialog = ({
                           target="_blank"
                           rel="noopener noreferrer"
                           sx={{
-                            display: 'flex',
+                            display: 'inline-flex',
                             alignItems: 'center',
-                            gap: 0.5,
+                            gap: 0.75,
                             textDecoration: 'none',
                             color: 'primary.main',
-                            wordBreak: 'break-all',
-                            flex: 1,
-                            '&:hover': { textDecoration: 'underline' },
+                            fontWeight: 600,
+                            p: '4px 12px',
+                            borderRadius: '20px',
+                            bgcolor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+                            transition: 'all 0.2s',
+                            '&:hover': {
+                              bgcolor: 'primary.main',
+                              color: 'white'
+                            },
                           }}
                         >
                           <ExternalLink size={14} />
-                          <Typography variant="body2">{logoUrl}</Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 'inherit' }}>{logoUrl}</Typography>
                         </Link>
                         <Tooltip title={copiedField === 'imageUrl' ? t('logos.messages.filenameCopied') : 'Copy'}>
                           <IconButton
@@ -177,8 +168,9 @@ export const LogoViewDialog = ({
                 <Chip
                   icon={logo.isActive ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
                   label={logo.isActive ? t('logos.status.active') : t('logos.status.inactive')}
+                  variant={logo.isActive ? 'filled' : 'outlined'}
                   color={logo.isActive ? 'success' : 'default'}
-                  sx={{ fontWeight: 600 }}
+                  sx={{ fontWeight: 700, borderRadius: '8px', height: 32 }}
                 />
               </Box>
             </CardContent>

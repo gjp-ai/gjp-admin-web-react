@@ -4,6 +4,7 @@ export interface Logo {
   name: string;
   originalUrl: string | null;
   filename: string;
+  fileUrl: string;
   extension: string;
   logoUrl: string;
   tags: string;

@@ -47,7 +47,9 @@ const AudiosPage: React.FC = () => {
   const audioToFormData = (audio: Audio) => ({
     name: audio.name || '',
     filename: audio.filename || '',
+    fileUrl: audio.fileUrl || '',
     coverImageFilename: audio.coverImageFilename || '',
+    coverImageUrl: audio.coverImageUrl || '',
     subtitle: audio.subtitle || '',
     coverImageFile: null,
     description: audio.description || '',

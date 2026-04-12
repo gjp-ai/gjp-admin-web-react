@@ -13,8 +13,8 @@ import { getFullImageUrl } from '../utils/getFullImageUrl';
 // import { useImageActionMenu } from '../hooks';
 
 function NameCell({ info }: { info: any }) {
-  const image = info.row.original;
-  const imageUrl = getFullImageUrl(image.thumbnailFilename || image.filename || '');
+  const image = info.row.original as Image;
+  const imageUrl = image.thumbnailUrl || image.fileUrl || getFullImageUrl(image.thumbnailFilename || image.filename || '');
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
       {imageUrl ? (

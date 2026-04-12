@@ -38,8 +38,8 @@ const ImageViewDialog = ({
   const { t } = useTranslation();
   const [copiedField, setCopiedField] = useState<string | null>(null);
   // Full URLs for filename and thumbnailFilename
-  const filenameUrl = useMemo(() => getFullImageUrl(image.filename || ''), [image.filename]);
-  const thumbnailUrl = useMemo(() => getFullImageUrl(image.thumbnailFilename || ''), [image.thumbnailFilename]);
+  const filenameUrl = useMemo(() => image.fileUrl || getFullImageUrl(image.filename || ''), [image.fileUrl, image.filename]);
+  const thumbnailUrl = useMemo(() => image.thumbnailUrl || getFullImageUrl(image.thumbnailFilename || ''), [image.thumbnailUrl, image.thumbnailFilename]);
   const sizeInKB = useMemo(() => {
     try {
       const bytes = Number(image.sizeBytes || 0);

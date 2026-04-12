@@ -96,6 +96,27 @@ const AudioEditDialog: React.FC<AudioEditDialogProps> = ({ open, formData, onFor
           <TextField label={t('audios.form.name') || 'Name'} value={formData.name} onChange={e => onFormChange('name', e.target.value)} fullWidth />
           <TextField label={t('audios.form.artist') || 'Artist'} value={(formData as any).artist || ''} onChange={e => onFormChange('artist' as any, e.target.value)} fullWidth />
           <TextField label={t('audios.form.filename') || 'Filename'} value={(formData as any).filename || ''} onChange={e => onFormChange('filename' as any, e.target.value)} fullWidth />
+          
+          {/* Cover Image Preview */}
+          {(formData.coverImageUrl || formData.coverImageFilename) && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', my: 1 }}>
+              <Box
+                component="img"
+                src={formData.coverImageUrl || getFullAudioUrl(`/cover-images/${formData.coverImageFilename}`)}
+                alt={formData.name}
+                sx={{
+                  maxWidth: '100%',
+                  maxHeight: 150,
+                  borderRadius: 1,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  objectFit: 'contain'
+                }}
+              />
+            </Box>
+          )}
+
           <Box>
             <Typography variant="subtitle2">{t('audios.form.coverImageFile') || 'Cover Image File'}</Typography>
             <input type="file" accept="image/*" onChange={handleCoverFileChange} />

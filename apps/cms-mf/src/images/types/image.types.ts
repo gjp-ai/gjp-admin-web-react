@@ -5,7 +5,9 @@ export interface Image {
   originalUrl: string;
   sourceName: string;
   filename: string;
+  fileUrl?: string;
   thumbnailFilename: string;
+  thumbnailUrl?: string;
   extension: string;
   mimeType: string;
   sizeBytes: number;
@@ -44,7 +46,9 @@ export interface ImageFormData {
   originalUrl: string;
   sourceName: string;
   filename: string;
+  fileUrl?: string;
   thumbnailFilename: string;
+  thumbnailUrl?: string;
   extension: string;
   mimeType: string;
   sizeBytes: number;

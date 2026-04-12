@@ -99,7 +99,7 @@ class FileService {
    * Delete file
    */
   async deleteFile(id: string): Promise<ApiResponse<void>> {
-    return apiClient.delete(`${this.crudUrl}/${id}`);
+    return apiClient.delete(`${this.crudUrl}/${id}/permanent`);
   }
 }
 

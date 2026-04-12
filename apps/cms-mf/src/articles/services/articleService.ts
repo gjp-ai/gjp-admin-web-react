@@ -143,7 +143,7 @@ class ArticleService {
   }
 
   async deleteArticle(id: string): Promise<ApiResponse<void>> {
-    return apiClient.delete(`${this.crudUrl}/${id}`);
+    return apiClient.delete(`${this.crudUrl}/${id}/permanent`);
   }
 
   async getArticleImages(articleId: string): Promise<ApiResponse<ArticleImage[]>> {

@@ -13,7 +13,7 @@ import { getFullAudioUrl } from '../utils/getFullAudioUrl';
 
 function NameCell({ info }: Readonly<{ info: any }>) {
   const audio = info.row.original as Audio;
-  const coverUrl = audio.coverImageFilename ? `${getFullAudioUrl('/cover-images')}/${audio.coverImageFilename}` : '';
+  const coverUrl = audio.coverImageUrl || (audio.coverImageFilename ? `${getFullAudioUrl('/cover-images')}/${audio.coverImageFilename}` : '');
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
       <Avatar src={coverUrl} alt={audio.name} sx={{ width: 60, height: 40 }} variant="rounded">

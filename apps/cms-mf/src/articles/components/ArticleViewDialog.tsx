@@ -42,7 +42,11 @@ const ArticleViewDialog = ({ open, article, onClose, onEdit }: ArticleViewDialog
   const [contentExpanded, setContentExpanded] = useState(false);
   const [images, setImages] = useState<ArticleImage[]>([]);
   const contentContainerRef = useRef<HTMLDivElement | null>(null);
-  const coverUrl = useMemo(() => (article.coverImageFilename ? getFullArticleCoverImageUrl(`/${article.coverImageFilename}`) : article.coverImageOriginalUrl || ''), [article.coverImageFilename, article.coverImageOriginalUrl]);
+  const coverUrl = useMemo(() => {
+    if (article.coverImageUrl) return article.coverImageUrl;
+    if (article.coverImageFilename) return getFullArticleCoverImageUrl(article.coverImageFilename);
+    return article.coverImageOriginalUrl || '';
+  }, [article.coverImageUrl, article.coverImageFilename, article.coverImageOriginalUrl]);
 
   useEffect(() => {
     if (open && article.id) {

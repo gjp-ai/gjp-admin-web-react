@@ -83,14 +83,14 @@ const ArticleEditDialog: React.FC<ArticleEditDialogProps> = ({
     if (formData.coverImageFile) {
       return URL.createObjectURL(formData.coverImageFile);
     }
+    if (formData.coverImageUrl) {
+      return formData.coverImageUrl;
+    }
     if (formData.coverImageFilename) {
-      return getFullArticleCoverImageUrl(`/${formData.coverImageFilename}`);
+      return getFullArticleCoverImageUrl(formData.coverImageFilename);
     }
-    if (formData.coverImageOriginalUrl) {
-      return formData.coverImageOriginalUrl;
-    }
-    return '';
-  }, [formData.coverImageFile, formData.coverImageOriginalUrl, formData.coverImageFilename]);
+    return formData.coverImageOriginalUrl || '';
+  }, [formData.coverImageFile, formData.coverImageUrl, formData.coverImageOriginalUrl, formData.coverImageFilename]);
 
   useEffect(() => {
     return () => {

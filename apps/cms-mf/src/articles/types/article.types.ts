@@ -6,6 +6,7 @@ export interface Article {
   originalUrl?: string | null;
   sourceName?: string | null;
   coverImageFilename?: string | null;
+  coverImageUrl?: string | null;
   coverImageOriginalUrl?: string | null;
   tags?: string | null;
   lang?: string | null;
@@ -34,6 +35,7 @@ export interface ArticleFormData {
   originalUrl: string;
   sourceName: string;
   coverImageFilename: string;
+  coverImageUrl: string;
   coverImageOriginalUrl: string;
   tags: string;
   lang: string;

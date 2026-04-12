@@ -47,7 +47,9 @@ const VideosPage: React.FC = () => {
   const videoToFormData = (video: Video) => ({
     name: video.name || '',
     filename: video.filename || '',
+    fileUrl: video.fileUrl || '',
     coverImageFilename: video.coverImageFilename || '',
+    coverImageUrl: video.coverImageUrl || '',
     coverImageFile: null,
     description: video.description || '',
     sourceName: video.sourceName || '',

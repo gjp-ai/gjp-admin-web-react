@@ -7,6 +7,7 @@ export const getEmptyArticleFormData = (lang = 'EN'): ArticleFormData => ({
   originalUrl: '',
   sourceName: '',
   coverImageFilename: '',
+  coverImageUrl: '',
   coverImageOriginalUrl: '',
   tags: '',
   lang,

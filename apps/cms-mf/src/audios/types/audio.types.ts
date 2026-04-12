@@ -3,8 +3,10 @@ export interface Audio {
   name: string;
   subtitle?: string | null;
   filename: string;
+  fileUrl?: string;
   sizeBytes: number;
   coverImageFilename: string;
+  coverImageUrl?: string;
   // optional fields returned by the API
   originalUrl?: string | null;
   sourceName?: string | null;
@@ -34,7 +36,9 @@ export interface AudioFormData {
   name: string;
   subtitle?: string;
   filename: string;
+  fileUrl?: string;
   coverImageFilename: string;
+  coverImageUrl?: string;
   sourceName?: string;
   originalUrl?: string;
   artist?: string;

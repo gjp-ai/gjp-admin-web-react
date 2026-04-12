@@ -11,7 +11,7 @@ import { getFullArticleCoverImageUrl } from '../utils/getFullArticleCoverImageUr
 
 function TitleCell({ info }: Readonly<{ info: any }>) {
   const article = info.row.original as Article;
-  const coverUrl = getFullArticleCoverImageUrl(`/${article.coverImageFilename}`);
+  const coverUrl = getFullArticleCoverImageUrl(article.coverImageUrl || article.coverImageFilename);
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
       <Avatar src={coverUrl} alt={article.title} sx={{ width: 60, height: 40 }} variant="rounded">

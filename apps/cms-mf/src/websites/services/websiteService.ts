@@ -98,7 +98,7 @@ class WebsiteService {
    * Delete a website
    */
   async deleteWebsite(id: string): Promise<ApiResponse<void>> {
-    return apiClient.delete<void>(`${this.baseUrl}/${id}`);
+    return apiClient.delete<void>(`${this.baseUrl}/${id}/permanent`);
   }
 }
 

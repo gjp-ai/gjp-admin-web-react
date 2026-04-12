@@ -34,7 +34,7 @@ class QuestionService {
   }
 
   async deleteQuestion(id: string): Promise<ApiResponse<void>> {
-    return apiClient.delete(`${this.crudUrl}/${id}`);
+    return apiClient.delete(`${this.crudUrl}/${id}/permanent`);
   }
 }
 

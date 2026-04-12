@@ -3,8 +3,10 @@ export interface Video {
   id: string;
   name: string;
   filename: string;
+  fileUrl?: string;
   sizeBytes: number;
   coverImageFilename: string;
+  coverImageUrl?: string;
   // optional fields returned by the API
   originalUrl?: string | null;
   sourceName?: string | null;
@@ -33,7 +35,9 @@ export type VideoActionType = 'create' | 'edit' | 'view';
 export interface VideoFormData {
   name: string;
   filename: string;
+  fileUrl?: string;
   coverImageFilename: string;
+  coverImageUrl?: string;
   sourceName?: string;
   originalUrl?: string;
   description: string;

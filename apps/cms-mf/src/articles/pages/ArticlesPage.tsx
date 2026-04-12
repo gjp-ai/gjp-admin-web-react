@@ -43,6 +43,7 @@ const ArticlesPage: React.FC = () => {
     sourceName: article.sourceName || '',
     originalUrl: article.originalUrl || '',
     coverImageFilename: article.coverImageFilename || '',
+    coverImageUrl: article.coverImageUrl || '',
     coverImageOriginalUrl: article.coverImageOriginalUrl || '',
     tags: article.tags || '',
     lang: article.lang || (dialog.getCurrentLanguage ? dialog.getCurrentLanguage() : 'EN'),
@@ -106,13 +107,9 @@ const ArticlesPage: React.FC = () => {
   };
 
   const computeCoverImageUrl = (article: Article) => {
-    if (article.coverImageOriginalUrl) {
-      return getFullArticleCoverImageUrl(article.coverImageOriginalUrl);
-    }
-    if (article.coverImageFilename) {
-      return getFullArticleCoverImageUrl(`/cover-images/${article.coverImageFilename}`);
-    }
-    return '';
+    if (article.coverImageUrl) return article.coverImageUrl;
+    if (article.coverImageFilename) return getFullArticleCoverImageUrl(article.coverImageFilename);
+    return article.coverImageOriginalUrl || '';
   };
 
   return (

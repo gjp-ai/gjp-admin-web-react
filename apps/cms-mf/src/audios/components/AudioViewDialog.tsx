@@ -37,8 +37,8 @@ const AudioViewDialog = ({ open, onClose, audio, onEdit }: AudioViewDialogProps)
   const [subtitleExpanded, setSubtitleExpanded] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playerHeight, setPlayerHeight] = useState<number | null>(null);
-  const audioUrl = useMemo(() => (audio.filename ? getFullAudioUrl(audio.filename) : ''), [audio.filename]);
-  const coverUrl = useMemo(() => (audio.coverImageFilename ? getFullAudioUrl(`/cover-images/${audio.coverImageFilename}`) : ''), [audio.coverImageFilename]);
+  const audioUrl = useMemo(() => audio.fileUrl || (audio.filename ? getFullAudioUrl(audio.filename) : ''), [audio.fileUrl, audio.filename]);
+  const coverUrl = useMemo(() => audio.coverImageUrl || (audio.coverImageFilename ? getFullAudioUrl(`/cover-images/${audio.coverImageFilename}`) : ''), [audio.coverImageUrl, audio.coverImageFilename]);
   const subtitleContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Prepare sanitized HTML and plain text for subtitle once per audio.subtitle

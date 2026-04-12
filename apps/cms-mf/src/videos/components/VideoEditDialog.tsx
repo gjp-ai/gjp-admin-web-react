@@ -91,6 +91,27 @@ const VideoEditDialog: React.FC<VideoEditDialogProps> = ({ open, formData, onFor
 					<TextField label={t('videos.form.sourceName') || 'Source Name'} value={(formData as any).sourceName || ''} onChange={e => onFormChange('sourceName' as any, e.target.value)} fullWidth />
 					<TextField label={t('videos.form.originalUrl') || 'Original URL'} value={(formData as any).originalUrl || ''} onChange={e => onFormChange('originalUrl' as any, e.target.value)} fullWidth />
 					<TextField label={t('videos.form.filename') || 'Filename'} value={formData.filename} onChange={e => onFormChange('filename' as any, e.target.value)} fullWidth />
+					
+					{/* Cover Image Preview */}
+					{(formData.coverImageUrl || formData.coverImageFilename) && (
+						<Box sx={{ display: 'flex', justifyContent: 'center', my: 1 }}>
+							<Box
+								component="img"
+								src={formData.coverImageUrl || getFullVideoUrl(`/cover-images/${formData.coverImageFilename}`)}
+								alt={formData.name}
+								sx={{
+									maxWidth: '100%',
+									maxHeight: 150,
+									borderRadius: 1,
+									boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+									border: '1px solid',
+									borderColor: 'divider',
+									objectFit: 'contain'
+								}}
+							/>
+						</Box>
+					)}
+
 					<Box>
 						<Typography variant="subtitle2">{t('videos.form.coverImageFile') || 'Cover Image File'}</Typography>
 						<input type="file" accept="image/*" onChange={handleCoverFileChange} />

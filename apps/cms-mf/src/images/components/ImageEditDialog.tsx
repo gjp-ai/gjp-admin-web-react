@@ -112,6 +112,25 @@ const ImageEditDialog = ({
       </DialogTitle>
       <DialogContent sx={{ pt: 3 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, pt: 2 }}>
+          {/* Image Preview */}
+          {(formData.thumbnailUrl || formData.fileUrl || formData.filename) && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 1 }}>
+              <Box
+                component="img"
+                src={formData.thumbnailUrl || formData.fileUrl || getFullImageUrl(formData.thumbnailFilename || formData.filename)}
+                alt={formData.name}
+                sx={{
+                  maxWidth: '100%',
+                  maxHeight: 200,
+                  borderRadius: 1,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  objectFit: 'contain'
+                }}
+              />
+            </Box>
+          )}
           <TextField label={t('images.form.name')} value={formData.name} onChange={(e) => onFormChange('name', e.target.value)} fullWidth error={!!getFieldError('name')} helperText={getFieldError('name')} />
           <TextField label={t('images.form.originalUrl')} value={formData.originalUrl} onChange={(e) => onFormChange('originalUrl', e.target.value)} fullWidth error={!!getFieldError('originalUrl')} helperText={getFieldError('originalUrl')} placeholder="https://example.com/image.jpg" />
           <TextField label={t('images.form.filename')} value={formData.filename} onChange={(e) => onFormChange('filename', e.target.value)} fullWidth />

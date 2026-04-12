@@ -13,7 +13,7 @@ import { getFullVideoUrl } from '../utils/getFullVideoUrl';
 
 function NameCell({ info }: { info: any }) {
   const video = info.row.original as Video;
-  const coverUrl = video.coverImageFilename ? `${getFullVideoUrl('/cover-images')}/${video.coverImageFilename}` : '';
+  const coverUrl = video.coverImageUrl || (video.coverImageFilename ? `${getFullVideoUrl('/cover-images')}/${video.coverImageFilename}` : '');
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
       <Avatar src={coverUrl} alt={video.name} sx={{ width: 60, height: 40 }} variant="rounded">

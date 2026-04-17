@@ -90,11 +90,11 @@ interface FileTableProps {
 
 const columnHelper = createColumnHelper<CmsFile>();
 
-const FileTable = memo(({ 
-  files, 
-  pagination, 
-  onPageChange, 
-  onPageSizeChange, 
+const FileTable = memo(({
+  files,
+  pagination,
+  onPageChange,
+  onPageSizeChange,
   onFileAction,
   onCopyFilename,
   onCopyUrl,
@@ -187,7 +187,7 @@ const FileTable = memo(({
       manualPagination={!!pagination}
       pageCount={pagination?.totalPages || 0}
       currentPage={pagination?.page || 0}
-      pageSize={pagination?.size || 20}
+      pageSize={pagination?.size || 50}
       totalRows={pagination?.totalElements || 0}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}

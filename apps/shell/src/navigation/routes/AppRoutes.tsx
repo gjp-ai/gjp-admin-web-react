@@ -98,6 +98,7 @@ import {
   handleLoginFailure,
   selectCurrentUser,
 } from "../../authentication/store/authSlice";
+import { useProactiveTokenRefresh } from "../../authentication/hooks/useProactiveTokenRefresh";
 import {
   setPageTitle,
   selectPageTitle,
@@ -173,6 +174,9 @@ const AppRoutes = () => {
   const dispatch = useAppDispatch();
   const { t, i18n } = useTranslation();
   const currentPageTitle = useAppSelector(selectPageTitle);
+
+  // Proactively refresh the JWT before it expires
+  useProactiveTokenRefresh();
 
   // Initialize authentication state on app load
   useEffect(() => {

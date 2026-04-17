@@ -23,13 +23,13 @@ interface WebsiteTableProps {
 // Column helper
 const columnHelper = createColumnHelper<Website>();
 
-export const WebsiteTable = memo(({ 
-  websites, 
-  loading, 
-  pagination, 
-  onPageChange, 
-  onPageSizeChange, 
-  onWebsiteAction 
+export const WebsiteTable = memo(({
+  websites,
+  loading,
+  pagination,
+  onPageChange,
+  onPageSizeChange,
+  onWebsiteAction
 }: WebsiteTableProps) => {
   const { t } = useTranslation();
 
@@ -53,8 +53,8 @@ export const WebsiteTable = memo(({
                 <Avatar
                   src={getFullLogoUrl(website.logoUrl)}
                   alt={info.getValue()}
-                  sx={{ 
-                    width: 40, 
+                  sx={{
+                    width: 40,
                     height: 40,
                     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                     border: (theme) => `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
@@ -67,8 +67,8 @@ export const WebsiteTable = memo(({
                 />
               ) : (
                 <Avatar
-                  sx={{ 
-                    width: 40, 
+                  sx={{
+                    width: 40,
                     height: 40,
                     bgcolor: 'primary.main',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
@@ -91,9 +91,9 @@ export const WebsiteTable = memo(({
       cell: (info) => {
         const value = info.getValue();
         return (
-          <Typography 
-            variant="body2" 
-            sx={{ 
+          <Typography
+            variant="body2"
+            sx={{
               maxWidth: 200,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
@@ -125,9 +125,9 @@ export const WebsiteTable = memo(({
       cell: (info) => {
         const tags = info.getValue();
         return (
-          <Typography 
-            variant="body2" 
-            sx={{ 
+          <Typography
+            variant="body2"
+            sx={{
               maxWidth: 150,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
@@ -211,7 +211,7 @@ export const WebsiteTable = memo(({
       manualPagination={true}
       pageCount={pagination?.totalPages || 0}
       currentPage={pagination?.page || 0}
-      pageSize={pagination?.size || 20}
+      pageSize={pagination?.size || 50}
       totalRows={pagination?.totalElements || 0}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}

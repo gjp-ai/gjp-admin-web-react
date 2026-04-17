@@ -229,11 +229,6 @@ export const useWebsiteHandlers = ({
     setFormErrors: (errors: Record<string, string[] | string>) => void
   ) => {
     const validationErrors = validateForm(formData);
-    if (formData.logoUploadMethod === 'url' && !formData.logoUrl?.trim()) {
-      validationErrors.logoUrl = 'Logo URL is required.';
-    } else if (formData.logoUploadMethod === 'file' && !formData.logoFile) {
-      validationErrors.logoFile = 'Logo file is required.';
-    }
 
     if (Object.keys(validationErrors).length > 0) {
       setFormErrors(validationErrors);
@@ -242,16 +237,7 @@ export const useWebsiteHandlers = ({
 
     try {
       if (selectedWebsite) {
-        let logoFilename = formData.logoUrl;
-        // Only trigger logo save if method is not 'url' (which means it's likely a new file or none)
-        // OR if it's a new URL that's different from the original (though handleCreateSave always creates a new logo entry)
-        // To keep it simple and consistent with Create, we recreate the logo entry if not 'url' or if it's a new upload.
-        if (formData.logoUploadMethod !== 'url' || (formData.logoUrl !== selectedWebsite.logoUrl && !formData.logoUrl.startsWith('http'))) {
-           logoFilename = await saveLogo(formData);
-        }
-
-        const websiteFormData = { ...formData, logoUrl: logoFilename };
-        const successMessage = await updateWebsite(selectedWebsite.id, websiteFormData);
+        const successMessage = await updateWebsite(selectedWebsite.id, formData);
         onSuccess(successMessage);
         onRefresh();
         return true;
@@ -268,7 +254,7 @@ export const useWebsiteHandlers = ({
       }
       return false;
     }
-  }, [t, validateForm, updateWebsite, onSuccess, onError, onRefresh]);
+  }, [validateForm, updateWebsite, onSuccess, onError, onRefresh]);
 
   /**
    * Handle delete operation

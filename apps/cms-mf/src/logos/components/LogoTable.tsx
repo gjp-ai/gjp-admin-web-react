@@ -56,8 +56,8 @@ export const LogoTable = memo(({
                 <Avatar
                   src={getFullLogoUrl(logo.fileUrl || logo.filename)}
                   alt={info.getValue()}
-                  sx={{ 
-                    width: 40, 
+                  sx={{
+                    width: 40,
                     height: 40,
                     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                     border: (theme) => `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
@@ -70,8 +70,8 @@ export const LogoTable = memo(({
                 />
               ) : (
                 <Avatar
-                  sx={{ 
-                    width: 40, 
+                  sx={{
+                    width: 40,
                     height: 40,
                     bgcolor: 'primary.main',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
@@ -187,7 +187,7 @@ export const LogoTable = memo(({
       manualPagination={!!pagination}
       pageCount={pagination?.totalPages || 0}
       currentPage={pagination?.page || 0}
-      pageSize={pagination?.size || 20}
+      pageSize={pagination?.size || 50}
       totalRows={pagination?.totalElements || 0}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}

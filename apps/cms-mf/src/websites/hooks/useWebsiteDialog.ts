@@ -56,6 +56,17 @@ export const useWebsiteDialog = () => {
     return validLang ? validLang.value : '';
   };
 
+  /**
+   * Helper to extract filename from logo URL if it's an internal view URL
+   */
+  const extractLogoFilename = (url: string) => {
+    if (url && url.includes('v1/logos/view/')) {
+      const parts = url.split('v1/logos/view/');
+      return parts[parts.length - 1];
+    }
+    return url;
+  };
+
   const [formData, setFormData] = useState<WebsiteFormData>({
     name: '',
     url: '',
@@ -92,7 +103,7 @@ export const useWebsiteDialog = () => {
     setFormData({
       name: website.name,
       url: website.url,
-      logoUrl: website.logoUrl,
+      logoUrl: extractLogoFilename(website.logoUrl),
       description: website.description,
       tags: website.tags,
       lang: website.lang,
@@ -111,7 +122,7 @@ export const useWebsiteDialog = () => {
     setFormData({
       name: website.name,
       url: website.url,
-      logoUrl: website.logoUrl,
+      logoUrl: extractLogoFilename(website.logoUrl),
       description: website.description,
       tags: website.tags,
       lang: website.lang,

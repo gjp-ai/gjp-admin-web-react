@@ -93,7 +93,7 @@ const AudioTable = memo(({ audios, pagination, onPageChange, onPageSizeChange, o
   if (!audios?.length) {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 8 }}>
-  <LucideMusic size={48} style={{ opacity: 0.3, marginBottom: 16 }} />
+        <LucideMusic size={48} style={{ opacity: 0.3, marginBottom: 16 }} />
         <Typography variant="h6" sx={{ mt: 2, opacity: 0.7 }}>
           {t('audios.noAudiosFound')}
         </Typography>
@@ -117,7 +117,7 @@ const AudioTable = memo(({ audios, pagination, onPageChange, onPageSizeChange, o
       manualPagination={!!pagination}
       pageCount={pagination?.totalPages || 0}
       currentPage={pagination?.page || 0}
-      pageSize={pagination?.size || 20}
+      pageSize={pagination?.size || 50}
       totalRows={pagination?.totalElements || 0}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}

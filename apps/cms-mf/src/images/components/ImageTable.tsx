@@ -96,11 +96,11 @@ interface ImageTableProps {
 
 const columnHelper = createColumnHelper<Image>();
 
-const ImageTable = memo(({ 
-  images, 
-  pagination, 
-  onPageChange, 
-  onPageSizeChange, 
+const ImageTable = memo(({
+  images,
+  pagination,
+  onPageChange,
+  onPageSizeChange,
   onImageAction,
   onCopyFilename,
   onCopyThumbnail,
@@ -181,7 +181,7 @@ const ImageTable = memo(({
       manualPagination={!!pagination}
       pageCount={pagination?.totalPages || 0}
       currentPage={pagination?.page || 0}
-      pageSize={pagination?.size || 20}
+      pageSize={pagination?.size || 50}
       totalRows={pagination?.totalElements || 0}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}

@@ -99,8 +99,7 @@ export const WebsiteCreateDialog = ({
               <TextField label={t('websites.form.name')} value={formData.name} onChange={(e) => onFormChange('name', e.target.value)} fullWidth variant="outlined" placeholder={t('websites.form.namePlaceholder')} error={!!getFieldError('name')} helperText={getFieldError('name') || t('websites.form.nameHelper')} sx={{ '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }} />
               {/* Website URL */}
               <TextField label={t('websites.form.url')} value={formData.url} onChange={(e) => onFormChange('url', e.target.value)} fullWidth variant="outlined" placeholder={t('websites.form.urlPlaceholder')} error={!!getFieldError('url')} helperText={getFieldError('url') || t('websites.form.urlHelper')} sx={{ '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }} />
-              {/* Description */}
-
+              
               {/* Logo Upload Method (RadioGroup) */}
               <FormControl component="fieldset" sx={{ mb: 2 }}>
                 <FormLabel component="legend">{t('websites.form.logoUploadMethod')}</FormLabel>
@@ -140,6 +139,7 @@ export const WebsiteCreateDialog = ({
                   {t('websites.form.logoNoneInfo') || 'No logo will be saved for this website'}
                 </Alert>
               )}
+
               {/* Tags */}
               <FormControl fullWidth error={!!getFieldError('tags')}>
                 <FormLabel sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}>{t('websites.form.tags')}</FormLabel>

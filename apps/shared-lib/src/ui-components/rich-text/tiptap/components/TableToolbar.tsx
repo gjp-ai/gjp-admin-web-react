@@ -60,6 +60,19 @@ export default function TableToolbar(props: Readonly<TableToolbarProps>) {
       <button type="button" title="Delete table" onMouseDown={(e) => { e.preventDefault(); try { (editor.chain() as any).focus().deleteTable().run(); } catch {} }}>
         Del table
       </button>
+      <span className="gjp-table-toolbar-sep" />
+      <button type="button" title="Merge selected cells" onMouseDown={(e) => { e.preventDefault(); try { (editor.chain() as any).focus().mergeCells().run(); } catch {} }}>
+        Merge
+      </button>
+      <button type="button" title="Split current cell" onMouseDown={(e) => { e.preventDefault(); try { (editor.chain() as any).focus().splitCell().run(); } catch {} }}>
+        Split
+      </button>
+      <button type="button" title="Toggle header row" onMouseDown={(e) => { e.preventDefault(); try { (editor.chain() as any).focus().toggleHeaderRow().run(); } catch {} }}>
+        Hdr row
+      </button>
+      <button type="button" title="Toggle header column" onMouseDown={(e) => { e.preventDefault(); try { (editor.chain() as any).focus().toggleHeaderColumn().run(); } catch {} }}>
+        Hdr col
+      </button>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -6,7 +6,6 @@ import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import DOMPurify from 'dompurify';
-import Image from '@tiptap/extension-image';
 import { Table } from '@tiptap/extension-table';
 import TableRow from '@tiptap/extension-table-row';
 import TableCell from '@tiptap/extension-table-cell';
@@ -19,8 +18,11 @@ import Color from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
 import Superscript from '@tiptap/extension-superscript';
 import Subscript from '@tiptap/extension-subscript';
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { createLowlight } from 'lowlight';
+import { ResizableImage } from '../extensions/ResizableImage';
+import { createCodeBlockWithLanguageSwitcher } from '../extensions/CodeBlockWithLanguageSwitcher';
+import { DragHandle } from '../extensions/DragHandle';
+import { FindReplaceExtension } from '../extensions/FindReplace';
 import js from 'highlight.js/lib/languages/javascript';
 import ts from 'highlight.js/lib/languages/typescript';
 import css from 'highlight.js/lib/languages/css';
@@ -80,6 +82,14 @@ export default function useTiptapEditor({ value = '', onChange, placeholder = 'E
   // Track if we're programmatically updating to avoid cursor jumps
   const isUpdatingRef = useRef(false);
   const lastValueRef = useRef(value);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const debouncedOnChange = useCallback((html: string) => {
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    debounceTimerRef.current = setTimeout(() => {
+      onChange?.(html);
+    }, 300);
+  }, [onChange]);
 
   // Memoise lowlight so we don't recreate the registry on every render.
   const lowlight = useMemo(() => {
@@ -134,7 +144,7 @@ export default function useTiptapEditor({ value = '', onChange, placeholder = 'E
       Placeholder.configure({ placeholder }),
       Dropcursor.configure({ color: '#94a3b8' }),
       Gapcursor,
-      Image,
+      ResizableImage,
       Table.configure({ resizable: true }),
       TableRow,
       TableHeader,
@@ -147,13 +157,9 @@ export default function useTiptapEditor({ value = '', onChange, placeholder = 'E
       Highlight,
       Superscript,
       Subscript,
-      CodeBlockLowlight.configure({
-        lowlight,
-        defaultLanguage: 'plaintext',
-        HTMLAttributes: {
-          class: 'gjp-code-block',
-        },
-      }),
+      createCodeBlockWithLanguageSwitcher(lowlight),
+      DragHandle,
+      FindReplaceExtension,
       // Register the YouTube node so embeds can be inserted as structured nodes
       Youtube,
     ],
@@ -170,12 +176,51 @@ export default function useTiptapEditor({ value = '', onChange, placeholder = 'E
       try {
         const dirty = editor.getHTML();
         const clean = DOMPurify.sanitize(dirty);
-        onChange?.(clean);
+        debouncedOnChange(clean);
       } catch {
         // ignore
       }
     },
   });
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    };
+  }, []);
+
+  // Paste image from clipboard: convert pasted image blobs to base64 and insert as <img>
+  useEffect(() => {
+    if (!editor) return undefined;
+
+    const handlePaste = (event: ClipboardEvent) => {
+      const items = event.clipboardData?.items;
+      if (!items) return;
+      for (const item of Array.from(items)) {
+        if (!item.type.startsWith('image/')) continue;
+        const file = item.getAsFile();
+        if (!file) continue;
+        event.preventDefault();
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const src = e.target?.result as string;
+          if (!src) return;
+          try {
+            editor.chain().focus().setImage({ src, alt: file.name }).run();
+          } catch {
+            // ignore
+          }
+        };
+        reader.readAsDataURL(file);
+        break; // only handle first image
+      }
+    };
+
+    const dom = editor.view.dom as HTMLElement;
+    dom.addEventListener('paste', handlePaste as EventListener);
+    return () => dom.removeEventListener('paste', handlePaste as EventListener);
+  }, [editor]);
 
   // Attach a helper to the editor instance so UI controls can lazy-load languages on demand.
   // Usage: await (editor as any).loadCodeLanguage('python')

@@ -38,6 +38,8 @@ export const APP_CONFIG = {
     LOGIN_URL: import.meta.env.VITE_AUTH_LOGIN_URL ?? '/v1/auth/tokens',
     REFRESH_TOKEN_URL: import.meta.env.VITE_AUTH_REFRESH_TOKEN_URL ?? '/v1/auth/tokens',
     TOKEN_EXPIRY_BUFFER: parseInt(import.meta.env.VITE_AUTH_TOKEN_EXPIRY_BUFFER ?? '300'),
+    IDLE_TIMEOUT_MINUTES: parseInt(import.meta.env.VITE_IDLE_TIMEOUT_MINUTES ?? '15'),
+    IDLE_WARNING_MINUTES: parseInt(import.meta.env.VITE_IDLE_WARNING_MINUTES ?? '2'),
   },
 };
 

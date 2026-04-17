@@ -99,6 +99,7 @@ import {
   selectCurrentUser,
 } from "../../authentication/store/authSlice";
 import { useProactiveTokenRefresh } from "../../authentication/hooks/useProactiveTokenRefresh";
+import { IdleWarningProvider } from "../../authentication/components/IdleWarningProvider";
 import {
   setPageTitle,
   selectPageTitle,
@@ -249,6 +250,9 @@ const AppRoutes = () => {
     <>
       {/* Refresh warning provider for authenticated users */}
       <RefreshWarningProvider />
+
+      {/* Idle timeout provider — warns and force-logs out inactive users */}
+      <IdleWarningProvider />
 
       <Routes>
         {/* Public routes */}

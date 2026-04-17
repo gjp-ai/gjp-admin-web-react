@@ -10,13 +10,15 @@ import LinkDialog from './dialogs/LinkDialog';
 import YoutubeDialog from './dialogs/YoutubeDialog';
 import { initCodeEnhancer } from './utils/codeEnhancer';
 import './styles/editor.css';
-// icons are provided by menuItems; keep this file focused
 import TableToolbar from './components/TableToolbar';
 import SelectionToolbar from './components/SelectionToolbar';
 import SlashMenu from './components/SlashMenu';
+import FindReplaceBar from './components/FindReplaceBar';
+import ExportMenu from './components/ExportMenu';
 import useSlashMenu from './hooks/useSlashMenu';
 import useToolbarPositioning from './hooks/useToolbarPositioning';
 import useTiptapEditor from './hooks/useTiptapEditor';
+import { useFindReplace } from './hooks/useFindReplace';
 
 // TiptapTextEditor
 // - Props: value, onChange, placeholder, initialRows
@@ -81,6 +83,37 @@ export default function TiptapTextEditor(props: Readonly<TiptapTextEditorProps>)
   const [youtubeForm, setYoutubeForm] = useState({ url: '', width: '', height: '' });
   const youtubeOverlayRef = useRef<HTMLDialogElement | null>(null);
   const [youtubeSelection, setYoutubeSelection] = useState<{ from: number; to: number } | null>(null);
+
+  // Find & Replace
+  const findReplace = useFindReplace(editor);
+
+  // Open find bar with Ctrl+F / Cmd+F
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'f' && editorContainerRef.current?.contains(document.activeElement)) {
+        e.preventDefault();
+        findReplace.setOpen(true);
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [findReplace]);
+
+  // Word/char count — updated on every editor change
+  const [wordCount, setWordCount] = useState({ words: 0, chars: 0 });
+  useEffect(() => {
+    if (!editor) return undefined;
+    const update = () => {
+      try {
+        const text = editor.getText() ?? '';
+        const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+        setWordCount({ words, chars: text.length });
+      } catch { /* ignore */ }
+    };
+    update();
+    editor.on('update', update);
+    return () => { try { editor.off('update', update); } catch { /* ignore */ } };
+  }, [editor]);
 
   // Slash menu handled by `useSlashMenu` (caret coords, query, keyboard, actions); UI is `SlashMenu`.
   const {
@@ -295,6 +328,9 @@ export default function TiptapTextEditor(props: Readonly<TiptapTextEditorProps>)
         >
           {isFullscreen ? <FullscreenExitIcon fontSize="small" /> : <FullscreenIcon fontSize="small" />}
         </IconButton>
+        {/* Find & Replace bar — sits above the editing area */}
+        <FindReplaceBar {...findReplace} />
+
         {/* Editor content */}
         <EditorContent
           editor={editor}
@@ -375,7 +411,25 @@ export default function TiptapTextEditor(props: Readonly<TiptapTextEditorProps>)
           selection={youtubeSelection}
           onClose={() => setYoutubeDialogOpen(false)}
         />
-    </div>
+      </div>
+
+      {/* Footer: word count + export */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '2px 8px',
+          fontSize: 11,
+          color: '#9ca3af',
+          userSelect: 'none',
+        }}
+      >
+        <ExportMenu editor={editor} />
+        <span aria-live="polite" aria-atomic="true">
+          {wordCount.words} words · {wordCount.chars} chars
+        </span>
+      </div>
   </div>
   );
 }

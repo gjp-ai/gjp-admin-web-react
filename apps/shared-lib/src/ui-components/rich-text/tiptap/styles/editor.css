@@ -413,3 +413,229 @@
 }
 .gjp-table-toolbar button:hover { background: #f8fafc; }
 .gjp-table-toolbar-sep { width: 1px; height: 18px; background: rgba(0,0,0,0.06); margin: 0 6px; border-radius: 1px; }
+
+/* ── Resizable Image ──────────────────────────────────── */
+.gjp-resizable-image {
+  display: inline-block;
+  position: relative;
+  line-height: 0;
+  margin: 4px 0;
+  max-width: 100%;
+}
+.gjp-resizable-image img {
+  display: block;
+  max-width: 100%;
+  border-radius: 4px;
+}
+.gjp-image-selected img {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+.gjp-resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  background: #6366f1;
+  border-radius: 2px 0 4px 0;
+  cursor: se-resize;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.gjp-resizable-image:hover .gjp-resize-handle,
+.gjp-image-selected .gjp-resize-handle {
+  opacity: 1;
+}
+
+/* ── Code Block with Language Switcher ───────────────── */
+.gjp-code-block-wrapper {
+  position: relative;
+  margin: 8px 0;
+}
+.gjp-code-lang-switcher {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+}
+.gjp-code-lang-select {
+  appearance: none;
+  background: #f3f4f6;
+  border: 1px solid #e6e6e6;
+  border-radius: 999px;
+  color: #374151;
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.2px;
+  padding: 3px 20px 3px 8px;
+  text-transform: lowercase;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.gjp-code-lang-select:hover { background-color: #e9eaec; border-color: #d1d5db; }
+.gjp-code-lang-select:focus { outline: none; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+
+/* ── Drag Handle ─────────────────────────────────────── */
+.gjp-drag-handle {
+  position: absolute;
+  left: -26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  cursor: grab;
+  color: #9ca3af;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, background 0.12s ease, color 0.12s ease;
+  user-select: none;
+  z-index: 50;
+}
+.gjp-drag-handle:hover {
+  background: #f1f5f9;
+  color: #475569;
+}
+.gjp-drag-handle--dragging {
+  cursor: grabbing;
+  opacity: 1 !important;
+  background: #e0e7ff;
+  color: #6366f1;
+}
+
+/* ── Find & Replace Bar ──────────────────────────────── */
+.gjp-find-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(2,6,23,0.10);
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+.gjp-find-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.gjp-find-input-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+.gjp-find-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px 48px 5px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+  color: #0f172a;
+  background: #fafafa;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+.gjp-find-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+  background: #fff;
+}
+.gjp-find-counter {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: #6b7280;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.gjp-find-counter--none { color: #ef4444; }
+.gjp-find-btn {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  color: #374151;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  transition: background 0.12s ease;
+  white-space: nowrap;
+}
+.gjp-find-btn:hover:not(:disabled) { background: #f8fafc; }
+.gjp-find-btn:disabled { opacity: 0.4; cursor: default; }
+.gjp-find-btn.is-active { background: #eef2ff; border-color: #a5b4fc; color: #4f46e5; }
+.gjp-find-btn--icon { min-width: 32px; padding: 4px 6px; text-align: center; }
+.gjp-find-btn--close { border-color: transparent; color: #9ca3af; }
+.gjp-find-btn--close:hover { background: #fef2f2; color: #ef4444; border-color: #fecaca; }
+
+/* Highlight matches inside the editor */
+.gjp-find-match {
+  background: rgba(251,191,36,0.35);
+  border-radius: 2px;
+}
+.gjp-find-current {
+  background: rgba(251,146,60,0.55);
+  border-radius: 2px;
+  outline: 1px solid #f97316;
+}
+
+/* ── Export Menu ─────────────────────────────────────── */
+.gjp-export-wrap {
+  position: relative;
+  display: inline-block;
+}
+.gjp-export-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  color: #374151;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.gjp-export-trigger:hover { background: #f8fafc; border-color: #d1d5db; }
+.gjp-export-caret { font-size: 9px; color: #9ca3af; }
+.gjp-export-menu {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 0;
+  min-width: 180px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.12);
+  padding: 6px;
+  z-index: 200;
+}
+.gjp-export-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #0f172a;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 7px 10px;
+  text-align: left;
+  transition: background 0.1s ease;
+}
+.gjp-export-item:hover { background: #f8fafc; }
+.gjp-export-item-icon { font-size: 14px; color: #6b7280; }
+.gjp-export-sep { height: 1px; background: rgba(0,0,0,0.06); margin: 4px 0; }

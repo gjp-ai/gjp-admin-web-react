@@ -5,11 +5,26 @@ import TableHeader from '@tiptap/extension-table-header';
 // This is identical to what the toolbar "New line in cell" button does.
 // We bypass editor.commands.setHardBreak() because it internally tries
 // exitCode() first, which moves the cursor out of the cell.
+//
+// Returns false when the cursor is NOT inside a table cell so that Tiptap's
+// default Enter handler runs and inserts a new <p> as expected.
 function insertHardBreakInCell(editor: any): boolean {
   try {
     const { state, view } = editor;
-    const hardBreakType = state?.schema?.nodes?.hardBreak;
-    if (!hardBreakType || !view) return false;
+    if (!state || !view) return false;
+
+    // Only intercept Enter when the cursor is inside a tableCell / tableHeader.
+    // If we return true outside a table, the default <p>-creation is suppressed.
+    const { $from } = state.selection;
+    let inCell = false;
+    for (let d = $from.depth; d >= 0; d--) {
+      const name = $from.node(d).type.name;
+      if (name === 'tableCell' || name === 'tableHeader') { inCell = true; break; }
+    }
+    if (!inCell) return false;
+
+    const hardBreakType = state.schema?.nodes?.hardBreak;
+    if (!hardBreakType) return false;
     const tr = state.tr.replaceSelectionWith(hardBreakType.create(), false);
     view.dispatch(tr.scrollIntoView());
     return true;

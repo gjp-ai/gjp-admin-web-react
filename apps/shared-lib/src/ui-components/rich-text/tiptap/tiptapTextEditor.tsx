@@ -9,6 +9,8 @@ import ImageDialog from './dialogs/ImageDialog';
 import LinkDialog from './dialogs/LinkDialog';
 import YoutubeDialog from './dialogs/YoutubeDialog';
 import { initCodeEnhancer } from './utils/codeEnhancer';
+// prosemirror-tables ships its own base CSS for resize handles and selected-cell overlay
+import 'prosemirror-tables/style/tables.css';
 import './styles/editor.css';
 import TableToolbar from './components/TableToolbar';
 import SelectionToolbar from './components/SelectionToolbar';

@@ -365,54 +365,194 @@
   border-radius: 5px;
 }
 
-.gjp-tiptap-editor table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 8px 0;
-  background: transparent;
-}
-.gjp-tiptap-editor th,
-.gjp-tiptap-editor td {
-  border: 1px solid #e6e6e6; /* visible but subtle */
-  padding: 8px 10px;
-  text-align: left;
-  vertical-align: middle;
-  background: #ffffff;
-  color: #0f172a;
-}
-.gjp-tiptap-editor thead th {
-  background: #f7f7fb; /* subtle header background */
-  font-weight: 700;
-}
-.gjp-tiptap-editor tbody tr:nth-child(even) td {
-  background: #fafafa; /* slight zebra for readability */
-}
-.gjp-tiptap-editor table[role="presentation"] td,
-.gjp-tiptap-editor table[role="presentation"] th {
-  border: 1px solid rgba(0,0,0,0.06);
+/* ── Table base — matches official TipTap tables example ── */
+.gjp-tiptap-editor .tableWrapper {
+  margin: 1.5rem 0;
+  overflow-x: auto;
 }
 
+.gjp-tiptap-editor table {
+  border-collapse: collapse;
+  margin: 0;
+  overflow: hidden;
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* ── Cells ──────────────────────────────────────────────── */
+.gjp-tiptap-editor td,
+.gjp-tiptap-editor th {
+  border: 1px solid #ced4da;
+  box-sizing: border-box;
+  min-width: 1em;
+  min-height: 2em;
+  padding: 6px 8px;
+  position: relative;
+  vertical-align: top;
+  /* Allow <br> hard-breaks to render correctly and long words to wrap */
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Zero out all block-element margins/padding inside cells.
+   The extra specificity (p, h1-h6, ul, ol) beats Tailwind preflight
+   and Ant Design globals that set margin on those elements. */
+.gjp-tiptap-editor td > *,
+.gjp-tiptap-editor th > *,
+.gjp-tiptap-editor td p,
+.gjp-tiptap-editor th p,
+.gjp-tiptap-editor td h1,
+.gjp-tiptap-editor td h2,
+.gjp-tiptap-editor td h3,
+.gjp-tiptap-editor td h4,
+.gjp-tiptap-editor td h5,
+.gjp-tiptap-editor td h6,
+.gjp-tiptap-editor th h1,
+.gjp-tiptap-editor th h2,
+.gjp-tiptap-editor th h3,
+.gjp-tiptap-editor th h4,
+.gjp-tiptap-editor th h5,
+.gjp-tiptap-editor th h6,
+.gjp-tiptap-editor td ul,
+.gjp-tiptap-editor td ol,
+.gjp-tiptap-editor th ul,
+.gjp-tiptap-editor th ol {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Re-add left indent for lists inside cells */
+.gjp-tiptap-editor td ul,
+.gjp-tiptap-editor td ol,
+.gjp-tiptap-editor th ul,
+.gjp-tiptap-editor th ol {
+  padding-left: 1.25em !important;
+}
+
+/* Add spacing between sibling blocks in a cell */
+.gjp-tiptap-editor td > * + *,
+.gjp-tiptap-editor th > * + * {
+  margin-top: 4px !important;
+}
+
+.gjp-tiptap-editor th {
+  background-color: #f1f3f5;
+  font-weight: bold;
+  text-align: left;
+}
+
+/* ── Row height resize ──────────────────────────────────── */
+.gjp-tiptap-editor tr[style*="height"] {
+  overflow: hidden;
+}
+.gjp-tiptap-editor tr[style*="height"] td,
+.gjp-tiptap-editor tr[style*="height"] th {
+  overflow: hidden;
+}
+
+/* ── Selected cells ──────────────────────────────────────
+   prosemirror-tables renders a semi-transparent ::after overlay.
+   We only override the color; DO NOT touch pointer-events or z-index. */
+.ProseMirror .selectedCell::after {
+  background: rgba(200, 200, 255, 0.4);
+  content: '';
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+}
+
+/* ── Column resize handle ────────────────────────────────
+   prosemirror-tables manages mouse events — pointer-events must
+   stay "none". We only restyle the appearance here. */
+.ProseMirror .column-resize-handle {
+  background-color: #6366f1;
+  bottom: -2px;
+  pointer-events: none;
+  position: absolute;
+  right: -2px;
+  top: 0;
+  width: 4px;
+}
+
+/* cursor applied to the ProseMirror div by the plugin */
+.ProseMirror.resize-cursor {
+  cursor: ew-resize;
+  cursor: col-resize;
+}
+
+/* ── Table toolbar ──────────────────────────────────────── */
 .gjp-table-toolbar {
   display: inline-flex;
-  gap: 6px;
   align-items: center;
-  padding: 6px 8px;
+  gap: 2px;
+  padding: 5px 8px;
   background: #fff;
   border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 8px;
-  box-shadow: 0 6px 20px rgba(2,6,23,0.12);
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(2,6,23,0.12), 0 1px 3px rgba(0,0,0,0.06);
+  white-space: nowrap;
+  max-width: calc(100vw - 24px);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
-.gjp-table-toolbar button {
-  background: transparent;
+.gjp-table-toolbar::-webkit-scrollbar { display: none; }
+
+.gjp-tb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   border: none;
-  padding: 4px 8px;
   border-radius: 6px;
+  background: transparent;
+  color: #374151;
   cursor: pointer;
-  font-weight: 600;
-  color: #0f172a;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.1s ease, color 0.1s ease;
 }
-.gjp-table-toolbar button:hover { background: #f8fafc; }
-.gjp-table-toolbar-sep { width: 1px; height: 18px; background: rgba(0,0,0,0.06); margin: 0 6px; border-radius: 1px; }
+.gjp-tb-btn:hover       { background: #f1f5f9; color: #0f172a; }
+.gjp-tb-btn.is-active   { background: #eef2ff; color: #6366f1; }
+.gjp-tb-btn.is-danger:hover { background: #fef2f2; color: #ef4444; }
+
+.gjp-table-toolbar-sep  { width: 1px; height: 18px; background: rgba(0,0,0,0.08); margin: 0 3px; border-radius: 1px; flex-shrink: 0; }
+
+/* ── Cell background color popup ────────────────────────── */
+.gjp-tb-color-popup {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  width: 132px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.12);
+  z-index: 200;
+}
+.gjp-tb-color-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  border: 1px solid rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  padding: 0;
+}
+.gjp-tb-color-swatch:hover {
+  transform: scale(1.18);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.14);
+}
+
 
 /* ── Resizable Image ──────────────────────────────────── */
 .gjp-resizable-image {

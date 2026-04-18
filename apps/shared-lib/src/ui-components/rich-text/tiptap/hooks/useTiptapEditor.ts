@@ -6,10 +6,9 @@ import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import DOMPurify from 'dompurify';
-import { Table } from '@tiptap/extension-table';
-import TableRow from '@tiptap/extension-table-row';
-import TableCell from '@tiptap/extension-table-cell';
-import TableHeader from '@tiptap/extension-table-header';
+import { TableKit } from '@tiptap/extension-table';
+import { CustomTableCell, CustomTableHeader } from '../extensions/CustomTableCell';
+import { CustomTableRow, RowResizeExtension } from '../extensions/RowResize';
 import TaskList from '@tiptap/extension-task-list';
 import TaskItem from '@tiptap/extension-task-item';
 import Mention from '@tiptap/extension-mention';
@@ -139,16 +138,24 @@ export default function useTiptapEditor({ value = '', onChange, placeholder = 'E
     extensions: [
       StarterKit,
       Underline,
-      TextAlign.configure({ types: ['heading', 'paragraph', 'listItem', 'blockquote'] }),
+      TextAlign.configure({ types: ['heading', 'paragraph', 'listItem', 'blockquote', 'tableCell', 'tableHeader'] }),
       Link.configure({ openOnClick: true }),
       Placeholder.configure({ placeholder }),
       Dropcursor.configure({ color: '#94a3b8' }),
       Gapcursor,
       ResizableImage,
-      Table.configure({ resizable: true }),
-      TableRow,
-      TableHeader,
-      TableCell,
+      // TableKit bundles Table + Row + Cell + Header; disable built-ins so we
+      // can supply our custom extensions (official example pattern).
+      TableKit.configure({
+        table: { resizable: true },
+        tableCell: false,
+        tableHeader: false,
+        tableRow: false,
+      }),
+      CustomTableRow,
+      RowResizeExtension,
+      CustomTableHeader,
+      CustomTableCell,
       TaskList,
       TaskItem,
       Mention,
@@ -164,6 +171,7 @@ export default function useTiptapEditor({ value = '', onChange, placeholder = 'E
       Youtube,
     ],
     content: value,
+    shouldRerenderOnTransaction: true,
     editorProps: {
       attributes: {
         class: 'gjp-tiptap-content',

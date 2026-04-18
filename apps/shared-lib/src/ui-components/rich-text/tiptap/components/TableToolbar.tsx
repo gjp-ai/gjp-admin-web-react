@@ -46,17 +46,11 @@ const icons = {
       <path d="M7 5v4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
     </Svg>
   ),
-  merge: (
+  mergeOrSplit: (
     <Svg>
       <rect x="1" y="1" width="5" height="12" rx="1" stroke="currentColor" strokeWidth="1.2" fill="none"/>
       <rect x="8" y="1" width="5" height="12" rx="1" stroke="currentColor" strokeWidth="1.2" fill="none"/>
       <path d="M5 7h4M7 5l2 2-2 2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-    </Svg>
-  ),
-  split: (
-    <Svg>
-      <rect x="1" y="1" width="12" height="12" rx="1" stroke="currentColor" strokeWidth="1.2" fill="none"/>
-      <path d="M7 1v12M5 4l-2 3 2 3M9 4l2 3-2 3" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
     </Svg>
   ),
   hdrRow: (
@@ -71,6 +65,12 @@ const icons = {
       <rect x="1" y="1" width="12" height="12" rx="1" stroke="currentColor" strokeWidth="1.2" fill="none"/>
       <rect x="1" y="1" width="4" height="12" rx="1" fill="currentColor" opacity="0.35"/>
       <path d="M5 1v12" stroke="currentColor" strokeWidth="1.2"/>
+    </Svg>
+  ),
+  hdrCell: (
+    <Svg>
+      <rect x="1" y="1" width="12" height="12" rx="1" stroke="currentColor" strokeWidth="1.2" fill="none"/>
+      <rect x="4" y="4" width="6" height="6" rx="0.5" fill="currentColor" opacity="0.35"/>
     </Svg>
   ),
   valignTop: (
@@ -94,6 +94,47 @@ const icons = {
       <path d="M7 3v7" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.4"/>
     </Svg>
   ),
+  bgColor: (
+    <Svg>
+      <path d="M3 10c.5-1.5 2-3 4-3s3.5 1.5 4 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
+      <circle cx="7" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.2" fill="none"/>
+      <path d="M5.5 5h3" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.5"/>
+    </Svg>
+  ),
+  alignLeft: (
+    <Svg>
+      <path d="M2 3h10M2 6h7M2 9h10M2 12h7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </Svg>
+  ),
+  alignCenter: (
+    <Svg>
+      <path d="M2 3h10M3.5 6h7M2 9h10M3.5 12h7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </Svg>
+  ),
+  alignRight: (
+    <Svg>
+      <path d="M2 3h10M5 6h7M2 9h10M5 12h7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </Svg>
+  ),
+  fixTable: (
+    <Svg>
+      <rect x="1" y="1" width="12" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.2" fill="none"/>
+      <path d="M1 4.5h12M4.5 1v12" stroke="currentColor" strokeWidth="1.2"/>
+      <path d="M6 7.5l1.2 1.2L9 6.5" stroke="#22c55e" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+    </Svg>
+  ),
+  nextCell: (
+    <Svg>
+      <path d="M2 7h8M8 5l2 2-2 2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M12 3v8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/>
+    </Svg>
+  ),
+  prevCell: (
+    <Svg>
+      <path d="M12 7H4M4 5L2 7l2 2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M2 3v8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/>
+    </Svg>
+  ),
   deleteTable: (
     <Svg viewBox="0 0 14 14">
       <rect x="1" y="1" width="12" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.2" fill="none"/>
@@ -101,11 +142,11 @@ const icons = {
       <path d="M7.5 7l2.5 2.5M10 7L7.5 9.5" stroke="#ef4444" strokeWidth="1.4" strokeLinecap="round"/>
     </Svg>
   ),
-  bgColor: (
-    <Svg>
-      <path d="M3 10c.5-1.5 2-3 4-3s3.5 1.5 4 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-      <circle cx="7" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.2" fill="none"/>
-      <path d="M5.5 5h3" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.5"/>
+  newLine: (
+    <Svg viewBox="0 0 14 14">
+      {/* Arrow: go right then bend down-left — classic ↵ return symbol */}
+      <path d="M12 3v4a1 1 0 0 1-1 1H3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      <path d="M5.5 5.5L3 8l2.5 2.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
     </Svg>
   ),
 };
@@ -134,12 +175,13 @@ function cmd(fn: () => void) {
 }
 
 function TbBtn({
-  icon, title, active, danger, onClick,
+  icon, title, active, danger, disabled, onClick,
 }: {
   icon: React.ReactNode;
   title: string;
   active?: boolean;
   danger?: boolean;
+  disabled?: boolean;
   onClick: (e: React.MouseEvent) => void;
 }) {
   return (
@@ -148,6 +190,7 @@ function TbBtn({
       className={`gjp-tb-btn${active ? ' is-active' : ''}${danger ? ' is-danger' : ''}`}
       title={title}
       aria-label={title}
+      disabled={disabled}
       onMouseDown={onClick}
     >
       {icon}
@@ -190,10 +233,11 @@ export default function TableToolbar(props: Readonly<TableToolbarProps>) {
   })();
 
   const chain = () => (editor.chain() as any).focus();
+  const can = () => (editor.can() as any);
 
   const setCellBg = (color: string | null) => {
     try {
-      chain().setCellAttribute('background', color).run();
+      chain().setCellAttribute('backgroundColor', color).run();
     } catch { /* ignore */ }
     setShowBgPicker(false);
   };
@@ -217,38 +261,70 @@ export default function TableToolbar(props: Readonly<TableToolbarProps>) {
     return 'middle';
   })();
 
+  // Determine if merge or split is appropriate for the smart button
+  const canMerge = (() => { try { return can().mergeCells(); } catch { return false; } })();
+  const canSplit = (() => { try { return can().splitCell(); } catch { return false; } })();
+
   return (
     <div
       className="gjp-table-toolbar"
       style={{ position: 'absolute', left: effective?.left ?? 8, top: effective?.top ?? 8, zIndex: 85 }}
       role="toolbar"
       aria-label="Table operations"
-      // Keep focus inside editor — prevent toolbar clicks from losing editor selection
       onMouseDown={(e) => e.preventDefault()}
     >
       {/* ── Row group ── */}
-      <TbBtn icon={icons.rowAbove}  title="Insert row above"  onClick={cmd(() => chain().addRowBefore().run())} />
-      <TbBtn icon={icons.rowBelow}  title="Insert row below"  onClick={cmd(() => chain().addRowAfter().run())} />
-      <TbBtn icon={icons.deleteRow} title="Delete row"        onClick={cmd(() => chain().deleteRow().run())} />
+      <TbBtn icon={icons.rowAbove}  title="Insert row above"  disabled={!can().addRowBefore()} onClick={cmd(() => chain().addRowBefore().run())} />
+      <TbBtn icon={icons.rowBelow}  title="Insert row below"  disabled={!can().addRowAfter()}  onClick={cmd(() => chain().addRowAfter().run())} />
+      <TbBtn icon={icons.deleteRow} title="Delete row"        disabled={!can().deleteRow()}    onClick={cmd(() => chain().deleteRow().run())} />
 
       <Sep />
 
       {/* ── Column group ── */}
-      <TbBtn icon={icons.colLeft}   title="Insert column left"  onClick={cmd(() => chain().addColumnBefore().run())} />
-      <TbBtn icon={icons.colRight}  title="Insert column right" onClick={cmd(() => chain().addColumnAfter().run())} />
-      <TbBtn icon={icons.deleteCol} title="Delete column"       onClick={cmd(() => chain().deleteColumn().run())} />
+      <TbBtn icon={icons.colLeft}   title="Insert column left"  disabled={!can().addColumnBefore()} onClick={cmd(() => chain().addColumnBefore().run())} />
+      <TbBtn icon={icons.colRight}  title="Insert column right" disabled={!can().addColumnAfter()}  onClick={cmd(() => chain().addColumnAfter().run())} />
+      <TbBtn icon={icons.deleteCol} title="Delete column"       disabled={!can().deleteColumn()}    onClick={cmd(() => chain().deleteColumn().run())} />
 
       <Sep />
 
-      {/* ── Cell group ── */}
-      <TbBtn icon={icons.merge} title="Merge selected cells" onClick={cmd(() => chain().mergeCells().run())} />
-      <TbBtn icon={icons.split} title="Split cell"           onClick={cmd(() => chain().splitCell().run())} />
+      {/* ── Merge / Split (smart single button) ── */}
+      <TbBtn
+        icon={icons.mergeOrSplit}
+        title={canMerge ? 'Merge selected cells' : 'Split cell'}
+        disabled={!canMerge && !canSplit}
+        onClick={cmd(() => canMerge ? chain().mergeCells().run() : chain().splitCell().run())}
+      />
 
       <Sep />
 
       {/* ── Header group ── */}
-      <TbBtn icon={icons.hdrRow} title="Toggle header row"    onClick={cmd(() => chain().toggleHeaderRow().run())} />
-      <TbBtn icon={icons.hdrCol} title="Toggle header column" onClick={cmd(() => chain().toggleHeaderColumn().run())} />
+      <TbBtn icon={icons.hdrRow}  title="Toggle header row"    disabled={!can().toggleHeaderRow()}    onClick={cmd(() => chain().toggleHeaderRow().run())} />
+      <TbBtn icon={icons.hdrCol}  title="Toggle header column" disabled={!can().toggleHeaderColumn()} onClick={cmd(() => chain().toggleHeaderColumn().run())} />
+      <TbBtn icon={icons.hdrCell} title="Toggle header cell"   disabled={!can().toggleHeaderCell()}   onClick={cmd(() => chain().toggleHeaderCell().run())} />
+
+      <Sep />
+
+      {/* ── Cell navigation ── */}
+      <TbBtn icon={icons.nextCell} title="Go to next cell (Tab)"      onClick={cmd(() => chain().goToNextCell().run())} />
+      <TbBtn icon={icons.prevCell} title="Go to previous cell (⇧Tab)" onClick={cmd(() => chain().goToPreviousCell().run())} />
+      <TbBtn
+        icon={icons.newLine}
+        title="New line in cell (↵)"
+        onClick={(e) => {
+          e.preventDefault();
+          try {
+            // Direct ProseMirror transaction — bypasses Tiptap's setHardBreak
+            // which internally tries exitCode() first (wrong inside table cells).
+            const { state, view } = editor;
+            const hardBreakType = state.schema.nodes.hardBreak;
+            if (!hardBreakType || !view) return;
+            const tr = state.tr.replaceSelectionWith(hardBreakType.create(), false);
+            view.dispatch(tr.scrollIntoView());
+            // Return focus to editor so cursor is visible
+            view.focus();
+          } catch { /* ignore */ }
+        }}
+      />
 
       <Sep />
 
@@ -256,6 +332,13 @@ export default function TableToolbar(props: Readonly<TableToolbarProps>) {
       <TbBtn icon={icons.valignTop}    title="Align cell top"    active={currentValign === 'top'}    onClick={(e) => { e.preventDefault(); setValign('top'); }} />
       <TbBtn icon={icons.valignMiddle} title="Align cell middle" active={currentValign === 'middle'} onClick={(e) => { e.preventDefault(); setValign('middle'); }} />
       <TbBtn icon={icons.valignBottom} title="Align cell bottom" active={currentValign === 'bottom'} onClick={(e) => { e.preventDefault(); setValign('bottom'); }} />
+
+      <Sep />
+
+      {/* ── Cell style: horizontal alignment ── */}
+      <TbBtn icon={icons.alignLeft}   title="Align text left"   active={editor.isActive({ textAlign: 'left' })}   onClick={(e) => { e.preventDefault(); chain().setTextAlign('left').run(); }} />
+      <TbBtn icon={icons.alignCenter} title="Align text center" active={editor.isActive({ textAlign: 'center' })} onClick={(e) => { e.preventDefault(); chain().setTextAlign('center').run(); }} />
+      <TbBtn icon={icons.alignRight}  title="Align text right"  active={editor.isActive({ textAlign: 'right' })}  onClick={(e) => { e.preventDefault(); chain().setTextAlign('right').run(); }} />
 
       <Sep />
 
@@ -286,11 +369,17 @@ export default function TableToolbar(props: Readonly<TableToolbarProps>) {
 
       <Sep />
 
+      {/* ── Fix tables (repair invalid table structure) ── */}
+      <TbBtn icon={icons.fixTable} title="Fix table structure" onClick={cmd(() => chain().fixTables().run())} />
+
+      <Sep />
+
       {/* ── Delete table ── */}
       <TbBtn
         icon={icons.deleteTable}
         title="Delete table"
         danger
+        disabled={!can().deleteTable()}
         onClick={cmd(() => chain().deleteTable().run())}
       />
     </div>

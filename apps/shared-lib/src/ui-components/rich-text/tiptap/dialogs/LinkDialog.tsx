@@ -4,7 +4,7 @@ import DOMPurify from 'dompurify';
 import * as tiptapStyles from '../styles/inlineStyles';
 import DialogWrapper from './DialogWrapper';
 
-interface LinkForm { url: string; text: string }
+export interface LinkForm { url: string; text: string; openInNewTab: boolean }
 
 interface LinkDialogProps {
   editor: Editor | null;
@@ -46,64 +46,54 @@ export default function LinkDialog(props: Readonly<LinkDialogProps>) {
           if (!url) return;
           
           try {
-            // Check if there's selected text at the saved position
             const hasSelection = selection && selection.from !== selection.to;
-            
+            const safeText = text || url; // no need to DOMPurify if we use JSON text node
+            const linkAttrs = {
+              href: url,
+              target: form.openInNewTab ? '_blank' : '_self',
+              rel: form.openInNewTab ? 'noopener noreferrer' : null,
+            };
+
             if (hasSelection && selection && editor) {
-              // If there's selected text, replace it with a link at the exact position
               try {
-                const safeText = DOMPurify.sanitize(text || url);
-                const html = `<a href="${url}" target="_blank" rel="noopener noreferrer">${safeText}</a>`;
                 const pos = selection.from;
-                
-                // Insert at the saved position, replacing the selection
                 editor.chain()
-                  .insertContentAt({ from: selection.from, to: selection.to }, html)
+                  .insertContentAt({ from: selection.from, to: selection.to }, {
+                    type: 'text',
+                    text: safeText,
+                    marks: [{ type: 'link', attrs: linkAttrs }]
+                  })
                   .run();
-                
-                // Set cursor right after the inserted link
-                const linkLength = safeText.length;
-                const cursorPos = pos + linkLength;
-                
-                // Focus without scrolling and set selection
-                editor.chain()
-                  .focus(undefined, { scrollIntoView: false })
-                  .setTextSelection(cursorPos)
-                  .run();
+                const cursorPos = pos + safeText.length;
+                editor.chain().focus(undefined, { scrollIntoView: false }).setTextSelection(cursorPos).run();
               } catch {
-                // Fallback to setTextSelection approach
                 editor.chain()
                   .setTextSelection({ from: selection.from, to: selection.to })
                   .extendMarkRange('link')
-                  .setLink({ href: url, target: '_blank', rel: 'noopener noreferrer' })
+                  .setLink(linkAttrs)
                   .focus(undefined, { scrollIntoView: false })
                   .run();
               }
             } else if (selection && editor) {
-              // No selection, insert new link at the saved cursor position
-              const safeText = DOMPurify.sanitize(text || url);
-              const html = `<a href="${url}" target="_blank" rel="noopener noreferrer">${safeText}</a>`;
               const pos = selection.from;
-              
-              // Insert at the saved position
               editor.chain()
-                .insertContentAt(pos, html)
+                .insertContentAt(pos, {
+                  type: 'text',
+                  text: safeText,
+                  marks: [{ type: 'link', attrs: linkAttrs }]
+                })
                 .run();
-              
-              // Set cursor right after the inserted link
-              const linkLength = safeText.length;
-              const cursorPos = pos + linkLength;
-              
-              // Focus without scrolling and set selection
-              editor.chain()
-                .focus(undefined, { scrollIntoView: false })
-                .setTextSelection(cursorPos)
-                .run();
+              const cursorPos = pos + safeText.length;
+              editor.chain().focus(undefined, { scrollIntoView: false }).setTextSelection(cursorPos).run();
             } else {
-              // No saved selection, insert at current position
-              const safeText = DOMPurify.sanitize(text || url);
-              const html = `<a href="${url}" target="_blank" rel="noopener noreferrer">${safeText}</a>`;
-              editor?.chain().focus(undefined, { scrollIntoView: false }).insertContent(html).run();
+              editor?.chain()
+                .focus(undefined, { scrollIntoView: false })
+                .insertContent({
+                  type: 'text',
+                  text: safeText,
+                  marks: [{ type: 'link', attrs: linkAttrs }]
+                })
+                .run();
             }
           } catch (err) {
             // eslint-disable-next-line no-console
@@ -149,6 +139,19 @@ export default function LinkDialog(props: Readonly<LinkDialogProps>) {
                 If left blank the full URL will be inserted. You can change the label later from the editor.
               </span>
             </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12 }}>
+              <input
+                id="gjp-link-blank"
+                type="checkbox"
+                checked={!!form.openInNewTab}
+                onChange={(e) => setForm({ ...form, openInNewTab: e.target.checked })}
+                style={{ cursor: 'pointer' }}
+              />
+              <label htmlFor="gjp-link-blank" style={{ ...tiptapStyles.dialogLabelStyle, marginBottom: 0, cursor: 'pointer' }}>
+                Open link in a new tab
+              </label>
+            </div>
           </div>
 
           <aside style={tiptapStyles.dialogPreviewWrapperStyle}>
@@ -156,8 +159,8 @@ export default function LinkDialog(props: Readonly<LinkDialogProps>) {
               {hasUrl ? (
                 <a
                   href={isValidUrl ? cleanedUrl : undefined}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={form.openInNewTab ? '_blank' : undefined}
+                  rel={form.openInNewTab ? 'noopener noreferrer' : undefined}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -189,7 +192,7 @@ export default function LinkDialog(props: Readonly<LinkDialogProps>) {
             </div>
             <span style={tiptapStyles.dialogHintStyle}>
               {isValidUrl
-                ? 'Preview uses the current values. Link opens in a new tab once inserted.'
+                ? `Preview uses the current values. Link opens in ${form.openInNewTab ? 'a new' : 'the current'} tab once inserted.`
                 : hasUrl
                   ? 'Enter a valid http(s) URL to enable the insert button.'
                   : 'Provide a URL to enable the insert button.'}

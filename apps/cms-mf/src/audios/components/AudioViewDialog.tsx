@@ -45,7 +45,7 @@ const AudioViewDialog = ({ open, onClose, audio, onEdit }: AudioViewDialogProps)
   const subtitleHtmlRaw = (audio as any).subtitle as string | undefined;
   const { sanitizedHtml, plainSubtitle, shouldShowSubtitleToggle } = useMemo(() => {
     const raw = subtitleHtmlRaw || '';
-    const rawSanitized = DOMPurify.sanitize(raw || '');
+    const rawSanitized = DOMPurify.sanitize(raw || '', { ADD_ATTR: ['target'] });
 
     // Ensure links open safely in a new tab
     let sanitized = rawSanitized;

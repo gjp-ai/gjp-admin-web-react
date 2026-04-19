@@ -6,7 +6,7 @@ import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 // styles are provided to buttons and dialogs via direct imports in those components
 // FloatingMenu from @tiptap/react isn't available in this build; render our own absolute menu
 import ImageDialog from './dialogs/ImageDialog';
-import LinkDialog from './dialogs/LinkDialog';
+import LinkDialog, { type LinkForm } from './dialogs/LinkDialog';
 import YoutubeDialog from './dialogs/YoutubeDialog';
 import { initCodeEnhancer } from './utils/codeEnhancer';
 // prosemirror-tables ships its own base CSS for resize handles and selected-cell overlay
@@ -77,7 +77,7 @@ export default function TiptapTextEditor(props: Readonly<TiptapTextEditorProps>)
   const [imageSelection, setImageSelection] = useState<{ from: number; to: number } | null>(null);
   // Link dialog state (kept in host; hooks perform editor transformations)
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
-  const [linkForm, setLinkForm] = useState({ url: '', text: '' });
+  const [linkForm, setLinkForm] = useState<LinkForm>({ url: '', text: '', openInNewTab: true });
   const linkOverlayRef = useRef<HTMLDialogElement | null>(null);
   const [linkSelection, setLinkSelection] = useState<{ from: number; to: number } | null>(null);
   // Youtube dialog state (host-managed for preview + validation)
@@ -203,7 +203,7 @@ export default function TiptapTextEditor(props: Readonly<TiptapTextEditorProps>)
             setLinkSelection(null);
           }
         }
-        setLinkForm({ url: 'https://', text: selected });
+        setLinkForm({ url: 'https://', text: selected, openInNewTab: true });
         setLinkDialogOpen(true);
       } catch (err) {
         // eslint-disable-next-line no-console
@@ -276,7 +276,7 @@ export default function TiptapTextEditor(props: Readonly<TiptapTextEditorProps>)
     }
     if (id === 'link') {
       setLinkSelection(capturedSelection);
-      setLinkForm({ url: 'https://', text: selectedText });
+      setLinkForm({ url: 'https://', text: selectedText, openInNewTab: true });
       setLinkDialogOpen(true);
     }
     if (id === 'youtube') {

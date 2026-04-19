@@ -30,7 +30,7 @@ const QuestionViewDialog = ({ open, onClose, question }: QuestionViewDialogProps
 
   const { sanitizedHtml } = useMemo(() => {
     const raw = question.answer || '';
-    const sanitized = DOMPurify.sanitize(raw || '');
+    const sanitized = DOMPurify.sanitize(raw || '', { ADD_ATTR: ['target'] });
 
     // ensure links open in new tab
     let safe = sanitized;

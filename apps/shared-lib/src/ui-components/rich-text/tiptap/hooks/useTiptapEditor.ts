@@ -183,7 +183,7 @@ export default function useTiptapEditor({ value = '', onChange, placeholder = 'E
       
       try {
         const dirty = editor.getHTML();
-        const clean = DOMPurify.sanitize(dirty);
+        const clean = DOMPurify.sanitize(dirty, { ADD_ATTR: ['target'] });
         debouncedOnChange(clean);
       } catch {
         // ignore

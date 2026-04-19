@@ -69,7 +69,7 @@ const ArticleViewDialog = ({ open, article, onClose, onEdit }: ArticleViewDialog
   const rawContent = (article as any).content as string | undefined;
   const { sanitizedHtml, plainText, shouldShowToggle } = useMemo(() => {
     const raw = rawContent || '';
-    const sanitized = DOMPurify.sanitize(raw || '');
+    const sanitized = DOMPurify.sanitize(raw || '', { ADD_ATTR: ['target'] });
 
     // ensure links open in new tab
     let safe = sanitized;

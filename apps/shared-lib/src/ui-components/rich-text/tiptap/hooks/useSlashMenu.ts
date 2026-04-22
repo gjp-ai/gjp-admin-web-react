@@ -367,6 +367,25 @@ export default function useSlashMenu(editor: Editor | null, containerRef: React.
           }
         });
         break;
+      case 'divider':
+        applyAndClose(() => {
+          if (slashPos != null) {
+            const insertPos = slashPos - 1;
+            const selTo = editor!.state.selection.from;
+            try {
+              editor?.chain()
+                .focus(undefined, { scrollIntoView: false })
+                .command(({ tr }) => {
+                  tr.delete(insertPos, selTo);
+                  tr.setSelection(TextSelection.near(tr.doc.resolve(insertPos)));
+                  return true;
+                })
+                .setHorizontalRule()
+                .run();
+            } catch { /* ignore */ }
+          }
+        });
+        break;
       default:
         closeSlashMenu();
     }

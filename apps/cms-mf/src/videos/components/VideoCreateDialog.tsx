@@ -120,23 +120,45 @@ const VideoCreateDialog = ({
 		setErrorMsg(null);
 		setLocalSaving(true);
 		try {
-			// build request expected by createVideoByUpload
-			if (!formData.file) throw new Error('No video file selected');
-			const file = formData.file;
-			await videoService.createVideoByUpload({
-				file,
-				name: formData.name,
-				filename: formData.filename,
-				coverImageFilename: formData.coverImageFilename,
-				coverImageFile: formData.coverImageFile || undefined,
-				sourceName: (formData as any).sourceName,
-				originalUrl: (formData as any).originalUrl,
-				description: formData.description,
-				tags: formData.tags,
-				lang: formData.lang,
-				displayOrder: formData.displayOrder,
-				isActive: formData.isActive,
-			});
+			const originalUrl = (formData as any).originalUrl || '';
+			const isYoutube = originalUrl.includes('youtube.com') || originalUrl.includes('youtu.be');
+
+			if (!isYoutube && !formData.file) {
+				throw new Error('No video file selected');
+			}
+
+			if (isYoutube && !formData.file) {
+				// Use JSON creation for YouTube URLs if no file is uploaded
+				await videoService.createVideo({
+					name: formData.name,
+					filename: formData.filename,
+					coverImageFilename: formData.coverImageFilename,
+					sourceName: (formData as any).sourceName,
+					originalUrl: originalUrl,
+					description: formData.description,
+					tags: formData.tags,
+					lang: formData.lang,
+					displayOrder: formData.displayOrder,
+					isActive: formData.isActive,
+				});
+			} else {
+				// build request expected by createVideoByUpload
+				const file = formData.file as File;
+				await videoService.createVideoByUpload({
+					file,
+					name: formData.name,
+					filename: formData.filename,
+					coverImageFilename: formData.coverImageFilename,
+					coverImageFile: formData.coverImageFile || undefined,
+					sourceName: (formData as any).sourceName,
+					originalUrl: originalUrl,
+					description: formData.description,
+					tags: formData.tags,
+					lang: formData.lang,
+					displayOrder: formData.displayOrder,
+					isActive: formData.isActive,
+				});
+			}
 
 			// on success: reset, let parent refresh table and then close
 			if (onReset) onReset();
@@ -180,7 +202,10 @@ const VideoCreateDialog = ({
 					<TextField label={t('videos.form.sourceName') || 'Source Name'} value={(formData as any).sourceName || ''} onChange={(e) => onFormChange('sourceName' as any, e.target.value)} fullWidth />
 					<TextField label={t('videos.form.originalUrl') || 'Original URL'} value={(formData as any).originalUrl || ''} onChange={(e) => onFormChange('originalUrl' as any, e.target.value)} fullWidth />
 					<Box>
-						<Typography variant="subtitle2">{t('videos.form.videoFile') || 'Video File'}</Typography>
+						<Typography variant="subtitle2">
+							{t('videos.form.videoFile') || 'Video File'}
+							{((formData as any).originalUrl?.includes('youtube.com') || (formData as any).originalUrl?.includes('youtu.be')) && ` (${t('common.optional') || 'Optional'})`}
+						</Typography>
 						<input type="file" accept="video/*" onChange={(e) => handleFileChange('file', e)} />
 					</Box>
 					<TextField label={t('videos.form.filename') || 'Filename'} value={formData.filename || ''} onChange={(e) => onFormChange('filename', e.target.value)} fullWidth />

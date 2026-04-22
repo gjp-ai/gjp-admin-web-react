@@ -3,6 +3,7 @@ import { EditorContent } from '@tiptap/react';
 import { IconButton } from '@mui/material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import CodeIcon from '@mui/icons-material/Code';
 // styles are provided to buttons and dialogs via direct imports in those components
 // FloatingMenu from @tiptap/react isn't available in this build; render our own absolute menu
 import ImageDialog from './dialogs/ImageDialog';
@@ -53,6 +54,22 @@ export default function TiptapTextEditor(props: Readonly<TiptapTextEditorProps>)
 
   const toggleFullscreen = () => {
     setIsFullscreen((prev) => !prev);
+  };
+
+  const [showSource, setShowSource] = useState(false);
+  const [sourceContent, setSourceContent] = useState('');
+
+  const toggleSource = () => {
+    if (!editor) return;
+    if (showSource) {
+      // Apply source HTML back to editor
+      editor.commands.setContent(sourceContent, { emitUpdate: true } as any);
+      setShowSource(false);
+    } else {
+      // Read current HTML
+      setSourceContent(editor.getHTML());
+      setShowSource(true);
+    }
   };
 
   // When entering fullscreen, lock body scroll and attach Escape handler to exit.
@@ -309,56 +326,98 @@ export default function TiptapTextEditor(props: Readonly<TiptapTextEditorProps>)
           boxShadow: isFullscreen ? '0 4px 20px rgba(0,0,0,0.12)' : undefined,
         }}
       >
-        <IconButton
-          size="small"
-          aria-pressed={isFullscreen}
-          aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-          onClick={toggleFullscreen}
-          title={isFullscreen ? 'Exit fullscreen (Esc)' : 'Enter fullscreen'}
-          sx={{
-            position: 'absolute',
-            top: 2,
-            right: 12,
-            zIndex: 1401,
-            backgroundColor: 'rgba(255,255,255,0.95)',
-            border: '1px solid rgba(0,0,0,0.08)',
-            padding: '6px',
-            borderRadius: 1,
-            boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-            '&:hover': { backgroundColor: 'rgba(255,255,255,1)' }
-          }}
-        >
-          {isFullscreen ? <FullscreenExitIcon fontSize="small" /> : <FullscreenIcon fontSize="small" />}
-        </IconButton>
+        <div style={{ position: 'absolute', top: 2, right: 12, zIndex: 1401, display: 'flex', gap: 4 }}>
+          <IconButton
+            size="small"
+            aria-pressed={showSource}
+            aria-label={showSource ? 'View rich text' : 'View source'}
+            onClick={toggleSource}
+            title={showSource ? 'View rich text' : 'View source code'}
+            sx={{
+              backgroundColor: showSource ? 'rgba(59,130,246,0.1)' : 'rgba(255,255,255,0.95)',
+              border: '1px solid rgba(0,0,0,0.08)',
+              padding: '6px',
+              borderRadius: 1,
+              boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+              '&:hover': { backgroundColor: showSource ? 'rgba(59,130,246,0.2)' : 'rgba(255,255,255,1)' }
+            }}
+          >
+            <CodeIcon fontSize="small"  color={showSource ? 'primary' : 'inherit'} />
+          </IconButton>
+          <IconButton
+            size="small"
+            aria-pressed={isFullscreen}
+            aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+            onClick={toggleFullscreen}
+            title={isFullscreen ? 'Exit fullscreen (Esc)' : 'Enter fullscreen'}
+            sx={{
+              backgroundColor: 'rgba(255,255,255,0.95)',
+              border: '1px solid rgba(0,0,0,0.08)',
+              padding: '6px',
+              borderRadius: 1,
+              boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+              '&:hover': { backgroundColor: 'rgba(255,255,255,1)' }
+            }}
+          >
+            {isFullscreen ? <FullscreenExitIcon fontSize="small" /> : <FullscreenIcon fontSize="small" />}
+          </IconButton>
+        </div>
         {/* Find & Replace bar — sits above the editing area */}
         <FindReplaceBar {...findReplace} />
 
-        {/* Editor content */}
-        <EditorContent
-          editor={editor}
-          className="gjp-tiptap-editor"
-          style={{
-            lineHeight: lineHeight,
-            minHeight: isFullscreen ? 'calc(100vh - 96px)' : calculatedMinHeight,
-          }}
-          onKeyDown={(e: any) => {
-            // let the slash hook handle navigation/selection when open
-            try {
-              if (handleKeyDown(e)) return;
-            } catch { /* ignore */ }
+        {/* Source Code View */}
+        {showSource && (
+          <textarea
+            value={sourceContent}
+            onChange={(e) => setSourceContent(e.target.value)}
+            spellCheck={false}
+            style={{
+              width: '100%',
+              minHeight: isFullscreen ? 'calc(100vh - 96px)' : calculatedMinHeight,
+              lineHeight: 1.5,
+              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+              fontSize: 14,
+              padding: 16,
+              border: 'none',
+              borderRadius: isFullscreen ? 0 : 6,
+              outline: 'none',
+              resize: 'none',
+              backgroundColor: '#1e1e1e',
+              color: '#d4d4d4',
+              display: 'block',
+              boxSizing: 'border-box'
+            }}
+          />
+        )}
 
-            // detect slash key to open the Notion-like menu
-            if (e.key === '/') {
+        {/* Editor content */}
+        <div style={{ display: showSource ? 'none' : 'block' }}>
+          <EditorContent
+            editor={editor}
+            className="gjp-tiptap-editor"
+            style={{
+              lineHeight: lineHeight,
+              minHeight: isFullscreen ? 'calc(100vh - 96px)' : calculatedMinHeight,
+            }}
+            onKeyDown={(e: any) => {
+              // let the slash hook handle navigation/selection when open
               try {
-                const pos = editor.state.selection.from;
-                // schedule open on next tick so the slash is in the document
-                setTimeout(() => openSlashMenuAt(pos), 0);
-              } catch {
-                // ignore
+                if (handleKeyDown(e)) return;
+              } catch { /* ignore */ }
+
+              // detect slash key to open the Notion-like menu
+              if (e.key === '/') {
+                try {
+                  const pos = editor.state.selection.from;
+                  // schedule open on next tick so the slash is in the document
+                  setTimeout(() => openSlashMenuAt(pos), 0);
+                } catch {
+                  // ignore
+                }
               }
-            }
-          }}
-        />
+            }}
+          />
+        </div>
 
         {/* Selection toolbar (extracted) */}
         <SelectionToolbar editor={editor} selToolbarOpen={selToolbarOpen} selToolbarCoords={selToolbarCoords} />

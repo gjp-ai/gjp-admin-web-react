@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeadingIcon, AlignmentIcon, BulletedIcon, NumberedIcon, QuoteIcon, CodeIcon, ImageIcon, TableIcon, LinkIcon, VideoIcon } from './icons';
+import { HeadingIcon, AlignmentIcon, BulletedIcon, NumberedIcon, QuoteIcon, CodeIcon, ImageIcon, TableIcon, LinkIcon, VideoIcon, DividerIcon } from './icons';
 
 export type MenuItem = {
   id: string;
@@ -58,4 +58,5 @@ export const defaultMenuItems: MenuItem[] = [
   { id: 'table', label: 'Table', icon: TableIcon },
   { id: 'link', label: 'Link', icon: LinkIcon },
   { id: 'youtube', label: 'Video', icon: VideoIcon },
+  { id: 'divider', label: 'Divider', icon: DividerIcon },
 ];

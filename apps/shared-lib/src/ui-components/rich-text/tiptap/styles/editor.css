@@ -199,6 +199,17 @@
 }
 .gjp-blockquote-fallback { border-left-color: #2563eb; background: rgba(37,99,235,0.06); }
 
+.gjp-tiptap-editor hr {
+  border: none;
+  border-top: 2px solid #eef2ff;
+  margin: 1.5rem 0;
+  cursor: pointer;
+}
+.gjp-tiptap-editor hr.ProseMirror-selectednode {
+  border-top-color: #6366f1;
+  outline: none;
+}
+
 
 /* Floating slash menu (Notion-like) */
 .gjp-floating-menu { font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }

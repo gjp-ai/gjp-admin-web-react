@@ -60,7 +60,7 @@ A modern, secure, and responsive admin console for GJP AI, built with React.js 1
 
 1. **Clone the repository**:
 ```bash
-git clone https://github.com/ganjianping/gjp-admin-console-web-react-ts-public.git
+git clone https://github.com/ganjianping/admin-console-web-react-ts-public.git
 cd gjp-admin-console-web-react-ts-public
 ```
 

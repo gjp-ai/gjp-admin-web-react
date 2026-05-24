@@ -9,6 +9,7 @@ export interface CmsFile {
   mimeType: string | null;
   sizeBytes: number | null;
   tags: string;
+  channel: string;
   lang: string;
   displayOrder: number;
   createdBy: string | null;
@@ -36,6 +37,7 @@ export interface FileFormData {
   mimeType: string;
   sizeBytes: number;
   tags: string;
+  channel: string;
   lang: string;
   displayOrder: number;
   isActive: boolean;

@@ -29,6 +29,7 @@ export interface CreateArticleRequest {
   coverImageOriginalUrl?: string;
   tags: string;
   lang: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -47,6 +48,7 @@ export interface UpdateArticleRequest {
   coverImageOriginalUrl?: string;
   tags?: string;
   lang?: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -70,6 +72,7 @@ class ArticleService {
     formData.append('content', data.content);
     formData.append('tags', data.tags);
     formData.append('lang', data.lang);
+    if (data.channel) formData.append('channel', data.channel);
     formData.append('coverImageFile', data.coverImageFile);
     if (data.coverImageFilename) {
       formData.append('coverImageFilename', data.coverImageFilename);
@@ -132,6 +135,7 @@ class ArticleService {
     if (data.lang) {
       formData.append('lang', data.lang);
     }
+    if (data.channel) formData.append('channel', data.channel);
     if (data.displayOrder !== undefined) {
       formData.append('displayOrder', String(data.displayOrder));
     }

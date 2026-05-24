@@ -56,6 +56,7 @@ const ImagesPage: React.FC = () => {
     altText: image.altText || '',
     tags: image.tags || '',
     lang: image.lang || (dialog.getCurrentLanguage ? dialog.getCurrentLanguage() : 'EN'),
+    channel: image.channel || '',
     displayOrder: image.displayOrder || 0,
     isActive: !!image.isActive,
     uploadMethod: 'url' as const,

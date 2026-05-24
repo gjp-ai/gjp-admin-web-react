@@ -18,13 +18,14 @@ export const useAudioHandlers = ({ onSuccess, onError, onRefresh }: { onSuccess:
           originalUrl: data.originalUrl,
           description: data.description,
           tags: data.tags,
+          channel: data.channel || undefined,
           lang: data.lang,
           displayOrder: data.displayOrder,
           isActive: data.isActive,
           coverImageFile: data.coverImageFile || undefined,
         });
       } else {
-        await audioService.createAudio({ name: data.name, filename, coverImageFilename, subtitle: (data as any).subtitle, originalUrl: data.originalUrl, sourceName: data.sourceName, description: data.description, tags: data.tags, lang: data.lang, displayOrder: data.displayOrder, isActive: data.isActive });
+        await audioService.createAudio({ name: data.name, filename, coverImageFilename, subtitle: (data as any).subtitle, originalUrl: data.originalUrl, sourceName: data.sourceName, description: data.description, tags: data.tags, channel: data.channel || undefined, lang: data.lang, displayOrder: data.displayOrder, isActive: data.isActive });
       }
       onSuccess('Audio created successfully');
     } catch (err: any) {

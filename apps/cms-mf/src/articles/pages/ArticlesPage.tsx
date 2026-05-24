@@ -47,6 +47,7 @@ const ArticlesPage: React.FC = () => {
     coverImageOriginalUrl: article.coverImageOriginalUrl || '',
     tags: article.tags || '',
     lang: article.lang || (dialog.getCurrentLanguage ? dialog.getCurrentLanguage() : 'EN'),
+    channel: article.channel || '',
     displayOrder: article.displayOrder ?? 0,
     isActive: Boolean(article.isActive),
     coverImageFile: null,

@@ -20,6 +20,8 @@ import {
   Radio,
   Select,
   MenuItem,
+  InputLabel,
+  FormHelperText,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
@@ -27,6 +29,7 @@ import '../i18n/translations';
 import { Plus } from 'lucide-react';
 import type { WebsiteFormData } from '../types/website.types';
 import { LANGUAGE_OPTIONS } from '../constants';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 export interface WebsiteCreateDialogProps {
   open: boolean;
@@ -157,6 +160,24 @@ export const WebsiteCreateDialog = ({
                 ) : (
                   <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, ml: 1.5 }}>{t('websites.form.tagsHelper')}</Typography>
                 )}
+              </FormControl>
+              {/* Channel */}
+              <FormControl fullWidth variant="outlined" error={!!getFieldError('channel')}>
+                <InputLabel>{t('websites.form.channel') || 'Channel'}</InputLabel>
+                <Select
+                  value={formData.channel || ''}
+                  onChange={(e) => onFormChange('channel', e.target.value)}
+                  label={t('websites.form.channel') || 'Channel'}
+                  sx={{ '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }}
+                >
+                  <MenuItem value=""><em>None</em></MenuItem>
+                  {CHANNEL_OPTIONS.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>{getFieldError('channel') || 'Select channel identifier'}</FormHelperText>
               </FormControl>
               {/* Language */}
               <FormControl fullWidth error={!!getFieldError('lang')}>

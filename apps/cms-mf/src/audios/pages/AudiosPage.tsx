@@ -59,6 +59,7 @@ const AudiosPage: React.FC = () => {
     sizeBytes: audio.sizeBytes || 0,
     tags: audio.tags || '',
     lang: audio.lang || (dialog.getCurrentLanguage ? dialog.getCurrentLanguage() : 'EN'),
+    channel: audio.channel || '',
     displayOrder: audio.displayOrder || 0,
     isActive: !!audio.isActive,
     uploadMethod: 'file' as const,

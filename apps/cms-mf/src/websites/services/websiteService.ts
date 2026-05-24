@@ -25,6 +25,7 @@ export interface CreateWebsiteRequest {
   logoUrl: string;
   description: string;
   tags: string;
+  channel?: string;
   lang: string;
   displayOrder?: number;
   isActive?: boolean;
@@ -37,6 +38,7 @@ export interface UpdateWebsiteRequest {
   logoUrl?: string;
   description?: string;
   tags?: string;
+  channel?: string;
   lang?: string;
   displayOrder?: number;
   isActive?: boolean;

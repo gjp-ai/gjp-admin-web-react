@@ -247,6 +247,16 @@ export const LogoViewDialog = ({
                     />
                   </Box>
 
+                  {/* Channel */}
+                  {logo.channel && (
+                    <Box>
+                      <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}>
+                        Channel
+                      </Typography>
+                      <Chip label={logo.channel} size="small" variant="outlined" sx={{ fontWeight: 600 }} />
+                    </Box>
+                  )}
+
                   {/* Display Order */}
                   <Box>
                     <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}>

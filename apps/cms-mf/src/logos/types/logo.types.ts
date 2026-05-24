@@ -8,6 +8,7 @@ export interface Logo {
   extension: string;
   logoUrl: string;
   tags: string;
+  channel: string;
   lang: string;
   displayOrder: number;
   isActive: boolean;
@@ -34,6 +35,7 @@ export interface LogoFormData {
   extension: string;
   logoUrl: string;
   tags: string;
+  channel: string;
   lang: string;
   displayOrder: number;
   isActive: boolean;

@@ -23,6 +23,7 @@ export interface CreateImageRequest {
   filename?: string;
   tags: string;
   lang: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -34,6 +35,7 @@ export interface CreateImageByUploadRequest {
   sourceName: string;
   tags: string;
   lang: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -53,6 +55,7 @@ export interface UpdateImageRequest {
   sourceName?: string;
   tags?: string;
   lang?: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -85,6 +88,7 @@ class ImageService {
     formData.append('sourceName', data.sourceName);
     formData.append('tags', data.tags);
     formData.append('lang', data.lang);
+    if (data.channel) formData.append('channel', data.channel);
     if (data.displayOrder !== undefined) formData.append('displayOrder', String(data.displayOrder));
     if (data.isActive !== undefined) formData.append('isActive', String(data.isActive));
     // Use dedicated upload endpoint for file uploads

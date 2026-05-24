@@ -57,6 +57,7 @@ const VideosPage: React.FC = () => {
     sizeBytes: video.sizeBytes || 0,
     tags: video.tags || '',
     lang: video.lang || (dialog.getCurrentLanguage ? dialog.getCurrentLanguage() : 'EN'),
+    channel: video.channel || '',
     displayOrder: video.displayOrder || 0,
     isActive: !!video.isActive,
     uploadMethod: 'file' as const,

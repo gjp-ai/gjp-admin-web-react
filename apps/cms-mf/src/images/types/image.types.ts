@@ -15,6 +15,7 @@ export interface Image {
   height: number;
   altText: string;
   tags: string;
+  channel: string;
   lang: string;
   displayOrder: number;
   createdBy: string;
@@ -56,6 +57,7 @@ export interface ImageFormData {
   height: number;
   altText: string;
   tags: string;
+  channel: string;
   lang: string;
   displayOrder: number;
   isActive: boolean;

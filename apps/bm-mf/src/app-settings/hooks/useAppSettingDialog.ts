@@ -41,6 +41,7 @@ export const useAppSettingDialog = () => {
     name: '',
     value: '',
     lang: '',
+    channel: '',
     isSystem: false,
     isPublic: true,
   });
@@ -52,6 +53,7 @@ export const useAppSettingDialog = () => {
       name: '',
       value: '',
       lang: '',
+      channel: '',
       isSystem: false,
       isPublic: true,
     });
@@ -64,6 +66,7 @@ export const useAppSettingDialog = () => {
       name: appSetting.name,
       value: appSetting.value,
       lang: appSetting.lang,
+      channel: appSetting.channel || '',
       isSystem: appSetting.isSystem,
       isPublic: appSetting.isPublic,
     });
@@ -78,6 +81,7 @@ export const useAppSettingDialog = () => {
       name: appSetting.name,
       value: appSetting.value,
       lang: appSetting.lang,
+      channel: appSetting.channel || '',
       isSystem: appSetting.isSystem,
       isPublic: appSetting.isPublic,
     });

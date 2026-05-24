@@ -3,6 +3,7 @@ export interface Question {
   question: string;
   answer: string;
   tags?: string | null;
+  channel?: string | null;
   lang?: string | null;
   displayOrder?: number | null;
   isActive?: boolean | null;
@@ -26,6 +27,7 @@ export interface QuestionFormData {
   question: string;
   answer: string;
   tags: string;
+  channel: string;
   lang: string;
   displayOrder: number;
   isActive: boolean;

@@ -16,6 +16,7 @@ const enTranslations = {
       name: 'Name',
       value: 'Value',
       lang: 'Language',
+      channel: 'Channel',
       isSystem: 'System',
       isPublic: 'Public',
       createdAt: 'Created At',
@@ -27,6 +28,7 @@ const enTranslations = {
       name: 'Setting Name',
       value: 'Setting Value',
       lang: 'Language',
+      channel: 'Channel',
       isSystem: 'Is System Setting',
       isPublic: 'Is Public Setting',
       namePlaceholder: 'Enter setting name',
@@ -38,6 +40,7 @@ const enTranslations = {
     filters: {
       searchByName: 'Search by name...',
       language: 'Language',
+      channel: 'Channel',
       systemSettings: 'System Settings',
       publicSettings: 'Public Settings',
       all: 'All',
@@ -86,6 +89,7 @@ const enTranslations = {
     },
     viewDialog: {
       lang: 'Language',
+      channel: 'Channel',
       flags: 'Flags',
       createdAt: 'Created At',
       updatedAt: 'Updated At',
@@ -119,6 +123,7 @@ const zhTranslations = {
       name: '名称',
       value: '值',
       lang: '语言',
+      channel: '频道',
       isSystem: '系统',
       isPublic: '公开',
       createdAt: '创建时间',
@@ -130,6 +135,7 @@ const zhTranslations = {
       name: '设置名称',
       value: '设置值',
       lang: '语言',
+      channel: '频道',
       isSystem: '是系统设置',
       isPublic: '是公开设置',
       namePlaceholder: '输入设置名称',
@@ -141,6 +147,7 @@ const zhTranslations = {
     filters: {
       searchByName: '按名称搜索...',
       language: '语言',
+      channel: '频道',
       systemSettings: '系统设置',
       publicSettings: '公开设置',
       all: '全部',
@@ -189,6 +196,7 @@ const zhTranslations = {
     },
     viewDialog: {
       lang: '语言',
+      channel: '频道',
       flags: '标记',
       createdAt: '创建时间',
       updatedAt: '更新时间',

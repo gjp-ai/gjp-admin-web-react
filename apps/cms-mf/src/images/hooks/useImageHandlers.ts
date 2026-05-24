@@ -28,6 +28,7 @@ export const useImageHandlers = ({
           sourceName: formData.sourceName,
           tags: formData.tags,
           lang: formData.lang,
+          channel: formData.channel || undefined,
           displayOrder: formData.displayOrder,
           isActive: formData.isActive,
         };
@@ -40,6 +41,7 @@ export const useImageHandlers = ({
           filename: formData.filename,
           tags: formData.tags,
           lang: formData.lang,
+          channel: formData.channel || undefined,
           displayOrder: formData.displayOrder,
           isActive: formData.isActive,
         };
@@ -72,6 +74,7 @@ export const useImageHandlers = ({
         altText: formData.altText,
         tags: formData.tags,
         lang: formData.lang,
+          channel: formData.channel || undefined,
         displayOrder: formData.displayOrder,
         isActive: formData.isActive,
       };

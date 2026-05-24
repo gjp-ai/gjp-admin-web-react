@@ -23,6 +23,7 @@ export interface CreateFileRequest {
   filename?: string;
   tags: string;
   lang: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -34,6 +35,7 @@ export interface CreateFileByUploadRequest {
   sourceName: string;
   tags: string;
   lang: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -49,6 +51,7 @@ export interface UpdateFileRequest {
   sourceName?: string;
   tags?: string;
   lang?: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -81,6 +84,7 @@ class FileService {
     formData.append('sourceName', data.sourceName);
     formData.append('tags', data.tags);
     formData.append('lang', data.lang);
+    if (data.channel) formData.append('channel', data.channel);
     if (data.displayOrder !== undefined) formData.append('displayOrder', String(data.displayOrder));
     if (data.isActive !== undefined) formData.append('isActive', String(data.isActive));
     // Use dedicated upload endpoint for file uploads

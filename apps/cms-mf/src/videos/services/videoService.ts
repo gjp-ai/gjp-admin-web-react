@@ -23,6 +23,7 @@ export interface CreateVideoRequest {
   description?: string;
   tags: string;
   lang: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -38,6 +39,7 @@ export interface CreateVideoByUploadRequest {
   description?: string;
   tags: string;
   lang: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
   coverImageFile?: File;
@@ -54,6 +56,7 @@ export interface UpdateVideoRequest {
   sizeBytes?: number;
   tags?: string;
   lang?: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -93,6 +96,7 @@ class VideoService {
     }
     formData.append('tags', data.tags);
     formData.append('lang', data.lang);
+    if (data.channel) formData.append('channel', data.channel);
     if (data.displayOrder !== undefined) {
       formData.append('displayOrder', String(data.displayOrder));
     }
@@ -141,6 +145,7 @@ class VideoService {
     if (data.lang) {
       formData.append('lang', data.lang);
     }
+    if (data.channel) formData.append('channel', data.channel);
     if (data.displayOrder !== undefined) {
       formData.append('displayOrder', String(data.displayOrder));
     }

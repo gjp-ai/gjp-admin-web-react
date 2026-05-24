@@ -12,6 +12,7 @@ export interface Video {
   sourceName?: string | null;
   description?: string | null;
   tags?: string;
+  channel?: string;
   lang?: string;
   displayOrder?: number;
   isActive?: boolean;
@@ -43,6 +44,7 @@ export interface VideoFormData {
   description: string;
   sizeBytes: number;
   tags: string;
+  channel: string;
   lang: string;
   displayOrder: number;
   isActive: boolean;
@@ -56,5 +58,6 @@ export interface VideoSearchFormData {
   name?: string;
   lang?: string;
   tags?: string;
+  channel?: string;
   isActive?: string | null;
 }

@@ -57,6 +57,7 @@ export const useAppSettingHandlers = ({
       name: formData.name.trim(),
       value: formData.value.trim(),
       lang: formData.lang.trim(),
+      channel: formData.channel?.trim() || undefined,
       isSystem: formData.isSystem,
       isPublic: formData.isPublic,
     };
@@ -78,6 +79,7 @@ export const useAppSettingHandlers = ({
       name: formData.name.trim(),
       value: formData.value.trim(),
       lang: formData.lang.trim(),
+      channel: formData.channel?.trim() || undefined,
       isSystem: formData.isSystem,
       isPublic: formData.isPublic,
     };

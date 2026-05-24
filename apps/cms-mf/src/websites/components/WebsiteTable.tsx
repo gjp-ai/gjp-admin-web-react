@@ -120,6 +120,17 @@ export const WebsiteTable = memo(({
         />
       ),
     }),
+    columnHelper.accessor('channel', {
+      header: t('websites.columns.channel') || 'Channel',
+      cell: (info) => {
+        const value = info.getValue();
+        return value ? (
+          <Chip label={value} size="small" variant="outlined" sx={{ fontSize: '0.75rem', height: 24 }} />
+        ) : (
+          <Typography variant="body2" sx={{ color: 'text.disabled' }}>-</Typography>
+        );
+      },
+    }),
     columnHelper.accessor('tags', {
       header: t('websites.columns.tags'),
       cell: (info) => {

@@ -23,6 +23,7 @@ export interface CreateLogoRequest {
   originalUrl: string;
   tags: string;
   lang: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -33,6 +34,7 @@ export interface CreateLogoByUploadRequest {
   name: string;
   tags: string;
   lang: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -46,6 +48,7 @@ export interface UpdateLogoRequest {
   logoUrl?: string;
   tags?: string;
   lang?: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -104,6 +107,7 @@ class LogoService {
     formData.append('name', data.name);
     formData.append('tags', data.tags);
     formData.append('lang', data.lang);
+    if (data.channel) formData.append('channel', data.channel);
     if (data.displayOrder !== undefined) {
       formData.append('displayOrder', String(data.displayOrder));
     }

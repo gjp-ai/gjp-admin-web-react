@@ -25,6 +25,7 @@ export interface CreateAudioRequest {
   description?: string;
   tags: string;
   lang: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -42,6 +43,7 @@ export interface CreateAudioByUploadRequest {
   description?: string;
   tags: string;
   lang: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
   coverImageFile?: File;
@@ -60,6 +62,7 @@ export interface UpdateAudioRequest {
   sizeBytes?: number;
   tags?: string;
   lang?: string;
+  channel?: string;
   displayOrder?: number;
   isActive?: boolean;
 }
@@ -108,6 +111,7 @@ class AudioService {
       formData.append('subtitle', (data as any).subtitle);
     }
     formData.append('lang', data.lang);
+    if (data.channel) formData.append('channel', data.channel);
     if (data.displayOrder !== undefined) {
       formData.append('displayOrder', String(data.displayOrder));
     }
@@ -162,6 +166,7 @@ class AudioService {
     if (data.lang) {
       formData.append('lang', data.lang);
     }
+    if (data.channel) formData.append('channel', data.channel);
     if (data.displayOrder !== undefined) {
       formData.append('displayOrder', String(data.displayOrder));
     }

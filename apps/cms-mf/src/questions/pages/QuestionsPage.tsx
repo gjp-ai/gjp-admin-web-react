@@ -40,6 +40,7 @@ const QuestionsPage: React.FC = () => {
     answer: question.answer || '',
     tags: question.tags || '',
     lang: question.lang || (dialog.getCurrentLanguage ? dialog.getCurrentLanguage() : 'EN'),
+    channel: question.channel || '',
     displayOrder: question.displayOrder ?? 0,
     isActive: Boolean(question.isActive),
   });

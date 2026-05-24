@@ -43,4 +43,11 @@ export const APP_CONFIG = {
   },
 };
 
-export default { APP_ENV, APP_CONFIG };
+export const CHANNEL_OPTIONS = [
+  { value: 'ai', label: 'AI' },
+  { value: 'developer', label: 'Developer' },
+  { value: 'blog', label: 'Blog' },
+  { value: 'rubi', label: 'Rubi' },
+] as const;
+
+export default { APP_ENV, APP_CONFIG, CHANNEL_OPTIONS };

@@ -5,6 +5,7 @@ export const getEmptyQuestionFormData = (): QuestionFormData => ({
   answer: '',
   tags: '',
   lang: 'EN',
+  channel: '',
   displayOrder: 999,
   isActive: true,
 });

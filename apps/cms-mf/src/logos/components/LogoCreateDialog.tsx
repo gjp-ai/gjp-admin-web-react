@@ -21,6 +21,8 @@ import {
   LinearProgress,
   Backdrop,
   CircularProgress,
+  InputLabel,
+  FormHelperText,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
@@ -28,6 +30,7 @@ import '../i18n/translations';
 import { Plus, Upload, ImageIcon } from 'lucide-react';
 import type { LogoFormData } from '../types/logo.types';
 import { LANGUAGE_OPTIONS } from '../constants';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface LogoCreateDialogProps {
   open: boolean;
@@ -233,6 +236,24 @@ export const LogoCreateDialog = ({
             )}
           </FormControl>
 
+              {/* Channel */}
+              <FormControl fullWidth variant="outlined" error={!!getFieldError('channel')}>
+                <InputLabel>Channel</InputLabel>
+                <Select
+                  value={formData.channel || ''}
+                  onChange={(e) => onFormChange('channel', e.target.value)}
+                  label="Channel"
+                  sx={{ '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }}
+                >
+                  <MenuItem value=""><em>None</em></MenuItem>
+                  {CHANNEL_OPTIONS.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>{getFieldError('channel') || 'Select channel identifier'}</FormHelperText>
+              </FormControl>
           {/* Language */}
           <FormControl fullWidth>
             <FormLabel>{t('logos.form.lang')}</FormLabel>

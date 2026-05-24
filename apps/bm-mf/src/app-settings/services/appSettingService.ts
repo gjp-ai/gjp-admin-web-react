@@ -23,6 +23,7 @@ export interface CreateAppSettingRequest {
   name: string;
   value: string;
   lang: string;
+  channel?: string;
   isSystem?: boolean;
   isPublic?: boolean;
 }
@@ -32,6 +33,7 @@ export interface UpdateAppSettingRequest {
   name?: string;
   value?: string;
   lang?: string;
+  channel?: string;
   isSystem?: boolean;
   isPublic?: boolean;
 }

@@ -14,6 +14,7 @@ export const getEmptyFileFormData = (lang = 'EN'): FileFormData => ({
   sizeBytes: 0,
   tags: '',
   lang,
+  channel: '',
   displayOrder: 999,
   isActive: true,
   uploadMethod: 'url',

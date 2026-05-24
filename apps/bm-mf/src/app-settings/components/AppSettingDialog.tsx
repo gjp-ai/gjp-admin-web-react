@@ -15,12 +15,15 @@ import {
   CircularProgress,
   FormControlLabel,
   Switch,
+  InputLabel,
+  FormHelperText,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import '../i18n/translations'; // Initialize app settings translations
 import { Settings, Eye, Edit, Plus } from 'lucide-react';
 import type { AppSettingFormData, AppSettingActionType } from '../types/app-setting.types';
 import { LANGUAGE_OPTIONS } from '../constants';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface AppSettingDialogProps {
   open: boolean;
@@ -199,6 +202,24 @@ export const AppSettingDialog = ({
                     {getFieldError('lang')}
                   </Typography>
                 )}
+              </FormControl>
+
+              {/* Channel */}
+              <FormControl fullWidth variant="outlined" disabled={isReadOnly} error={!!getFieldError('channel')}>
+                <InputLabel>{t('appSettings.form.channel') || 'Channel'}</InputLabel>
+                <Select
+                  value={formData.channel || ''}
+                  onChange={(e) => handleFormChange('channel', e.target.value)}
+                  label={t('appSettings.form.channel') || 'Channel'}
+                >
+                  <MenuItem value=""><em>None</em></MenuItem>
+                  {CHANNEL_OPTIONS.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>{getFieldError('channel') || (isReadOnly ? '' : 'Select channel identifier')}</FormHelperText>
               </FormControl>
             </Box>
           </Box>

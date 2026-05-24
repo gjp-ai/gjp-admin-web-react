@@ -13,6 +13,7 @@ export interface Audio {
   artist?: string | null;
   description?: string | null;
   tags?: string;
+  channel?: string;
   lang?: string;
   displayOrder?: number;
   isActive?: boolean;
@@ -45,6 +46,7 @@ export interface AudioFormData {
   description: string;
   sizeBytes: number;
   tags: string;
+  channel: string;
   lang: string;
   displayOrder: number;
   isActive: boolean;
@@ -57,5 +59,6 @@ export interface AudioSearchFormData {
   name?: string;
   lang?: string;
   tags?: string;
+  channel?: string;
   isActive?: string | null;
 }

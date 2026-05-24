@@ -11,6 +11,7 @@ export const getEmptyArticleFormData = (lang = 'EN'): ArticleFormData => ({
   coverImageOriginalUrl: '',
   tags: '',
   lang,
+  channel: '',
   displayOrder: 999,
   isActive: true,
   coverImageFile: null,

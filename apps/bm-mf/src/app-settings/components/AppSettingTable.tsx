@@ -86,6 +86,17 @@ export const AppSettingTable = memo(({
         />
       ),
     }),
+    columnHelper.accessor('channel', {
+      header: t('appSettings.columns.channel') || 'Channel',
+      cell: (info) => {
+        const value = info.getValue();
+        return value ? (
+          <Chip label={value} size="small" variant="outlined" sx={{ fontSize: '0.75rem', height: 24 }} />
+        ) : (
+          <Typography variant="body2" sx={{ color: 'text.disabled' }}>-</Typography>
+        );
+      },
+    }),
     columnHelper.accessor('isSystem', {
       header: t('appSettings.columns.isSystem'),
       cell: (info) => {

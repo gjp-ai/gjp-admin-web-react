@@ -192,7 +192,14 @@ export const WebsiteViewDialog = ({
                   <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}>Active</Typography>
                   <Chip icon={website.isActive ? <CheckCircle2 size={16} /> : <XCircle size={16} />} label={website.isActive ? 'Yes' : 'No'} color={website.isActive ? 'success' : 'default'} sx={{ fontWeight: 600 }} />
                 </Box>
-                {/* Row 3: Logo URL (label, value below with copy icon) */}
+                {/* Row 3: Channel */}
+                {website.channel && (
+                  <Box sx={{ gridColumn: '1 / 3' }}>
+                    <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}>Channel</Typography>
+                    <Chip label={website.channel} size="small" variant="outlined" sx={{ fontWeight: 600 }} />
+                  </Box>
+                )}
+                {/* Row 4: Logo URL (label, value below with copy icon) */}
                 <Box sx={{ gridColumn: '1 / 3' }}>
                   <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}>Logo URL</Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

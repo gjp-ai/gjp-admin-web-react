@@ -65,6 +65,7 @@ export const useLogoHandlers = ({
         name: formData.name.trim(),
         tags: formData.tags.trim(),
         lang: formData.lang.trim(),
+      channel: formData.channel?.trim() || undefined,
         displayOrder: formData.displayOrder,
         isActive: formData.isActive,
       };
@@ -81,6 +82,7 @@ export const useLogoHandlers = ({
         originalUrl: formData.originalUrl.trim(),
         tags: formData.tags.trim(),
         lang: formData.lang.trim(),
+      channel: formData.channel?.trim() || undefined,
         displayOrder: formData.displayOrder,
         isActive: formData.isActive,
       };
@@ -105,6 +107,7 @@ export const useLogoHandlers = ({
       extension: formData.extension.trim(),
       tags: formData.tags.trim(),
       lang: formData.lang.trim(),
+      channel: formData.channel?.trim() || undefined,
       displayOrder: formData.displayOrder,
       isActive: formData.isActive,
     };

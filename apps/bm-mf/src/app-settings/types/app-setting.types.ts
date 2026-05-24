@@ -4,6 +4,7 @@ export interface AppSetting {
   name: string;
   value: string;
   lang: string;
+  channel: string;
   isSystem: boolean;
   isPublic: boolean;
   createdAt: string;
@@ -25,6 +26,7 @@ export interface AppSettingFormData {
   name: string;
   value: string;
   lang: string;
+  channel: string;
   isSystem: boolean;
   isPublic: boolean;
 }

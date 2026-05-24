@@ -50,6 +50,7 @@ const FilesPage: React.FC = () => {
     sizeBytes: file.sizeBytes || 0,
     tags: file.tags || '',
     lang: file.lang || (dialog.getCurrentLanguage ? dialog.getCurrentLanguage() : 'EN'),
+    channel: file.channel || '',
     displayOrder: file.displayOrder || 0,
     isActive: !!file.isActive,
     uploadMethod: 'url' as const,

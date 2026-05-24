@@ -28,6 +28,7 @@ export const useFileHandlers = ({
           sourceName: formData.sourceName,
           tags: formData.tags,
           lang: formData.lang,
+          channel: formData.channel || undefined,
           displayOrder: formData.displayOrder,
           isActive: formData.isActive,
         };
@@ -40,6 +41,7 @@ export const useFileHandlers = ({
           filename: formData.filename,
           tags: formData.tags,
           lang: formData.lang,
+          channel: formData.channel || undefined,
           displayOrder: formData.displayOrder,
           isActive: formData.isActive,
         };
@@ -68,6 +70,7 @@ export const useFileHandlers = ({
         sizeBytes: formData.sizeBytes,
         tags: formData.tags,
         lang: formData.lang,
+          channel: formData.channel || undefined,
         displayOrder: formData.displayOrder,
         isActive: formData.isActive,
       };

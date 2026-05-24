@@ -50,6 +50,7 @@ export interface ArticleSearchFormData {
   title?: string;
   lang?: string;
   tags?: string;
+  channel?: string;
   isActive?: string | null;
 }
 

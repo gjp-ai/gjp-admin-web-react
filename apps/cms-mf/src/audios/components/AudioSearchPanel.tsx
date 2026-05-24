@@ -19,6 +19,7 @@ import {
 import { Search } from 'lucide-react';
 import type { AudioSearchFormData } from '../types/audio.types';
 import { LANGUAGE_OPTIONS } from '../constants';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface AudioSearchPanelProps {
   searchFormData: AudioSearchFormData;
@@ -192,6 +193,18 @@ const AudioSearchPanel: React.FC<AudioSearchPanelProps> = ({ searchFormData, loa
                 sx={{ borderRadius: 2 }}
               >
                 {availableTags.length > 0 ? availableTags.map(tag => (<MenuItem key={tag} value={tag}>{tag}</MenuItem>)) : (<MenuItem disabled><Typography variant="body2" color="text.secondary">No tags available</Typography></MenuItem>)}
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box>
+            <FormLabel sx={{ fontWeight: 500, color: 'text.primary', mb: 1, display: 'block' }}>{t('audios.form.channel') || 'Channel'}</FormLabel>
+            <FormControl fullWidth size="small">
+              <Select value={searchFormData.channel || ''} onChange={(e) => onFormChange('channel', e.target.value)} disabled={loading} displayEmpty sx={{ borderRadius: 2 }}>
+                <MenuItem value="">{t('audios.filters.all')}</MenuItem>
+                {CHANNEL_OPTIONS.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>

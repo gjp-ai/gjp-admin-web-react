@@ -19,6 +19,7 @@ import {
 import { Search } from 'lucide-react';
 import type { ArticleSearchFormData } from '../types/article.types';
 import { ARTICLE_TAG_SETTING_KEY, LANGUAGE_OPTIONS, ARTICLE_LANG_SETTING_KEY } from '../constants';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface ArticleSearchPanelProps {
   searchFormData: ArticleSearchFormData;
@@ -269,6 +270,26 @@ const ArticleSearchPanel: React.FC<ArticleSearchPanelProps> = ({
                     </Typography>
                   </MenuItem>
                 )}
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box>
+            <FormLabel sx={{ fontWeight: 500, color: 'text.primary', mb: 1, display: 'block' }}>
+              {t('articles.form.channel') || 'Channel'}
+            </FormLabel>
+            <FormControl fullWidth size='small'>
+              <Select
+                value={searchFormData.channel || ''}
+                onChange={(e) => onFormChange('channel', e.target.value)}
+                disabled={loading}
+                displayEmpty
+                sx={{ borderRadius: 2 }}
+              >
+                <MenuItem value=''>{t('articles.filters.all')}</MenuItem>
+                {CHANNEL_OPTIONS.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>

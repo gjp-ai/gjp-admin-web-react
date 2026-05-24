@@ -3,18 +3,19 @@ import type { Audio, AudioSearchFormData } from '../types/audio.types';
 
 export const useAudioSearch = (allAudios: Audio[]) => {
   const [searchPanelOpen, setSearchPanelOpen] = useState(false);
-  const [searchFormData, setSearchFormData] = useState<AudioSearchFormData>({ name: '', lang: '', tags: '', isActive: null });
+  const [searchFormData, setSearchFormData] = useState<AudioSearchFormData>({ name: '', lang: '', tags: '', channel: '', isActive: null });
 
   const handleSearchPanelToggle = () => setSearchPanelOpen(!searchPanelOpen);
   const handleSearchFormChange = (field: keyof AudioSearchFormData, value: any) => setSearchFormData({ ...searchFormData, [field]: value });
-  const handleClearSearch = () => setSearchFormData({ name: '', lang: '', tags: '', isActive: null });
+  const handleClearSearch = () => setSearchFormData({ name: '', lang: '', tags: '', channel: '', isActive: null });
 
   const applyClientSideFiltersWithData = (formData: AudioSearchFormData) => {
-    const { name, lang, tags, isActive } = formData;
+    const { name, lang, tags, channel, isActive } = formData;
     return allAudios.filter((v) => {
       if (name && !v.name?.toLowerCase().includes(name.toLowerCase())) return false;
       if (lang && v.lang !== lang) return false;
       if (tags && !v.tags?.toLowerCase().includes(tags.toLowerCase())) return false;
+      if (channel && !v.channel?.toLowerCase().includes(channel.toLowerCase())) return false;
       if (isActive === 'true' && !v.isActive) return false;
       if (isActive === 'false' && v.isActive) return false;
       return true;

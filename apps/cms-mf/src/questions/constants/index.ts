@@ -15,7 +15,8 @@ export const LANGUAGE_OPTIONS = [
 export const QUESTION_TAG_SETTING_KEY = 'question_tags';
 
 export const QUESTION_CONSTANTS = {
-  DEFAULT_PAGE_SIZE: 20,
+  DEFAULT_PAGE_SIZE: 100,
+  PAGE_SIZE_OPTIONS: [10, 20, 50, 100, 500, 1000],
   SORT_FIELD: 'updatedAt',
   SORT_DIRECTION: 'desc' as const,
 };

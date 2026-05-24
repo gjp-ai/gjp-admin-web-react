@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 import type { VideoFormData } from '../types/video.types';
 import { LANGUAGE_OPTIONS } from '../constants';
 import { videoService } from '../services/videoService';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface VideoCreateDialogProps {
 	open: boolean;
@@ -137,6 +138,7 @@ const VideoCreateDialog = ({
 					originalUrl: originalUrl,
 					description: formData.description,
 					tags: formData.tags,
+					channel: formData.channel || undefined,
 					lang: formData.lang,
 					displayOrder: formData.displayOrder,
 					isActive: formData.isActive,
@@ -154,6 +156,7 @@ const VideoCreateDialog = ({
 					originalUrl: originalUrl,
 					description: formData.description,
 					tags: formData.tags,
+					channel: formData.channel || undefined,
 					lang: formData.lang,
 					displayOrder: formData.displayOrder,
 					isActive: formData.isActive,
@@ -233,6 +236,14 @@ const VideoCreateDialog = ({
 							</Box>
 						)}>
 							{availableTags.length > 0 ? availableTags.map((t) => (<MenuItem key={t} value={t}>{t}</MenuItem>)) : (<MenuItem disabled>No tags</MenuItem>)}
+						</Select>
+					</FormControl>
+
+					<FormControl fullWidth>
+						<Typography variant="caption" sx={{ mb: 0.5 }}>{t('videos.form.channel') || 'Channel'}</Typography>
+						<Select value={formData.channel || ''} onChange={(e) => onFormChange('channel', e.target.value)}>
+							<MenuItem value=""><em>None</em></MenuItem>
+							{CHANNEL_OPTIONS.map((option) => (<MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>))}
 						</Select>
 					</FormControl>
 

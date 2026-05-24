@@ -15,6 +15,7 @@ export interface WebsiteQueryParams {
   name?: string;
   lang?: string;
   tags?: string;
+  channel?: string;
   isActive?: boolean;
 }
 

@@ -56,6 +56,10 @@ const AudioTable = memo(({ audios, pagination, onPageChange, onPageSizeChange, o
       header: t('audios.columns.lang'),
       cell: (info) => <Typography variant="body2">{info.getValue() || '-'}</Typography>,
     }),
+    columnHelper.accessor('channel', {
+      header: t('audios.columns.channel') || 'Channel',
+      cell: (info) => <Typography variant="body2">{info.getValue() || '-'}</Typography>,
+    }),
     columnHelper.accessor('displayOrder', {
       header: t('audios.columns.displayOrder'),
       cell: (info) => <Typography variant="body2">{info.getValue()}</Typography>,

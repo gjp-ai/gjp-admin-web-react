@@ -37,6 +37,7 @@ import type { ArticleFormData, ArticleImage } from '../types/article.types';
 import { ARTICLE_TAG_SETTING_KEY, LANGUAGE_OPTIONS, ARTICLE_LANG_SETTING_KEY } from '../constants';
 import { articleService } from '../services/articleService';
 import { getFullArticleCoverImageUrl } from '../utils/getFullArticleCoverImageUrl';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface ArticleEditDialogProps {
   open: boolean;
@@ -508,6 +509,16 @@ const ArticleEditDialog: React.FC<ArticleEditDialogProps> = ({
               ) : (
                 <MenuItem disabled>No tags</MenuItem>
               )}
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth>
+            <Typography variant="caption" sx={{ mb: 0.5 }}>{t('articles.form.channel') || 'Channel'}</Typography>
+            <Select value={formData.channel || ''} onChange={(e) => onFormChange('channel', e.target.value)}>
+              <MenuItem value=""><em>None</em></MenuItem>
+              {CHANNEL_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+              ))}
             </Select>
           </FormControl>
 

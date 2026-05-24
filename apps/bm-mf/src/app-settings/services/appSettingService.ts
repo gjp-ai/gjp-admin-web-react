@@ -14,6 +14,7 @@ export interface AppSettingQueryParams {
   direction?: "asc" | "desc";
   name?: string;
   lang?: string;
+  channel?: string;
   isSystem?: boolean;
   isPublic?: boolean;
 }

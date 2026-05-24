@@ -27,6 +27,7 @@ import '../i18n/translations';
 import type { ArticleFormData } from '../types/article.types';
 import { ARTICLE_TAG_SETTING_KEY, LANGUAGE_OPTIONS, ARTICLE_LANG_SETTING_KEY } from '../constants';
 import { articleService } from '../services/articleService';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface ArticleCreateDialogProps {
   open: boolean;
@@ -120,6 +121,7 @@ const ArticleCreateDialog = ({
           summary: formData.summary,
           content: formData.content,
           tags: formData.tags,
+          channel: formData.channel || undefined,
           lang: formData.lang,
           displayOrder: formData.displayOrder,
           isActive: formData.isActive,
@@ -135,6 +137,7 @@ const ArticleCreateDialog = ({
           summary: formData.summary,
           content: formData.content,
           tags: formData.tags,
+          channel: formData.channel || undefined,
           lang: formData.lang,
           displayOrder: formData.displayOrder,
           isActive: formData.isActive,
@@ -245,6 +248,16 @@ const ArticleCreateDialog = ({
               ) : (
                 <MenuItem disabled>No tags</MenuItem>
               )}
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth>
+            <Typography variant="caption" sx={{ mb: 0.5 }}>{t('articles.form.channel') || 'Channel'}</Typography>
+            <Select value={formData.channel || ''} onChange={(e) => onFormChange('channel', e.target.value)}>
+              <MenuItem value=""><em>None</em></MenuItem>
+              {CHANNEL_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+              ))}
             </Select>
           </FormControl>
 

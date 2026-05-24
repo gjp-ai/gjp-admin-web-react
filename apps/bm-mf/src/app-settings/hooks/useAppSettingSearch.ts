@@ -7,6 +7,7 @@ export const useAppSettingSearch = (allAppSettings: AppSetting[]) => {
     initialFormData: {
       name: '',
       lang: '',
+      channel: '',
       isSystem: '',
       isPublic: '',
     },
@@ -24,6 +25,12 @@ export const useAppSettingSearch = (allAppSettings: AppSetting[]) => {
       if (filters.lang) {
         filtered = filtered.filter(setting => 
           setting.lang.toLowerCase().includes(filters.lang.toLowerCase())
+        );
+      }
+
+      if (filters.channel) {
+        filtered = filtered.filter(setting =>
+          setting.channel?.toLowerCase().includes(filters.channel.toLowerCase())
         );
       }
 

@@ -17,6 +17,7 @@ export interface AppSetting {
 export interface AppSettingSearchFormData {
   name: string;
   lang: string;
+  channel: string;
   isSystem: string; // '', 'true', 'false'
   isPublic: string; // '', 'true', 'false'
 }

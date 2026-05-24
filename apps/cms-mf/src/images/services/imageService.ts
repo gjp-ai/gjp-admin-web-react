@@ -12,6 +12,7 @@ export interface ImageQueryParams {
   name?: string;
   lang?: string;
   tags?: string;
+  channel?: string;
   isActive?: boolean;
 }
 

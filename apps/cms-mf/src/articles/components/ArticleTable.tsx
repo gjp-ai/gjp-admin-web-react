@@ -63,6 +63,10 @@ const ArticleTable = memo(
           header: t('articles.columns.lang'),
           cell: (info) => <Typography variant="body2">{info.getValue() || '-'}</Typography>,
         }),
+        columnHelper.accessor('channel', {
+          header: t('articles.columns.channel') || 'Channel',
+          cell: (info) => <Typography variant="body2">{info.getValue() || '-'}</Typography>,
+        }),
         columnHelper.accessor('displayOrder', {
           header: t('articles.columns.displayOrder'),
           cell: (info) => <Typography variant="body2">{info.getValue()}</Typography>,

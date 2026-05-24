@@ -52,6 +52,10 @@ const VideoTable = memo(({ images, pagination, onPageChange, onPageSizeChange, o
       header: t('videos.columns.lang'),
       cell: (info) => <Typography variant="body2">{info.getValue() || '-'}</Typography>,
     }),
+    columnHelper.accessor('channel', {
+      header: t('videos.columns.channel') || 'Channel',
+      cell: (info) => <Typography variant="body2">{info.getValue() || '-'}</Typography>,
+    }),
     columnHelper.accessor('displayOrder', {
       header: t('videos.columns.displayOrder'),
       cell: (info) => <Typography variant="body2">{info.getValue()}</Typography>,

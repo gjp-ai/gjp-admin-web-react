@@ -14,6 +14,7 @@ export interface QuestionQueryParams {
   question?: string;
   lang?: string;
   tags?: string;
+  channel?: string;
   isActive?: boolean;
 }
 

@@ -16,6 +16,7 @@ export interface ArticleQueryParams {
   title?: string;
   lang?: string;
   tags?: string;
+  channel?: string;
   isActive?: boolean;
 }
 

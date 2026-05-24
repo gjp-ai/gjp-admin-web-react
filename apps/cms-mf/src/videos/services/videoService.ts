@@ -10,6 +10,7 @@ export interface VideoQueryParams {
   name?: string;
   lang?: string;
   tags?: string;
+  channel?: string;
   isActive?: boolean;
 }
 

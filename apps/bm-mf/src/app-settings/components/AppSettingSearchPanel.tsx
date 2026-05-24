@@ -17,6 +17,7 @@ import {
 import { Search } from 'lucide-react';
 import type { AppSettingSearchFormData } from '../types/app-setting.types';
 import { LANGUAGE_OPTIONS } from '../constants';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface AppSettingSearchPanelProps {
   searchFormData: AppSettingSearchFormData;
@@ -226,6 +227,27 @@ export const AppSettingSearchPanel: React.FC<AppSettingSearchPanelProps> = ({
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          {/* Channel */}
+          <Box>
+            <FormLabel sx={{ fontWeight: 500, color: 'text.primary', mb: 1, display: 'block' }}>
+              {t('appSettings.form.channel') || 'Channel'}
+            </FormLabel>
+            <FormControl fullWidth size="small">
+              <Select
+                value={searchFormData.channel}
+                onChange={(e) => onFormChange('channel', e.target.value)}
+                disabled={loading}
+                displayEmpty
+                sx={{ borderRadius: 2 }}
+              >
+                <MenuItem value="">{t('appSettings.filters.all')}</MenuItem>
+                {CHANNEL_OPTIONS.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                 ))}
               </Select>
             </FormControl>

@@ -8,6 +8,7 @@ export const useWebsiteSearch = (allWebsites: Website[]) => {
       name: '',
       lang: '',
       tags: '',
+      channel: '',
       isActive: '',
     },
     filterFunction: (items, filters) => {
@@ -31,6 +32,12 @@ export const useWebsiteSearch = (allWebsites: Website[]) => {
       if (filters.tags) {
         filtered = filtered.filter(website => 
           website.tags.toLowerCase().includes(filters.tags.toLowerCase())
+        );
+      }
+
+      if (filters.channel) {
+        filtered = filtered.filter(website =>
+          website.channel?.toLowerCase().includes(filters.channel.toLowerCase())
         );
       }
 

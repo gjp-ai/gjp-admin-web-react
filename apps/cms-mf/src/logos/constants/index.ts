@@ -5,8 +5,8 @@
 
 export const LOGO_CONSTANTS = {
   // Pagination
-  DEFAULT_PAGE_SIZE: 20,
-  PAGE_SIZE_OPTIONS: [10, 20, 50, 100],
+  DEFAULT_PAGE_SIZE: 100,
+  PAGE_SIZE_OPTIONS: [10, 20, 50, 100, 500, 1000],
   
   // Defaults
   DEFAULT_LANGUAGE: 'EN',

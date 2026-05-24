@@ -8,6 +8,7 @@ export const useLogoSearch = (allLogos: Logo[]) => {
       name: '',
       lang: '',
       tags: '',
+      channel: '',
       isActive: '',
     },
     filterFunction: (items, filters) => {
@@ -31,6 +32,12 @@ export const useLogoSearch = (allLogos: Logo[]) => {
       if (filters.tags) {
         filtered = filtered.filter(logo => 
           logo.tags.toLowerCase().includes(filters.tags.toLowerCase())
+        );
+      }
+
+      if (filters.channel) {
+        filtered = filtered.filter(logo =>
+          logo.channel?.toLowerCase().includes(filters.channel.toLowerCase())
         );
       }
 

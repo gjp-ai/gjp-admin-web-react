@@ -8,6 +8,7 @@ export const useImageSearch = (allImages: Image[]) => {
       name: '',
       lang: '',
       tags: '',
+      channel: '',
       isActive: '',
     },
     filterFunction: (items, filters) => {
@@ -20,6 +21,9 @@ export const useImageSearch = (allImages: Image[]) => {
       }
       if (filters.tags) {
         filtered = filtered.filter(image => image.tags.toLowerCase().includes(filters.tags.toLowerCase()));
+      }
+      if (filters.channel) {
+        filtered = filtered.filter(image => image.channel?.toLowerCase().includes(filters.channel.toLowerCase()));
       }
       if (filters.isActive !== '') {
         const isActive = filters.isActive === 'true';

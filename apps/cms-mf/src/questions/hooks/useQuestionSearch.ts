@@ -7,6 +7,7 @@ export const useQuestionSearch = (allQuestions: Question[]) => {
     question: '',
     lang: '',
     tags: '',
+    channel: '',
     isActive: null,
   });
 
@@ -18,15 +19,17 @@ export const useQuestionSearch = (allQuestions: Question[]) => {
       question: '',
       lang: '',
       tags: '',
+      channel: '',
       isActive: null,
     });
 
   const applyClientSideFiltersWithData = (formData: QuestionSearchFormData) => {
-    const { question, lang, tags, isActive } = formData;
+    const { question, lang, tags, channel, isActive } = formData;
     return allQuestions.filter((q) => {
       if (question && !q.question?.toLowerCase().includes(question.toLowerCase())) return false;
       if (lang && q.lang !== lang) return false;
       if (tags && !q.tags?.toLowerCase().includes(tags.toLowerCase())) return false;
+      if (channel && !q.channel?.toLowerCase().includes(channel.toLowerCase())) return false;
       if (isActive === 'true' && !q.isActive) return false;
       if (isActive === 'false' && q.isActive) return false;
       return true;

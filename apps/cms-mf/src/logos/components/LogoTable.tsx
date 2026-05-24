@@ -114,6 +114,10 @@ export const LogoTable = memo(({
         />
       ),
     }),
+    columnHelper.accessor('channel', {
+      header: t('logos.columns.channel') || 'Channel',
+      cell: (info) => <Chip label={info.getValue() || '-'} size="small" variant="outlined" />,
+    }),
     columnHelper.accessor('tags', {
       header: t('logos.columns.tags'),
       cell: (info) => {

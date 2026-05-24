@@ -52,6 +52,11 @@ const QuestionTable = memo(
           cell: (info) => info.getValue(),
           size: 100,
         }),
+        columnHelper.accessor('channel', {
+          header: t('questions.fields.channel') || 'Channel',
+          cell: (info) => info.getValue() || '-',
+          size: 120,
+        }),
         columnHelper.accessor('isActive', {
           header: t('questions.fields.status'),
           cell: (info) => createStatusChip(String(info.getValue()), STATUS_MAPS.active),

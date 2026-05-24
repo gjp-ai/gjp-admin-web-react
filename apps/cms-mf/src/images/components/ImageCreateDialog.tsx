@@ -28,6 +28,7 @@ import '../i18n/translations';
 import { Plus, Upload, ImageIcon } from 'lucide-react';
 import type { ImageFormData } from '../types/image.types';
 import { LANGUAGE_OPTIONS } from '../constants';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface ImageCreateDialogProps {
   open: boolean;
@@ -187,6 +188,15 @@ const ImageCreateDialog = ({
             {getFieldError('tags') && (
               <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>{getFieldError('tags')}</Typography>
             )}
+          </FormControl>
+          <FormControl fullWidth>
+            <FormLabel>{t('images.form.channel') || 'Channel'}</FormLabel>
+            <Select value={formData.channel || ''} onChange={(e) => onFormChange('channel', e.target.value)}>
+              <MenuItem value=""><em>None</em></MenuItem>
+              {CHANNEL_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+              ))}
+            </Select>
           </FormControl>
           <FormControl fullWidth>
             <FormLabel>{t('images.form.lang')}</FormLabel>

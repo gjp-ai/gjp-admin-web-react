@@ -16,6 +16,7 @@ import {
 import { Search } from 'lucide-react';
 import type { QuestionSearchFormData } from '../types/question.types';
 import { LANGUAGE_OPTIONS, QUESTION_TAG_SETTING_KEY } from '../constants';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface QuestionSearchPanelProps {
   searchFormData: QuestionSearchFormData;
@@ -103,6 +104,23 @@ const QuestionSearchPanel: React.FC<QuestionSearchPanelProps> = ({
               {availableTags.map((tag) => (
                 <MenuItem key={tag} value={tag}>
                   {tag}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth size='small'>
+            <FormLabel sx={{ mb: 1, fontSize: '0.875rem', fontWeight: 500 }}>{t('questions.fields.channel') || 'Channel'}</FormLabel>
+            <Select
+              value={searchFormData.channel || ''}
+              onChange={(e) => onFormChange('channel', e.target.value)}
+              displayEmpty
+              sx={{ borderRadius: 1.5 }}
+            >
+              <MenuItem value=''>{t('common.all')}</MenuItem>
+              {CHANNEL_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
                 </MenuItem>
               ))}
             </Select>

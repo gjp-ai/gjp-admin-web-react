@@ -14,6 +14,7 @@ export interface LogoQueryParams {
   name?: string;
   lang?: string;
   tags?: string;
+  channel?: string;
   isActive?: boolean;
 }
 

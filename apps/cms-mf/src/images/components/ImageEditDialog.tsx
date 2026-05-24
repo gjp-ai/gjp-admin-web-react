@@ -26,6 +26,7 @@ import { Edit, ImageIcon } from 'lucide-react';
 import type { ImageFormData } from '../types/image.types';
 import { LANGUAGE_OPTIONS } from '../constants';
 import { getFullImageUrl } from '../utils/getFullImageUrl';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface ImageEditDialogProps {
   open: boolean;
@@ -165,6 +166,15 @@ const ImageEditDialog = ({
             )}
           </FormControl>
           <TextField label={t('images.form.extension')} value={formData.extension} onChange={(e) => onFormChange('extension', e.target.value)} fullWidth error={!!getFieldError('extension')} helperText={getFieldError('extension')} />
+          <FormControl fullWidth>
+            <FormLabel>{t('images.form.channel') || 'Channel'}</FormLabel>
+            <Select value={formData.channel || ''} onChange={(e) => onFormChange('channel', e.target.value)}>
+              <MenuItem value=""><em>None</em></MenuItem>
+              {CHANNEL_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <FormControl fullWidth>
             <FormLabel>{t('images.form.lang')}</FormLabel>
             <Select value={formData.lang} onChange={(e) => onFormChange('lang', e.target.value)} error={!!getFieldError('lang')}>

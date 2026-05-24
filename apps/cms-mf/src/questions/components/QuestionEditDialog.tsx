@@ -21,6 +21,7 @@ import '../i18n/translations';
 import type { QuestionFormData } from '../types/question.types';
 import { LANGUAGE_OPTIONS, QUESTION_TAG_SETTING_KEY } from '../constants';
 import TiptapTextEditor from '../../../../shared-lib/src/ui-components/rich-text/tiptap/tiptapTextEditor';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface QuestionEditDialogProps {
   open: boolean;
@@ -103,6 +104,20 @@ const QuestionEditDialog = ({
               ) : (
                 <MenuItem disabled>No tags</MenuItem>
               )}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <Typography variant="caption" sx={{ mb: 0.5 }}>{t('questions.fields.channel') || 'Channel'}</Typography>
+            <Select
+              value={formData.channel || ''}
+              onChange={(e) => onFormChange('channel', e.target.value)}
+            >
+              <MenuItem value=""><em>None</em></MenuItem>
+              {CHANNEL_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormControl fullWidth>

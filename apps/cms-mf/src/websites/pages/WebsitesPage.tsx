@@ -129,6 +129,7 @@ const WebsitesPage = () => {
     if (searchFormData.name) searchParams.name = searchFormData.name;
     if (searchFormData.lang) searchParams.lang = searchFormData.lang;
     if (searchFormData.tags) searchParams.tags = searchFormData.tags;
+    if (searchFormData.channel) searchParams.channel = searchFormData.channel;
     if (searchFormData.isActive !== '') searchParams.isActive = searchFormData.isActive === 'true';
     return searchParams;
   };
@@ -337,4 +338,3 @@ const WebsitesPage = () => {
 };
 
 export default WebsitesPage;
-

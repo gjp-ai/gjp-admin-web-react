@@ -121,6 +121,7 @@ const AppSettingsPage = () => {
     
     if (searchFormData.name) searchParams.name = searchFormData.name;
     if (searchFormData.lang) searchParams.lang = searchFormData.lang;
+    if (searchFormData.channel) searchParams.channel = searchFormData.channel;
     if (searchFormData.isSystem !== '') searchParams.isSystem = searchFormData.isSystem === 'true';
     if (searchFormData.isPublic !== '') searchParams.isPublic = searchFormData.isPublic === 'true';
     

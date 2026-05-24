@@ -131,6 +131,9 @@ const LogosPage = () => {
     if (searchFormData.tags && searchFormData.tags.trim() !== '') {
       params.tags = searchFormData.tags.trim();
     }
+    if (searchFormData.channel && searchFormData.channel.trim() !== '') {
+      params.channel = searchFormData.channel.trim();
+    }
     if (searchFormData.isActive === 'true') {
       params.isActive = true;
     } else if (searchFormData.isActive === 'false') {

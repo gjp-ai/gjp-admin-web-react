@@ -129,6 +129,10 @@ const ImageTable = memo(({
       header: t('images.columns.lang'),
       cell: (info) => <LangCell info={info} />,
     }),
+    columnHelper.accessor('channel', {
+      header: t('images.columns.channel') || 'Channel',
+      cell: (info) => <Typography variant="body2">{info.getValue() || '-'}</Typography>,
+    }),
     columnHelper.accessor('tags', {
       header: t('images.columns.tags'),
       cell: (info) => <TagsCell info={info} />,

@@ -26,6 +26,7 @@ import '../i18n/translations';
 import { Plus, Upload } from 'lucide-react';
 import type { FileFormData } from '../types/file.types';
 import { LANGUAGE_OPTIONS } from '../constants';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface FileCreateDialogProps {
   open: boolean;
@@ -283,6 +284,18 @@ const FileCreateDialog = ({
                 {getFieldError('tags')}
               </Typography>
             )}
+          </FormControl>
+
+          <FormControl fullWidth>
+            <FormLabel sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}>
+              {t('files.form.channel') || 'Channel'}
+            </FormLabel>
+            <Select value={formData.channel || ''} onChange={(e) => onFormChange('channel', e.target.value)} size="small" sx={{ borderRadius: 2 }}>
+              <MenuItem value=""><em>None</em></MenuItem>
+              {CHANNEL_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+              ))}
+            </Select>
           </FormControl>
 
           <FormControl fullWidth>

@@ -135,6 +135,10 @@ const FileTable = memo(({
       header: t('files.columns.lang'),
       cell: (info) => <LangCell info={info} />,
     }),
+    columnHelper.accessor('channel', {
+      header: t('files.columns.channel') || 'Channel',
+      cell: (info) => <Typography variant="body2">{info.getValue() || '-'}</Typography>,
+    }),
     columnHelper.accessor('tags', {
       header: t('files.columns.tags'),
       cell: (info) => <TagsCell info={info} />,

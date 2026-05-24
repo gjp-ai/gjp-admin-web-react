@@ -22,6 +22,7 @@ export interface WebsiteSearchFormData {
   name: string;
   lang: string;
   tags: string;
+  channel: string;
   isActive: string; // '', 'true', 'false'
 }
 

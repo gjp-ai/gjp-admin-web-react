@@ -24,6 +24,7 @@ export interface FileSearchFormData {
   name: string;
   lang: string;
   tags: string;
+  channel: string;
   isActive: string; // '', 'true', 'false'
 }
 
@@ -58,4 +59,3 @@ export interface FilePaginatedResponse {
     totalPages: number;
   };
 }
-

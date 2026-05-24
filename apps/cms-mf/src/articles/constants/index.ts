@@ -17,7 +17,8 @@ export const ARTICLE_LANG_SETTING_KEY = 'lang';
 export const ARTICLE_COVER_IMAGE_BASE_URL_KEY = 'article_cover_image_base_url';
 
 export const ARTICLE_CONSTANTS = {
-  DEFAULT_PAGE_SIZE: 20,
+  DEFAULT_PAGE_SIZE: 100,
+  PAGE_SIZE_OPTIONS: [10, 20, 50, 100, 500, 1000],
   SORT_FIELD: 'updatedAt',
   SORT_DIRECTION: 'desc' as const,
 };

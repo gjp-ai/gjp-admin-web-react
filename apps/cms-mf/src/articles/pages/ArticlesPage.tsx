@@ -75,6 +75,9 @@ const ArticlesPage: React.FC = () => {
     if (searchFormData.tags?.trim()) {
       params.tags = searchFormData.tags.trim();
     }
+    if (searchFormData.channel?.trim()) {
+      params.channel = searchFormData.channel.trim();
+    }
     if (searchFormData.isActive === 'true') {
       params.isActive = true;
     } else if (searchFormData.isActive === 'false') {

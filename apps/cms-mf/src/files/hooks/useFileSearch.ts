@@ -8,6 +8,7 @@ export const useFileSearch = (allFiles: CmsFile[]) => {
       name: '',
       lang: '',
       tags: '',
+      channel: '',
       isActive: '',
     },
     filterFunction: (items, filters) => {
@@ -20,6 +21,9 @@ export const useFileSearch = (allFiles: CmsFile[]) => {
       }
       if (filters.tags) {
         filtered = filtered.filter(file => file.tags.toLowerCase().includes(filters.tags.toLowerCase()));
+      }
+      if (filters.channel) {
+        filtered = filtered.filter(file => file.channel?.toLowerCase().includes(filters.channel.toLowerCase()));
       }
       if (filters.isActive !== '') {
         const isActive = filters.isActive === 'true';

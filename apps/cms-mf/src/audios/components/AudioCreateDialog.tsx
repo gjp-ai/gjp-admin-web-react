@@ -26,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 import type { AudioFormData } from '../types/audio.types';
 import { LANGUAGE_OPTIONS } from '../constants';
 import { audioService } from '../services/audioService';
+import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 
 interface AudioCreateDialogProps {
   open: boolean;
@@ -137,6 +138,7 @@ const AudioCreateDialog = ({
           artist: (formData as any).artist,
           description: formData.description,
           tags: formData.tags,
+          channel: formData.channel || undefined,
           lang: formData.lang,
           displayOrder: formData.displayOrder,
           isActive: formData.isActive,
@@ -201,6 +203,13 @@ const AudioCreateDialog = ({
               </Box>
             )}>
               {availableTags.length > 0 ? availableTags.map((t) => (<MenuItem key={t} value={t}>{t}</MenuItem>)) : (<MenuItem disabled>No tags</MenuItem>)}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <Typography variant="caption" sx={{ mb: 0.5 }}>{t('audios.form.channel') || 'Channel'}</Typography>
+            <Select value={formData.channel || ''} onChange={(e) => onFormChange('channel', e.target.value)}>
+              <MenuItem value=""><em>None</em></MenuItem>
+              {CHANNEL_OPTIONS.map((option) => (<MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>))}
             </Select>
           </FormControl>
           <FormControl fullWidth>

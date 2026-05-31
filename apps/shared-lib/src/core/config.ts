@@ -48,6 +48,7 @@ export const CHANNEL_OPTIONS = [
   { value: 'Developer', label: 'Developer' },
   { value: 'Blog', label: 'Blog' },
   { value: 'Rubi', label: 'Rubi' },
+  { value: 'English', label: 'English' },
 ] as const;
 
 export default { APP_ENV, APP_CONFIG, CHANNEL_OPTIONS };

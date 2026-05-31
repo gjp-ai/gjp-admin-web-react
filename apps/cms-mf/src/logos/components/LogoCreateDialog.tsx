@@ -31,6 +31,7 @@ import { Plus, Upload, ImageIcon } from 'lucide-react';
 import type { LogoFormData } from '../types/logo.types';
 import { LANGUAGE_OPTIONS } from '../constants';
 import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
+import { getAppSettingTags } from '../../common/utils/appSettingsTags';
 
 interface LogoCreateDialogProps {
   open: boolean;
@@ -52,29 +53,10 @@ export const LogoCreateDialog = ({
   formErrors,
 }: LogoCreateDialogProps) => {
   const { t, i18n } = useTranslation();
-
-  // Get logo tags from local storage filtered by current language
-  const availableTags = useMemo(() => {
-    try {
-      const settings = localStorage.getItem('gjp_app_settings');
-      if (!settings) return [];
-
-      const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
-      const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
-
-      const logoTagsSetting = appSettings.find(
-        (setting) => setting.name === 'logo_tags' && setting.lang === currentLang
-      );
-
-      if (!logoTagsSetting) return [];
-
-      // Parse the comma-separated tags
-      return logoTagsSetting.value.split(',').map((tag) => tag.trim()).filter(Boolean);
-    } catch (error) {
-      console.error('[LogoCreateDialog] Error loading tags:', error);
-      return [];
-    }
-  }, [i18n.language]);
+  const availableTags = useMemo(
+    () => getAppSettingTags('logo_tags', i18n.language, formData.channel),
+    [i18n.language, formData.channel],
+  );
 
   const getFieldError = (field: string): string => {
     const error = formErrors[field];
@@ -84,21 +66,30 @@ export const LogoCreateDialog = ({
     return error || '';
   };
 
+  const handleChannelChange = (value: string) => {
+    onFormChange('channel', value);
+    onFormChange('tags', '');
+  };
+
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="md"
-      fullWidth
-    >
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       {/* Upload Progress Bar */}
       {loading && (
-        <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1 }}>
+        <Box
+          sx={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1 }}
+        >
           <LinearProgress />
         </Box>
       )}
 
-      <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1.5, pt: loading ? 3 : 2 }}>
+      <DialogTitle
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1.5,
+          pt: loading ? 3 : 2,
+        }}
+      >
         <Plus size={20} />
         <Typography variant="h6" component="span">
           {t('logos.create')}
@@ -119,11 +110,15 @@ export const LogoCreateDialog = ({
 
           {/* Upload Method Selection */}
           <FormControl component="fieldset">
-            <FormLabel component="legend">{t('logos.form.uploadMethod')}</FormLabel>
+            <FormLabel component="legend">
+              {t('logos.form.uploadMethod')}
+            </FormLabel>
             <RadioGroup
               row
               value={formData.uploadMethod}
-              onChange={(e) => onFormChange('uploadMethod', e.target.value as 'url' | 'file')}
+              onChange={(e) =>
+                onFormChange('uploadMethod', e.target.value as 'url' | 'file')
+              }
             >
               <FormControlLabel
                 value="url"
@@ -148,7 +143,9 @@ export const LogoCreateDialog = ({
                 fullWidth
                 sx={{ mb: 1 }}
               >
-                {formData.file ? formData.file.name : t('logos.form.chooseFile')}
+                {formData.file
+                  ? formData.file.name
+                  : t('logos.form.chooseFile')}
                 <input
                   type="file"
                   hidden
@@ -163,7 +160,8 @@ export const LogoCreateDialog = ({
               </Button>
               {formData.file && (
                 <Alert severity="info" sx={{ mt: 1 }}>
-                  Selected file: {formData.file.name} ({(formData.file.size / 1024).toFixed(2)} KB)
+                  Selected file: {formData.file.name} (
+                  {(formData.file.size / 1024).toFixed(2)} KB)
                 </Alert>
               )}
               {getFieldError('file') && (
@@ -187,6 +185,38 @@ export const LogoCreateDialog = ({
             />
           )}
 
+           {/* Channel */}
+          <FormControl
+            fullWidth
+            variant="outlined"
+            error={!!getFieldError('channel')}
+          >
+            <InputLabel>Channel</InputLabel>
+            <Select
+              value={formData.channel || ''}
+              onChange={(e) => handleChannelChange(e.target.value)}
+              label="Channel"
+              sx={{
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'primary.main',
+                  borderWidth: '2px',
+                },
+              }}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {CHANNEL_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+            <FormHelperText>
+              {getFieldError('channel') || 'Select channel identifier'}
+            </FormHelperText>
+          </FormControl>
+
           {/* Tags */}
           <FormControl fullWidth error={!!getFieldError('tags')}>
             <FormLabel sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}>
@@ -194,12 +224,21 @@ export const LogoCreateDialog = ({
             </FormLabel>
             <Select<string[]>
               multiple
-              value={formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : []}
+              value={
+                formData.tags
+                  ? formData.tags
+                      .split(',')
+                      .map((t) => t.trim())
+                      .filter(Boolean)
+                  : []
+              }
               onChange={(e) => {
                 const value = e.target.value;
-                const tagsArray = typeof value === 'string' ? value.split(',') : value;
+                const tagsArray =
+                  typeof value === 'string' ? value.split(',') : value;
                 onFormChange('tags', tagsArray.join(','));
               }}
+              disabled={!formData.channel}
               input={<OutlinedInput />}
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -224,36 +263,22 @@ export const LogoCreateDialog = ({
               ) : (
                 <MenuItem disabled>
                   <Typography variant="body2" color="text.secondary">
-                    No tags available for current language
+                    Select a channel to load tags
                   </Typography>
                 </MenuItem>
               )}
             </Select>
             {getFieldError('tags') && (
-              <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
+              <Typography
+                variant="caption"
+                color="error"
+                sx={{ mt: 0.5, ml: 1.5 }}
+              >
                 {getFieldError('tags')}
               </Typography>
             )}
           </FormControl>
 
-              {/* Channel */}
-              <FormControl fullWidth variant="outlined" error={!!getFieldError('channel')}>
-                <InputLabel>Channel</InputLabel>
-                <Select
-                  value={formData.channel || ''}
-                  onChange={(e) => onFormChange('channel', e.target.value)}
-                  label="Channel"
-                  sx={{ '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }}
-                >
-                  <MenuItem value=""><em>None</em></MenuItem>
-                  {CHANNEL_OPTIONS.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText>{getFieldError('channel') || 'Select channel identifier'}</FormHelperText>
-              </FormControl>
           {/* Language */}
           <FormControl fullWidth>
             <FormLabel>{t('logos.form.lang')}</FormLabel>
@@ -274,7 +299,9 @@ export const LogoCreateDialog = ({
           <TextField
             label={t('logos.form.displayOrder')}
             value={formData.displayOrder}
-            onChange={(e) => onFormChange('displayOrder', parseInt(e.target.value) || 0)}
+            onChange={(e) =>
+              onFormChange('displayOrder', parseInt(e.target.value) || 0)
+            }
             type="number"
             fullWidth
             error={!!getFieldError('displayOrder')}
@@ -330,7 +357,10 @@ export const LogoCreateDialog = ({
         >
           <CircularProgress size={60} thickness={4} />
           <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="h6" sx={{ mb: 0.5, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography
+              variant="h6"
+              sx={{ mb: 0.5, display: 'flex', alignItems: 'center', gap: 1 }}
+            >
               <ImageIcon size={20} />
               {formData.uploadMethod === 'file'
                 ? t('logos.messages.uploadingImage')

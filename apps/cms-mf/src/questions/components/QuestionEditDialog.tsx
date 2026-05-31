@@ -22,6 +22,7 @@ import type { QuestionFormData } from '../types/question.types';
 import { LANGUAGE_OPTIONS, QUESTION_TAG_SETTING_KEY } from '../constants';
 import TiptapTextEditor from '../../../../shared-lib/src/ui-components/rich-text/tiptap/tiptapTextEditor';
 import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
+import { getAppSettingTags } from '../../common/utils/appSettingsTags';
 
 interface QuestionEditDialogProps {
   open: boolean;
@@ -43,24 +44,26 @@ const QuestionEditDialog = ({
 }: QuestionEditDialogProps) => {
   const { t, i18n } = useTranslation();
 
-  const availableTags = useMemo(() => {
-    try {
-      const settings = localStorage.getItem('gjp_app_settings');
-      if (!settings) return [] as string[];
-      const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
-      const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
-      const tagSetting = appSettings.find((s) => s.name === QUESTION_TAG_SETTING_KEY && s.lang === currentLang);
-      if (!tagSetting) return [] as string[];
-      return tagSetting.value.split(',').map((v) => v.trim()).filter(Boolean);
-    } catch (err) {
-      console.error('[QuestionEditDialog] Error loading tags:', err);
-      return [] as string[];
-    }
-  }, [i18n.language]);
+  const availableTags = useMemo(
+    () =>
+      getAppSettingTags(
+        QUESTION_TAG_SETTING_KEY,
+        i18n.language,
+        formData.channel,
+      ),
+
+    [i18n.language, formData.channel],
+  );
 
   const handleTagsChange = (e: any) => {
     const value = e.target.value as string[];
     onFormChange('tags', value.join(','));
+  };
+
+  const handleChannelChange = (value: string) => {
+    onFormChange('channel', value);
+
+    onFormChange('tags', '');
   };
 
   return (
@@ -83,15 +86,41 @@ const QuestionEditDialog = ({
             placeholder={t('questions.fields.answer')}
           />
           <FormControl fullWidth>
-            <Typography variant="caption" sx={{ mb: 0.5 }}>{t('questions.fields.tags')}</Typography>
+            <Typography variant="caption" sx={{ mb: 0.5 }}>
+              {t('questions.fields.channel') || 'Channel'}
+            </Typography>
+            <Select
+              value={formData.channel || ''}
+              onChange={(e) => handleChannelChange(e.target.value)}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {CHANNEL_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <Typography variant="caption" sx={{ mb: 0.5 }}>
+              {t('questions.fields.tags')}
+            </Typography>
             <Select
               multiple
-              value={formData.tags ? formData.tags.split(',').filter(Boolean) : []}
+              value={
+                formData.tags ? formData.tags.split(',').filter(Boolean) : []
+              }
               onChange={handleTagsChange}
+              disabled={!formData.channel}
               input={<OutlinedInput />}
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {Array.isArray(selected) && selected.map((v) => <Chip key={v} label={v} size="small" />)}
+                  {Array.isArray(selected) &&
+                    selected.map((v) => (
+                      <Chip key={v} label={v} size="small" />
+                    ))}
                 </Box>
               )}
             >
@@ -102,26 +131,15 @@ const QuestionEditDialog = ({
                   </MenuItem>
                 ))
               ) : (
-                <MenuItem disabled>No tags</MenuItem>
+                <MenuItem disabled>Select a channel to load tags</MenuItem>
               )}
             </Select>
           </FormControl>
+
           <FormControl fullWidth>
-            <Typography variant="caption" sx={{ mb: 0.5 }}>{t('questions.fields.channel') || 'Channel'}</Typography>
-            <Select
-              value={formData.channel || ''}
-              onChange={(e) => onFormChange('channel', e.target.value)}
-            >
-              <MenuItem value=""><em>None</em></MenuItem>
-              {CHANNEL_OPTIONS.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <Typography variant="caption" sx={{ mb: 0.5 }}>{t('questions.fields.language')}</Typography>
+            <Typography variant="caption" sx={{ mb: 0.5 }}>
+              {t('questions.fields.language')}
+            </Typography>
             <Select
               value={formData.lang}
               onChange={(e) => onFormChange('lang', e.target.value)}
@@ -137,7 +155,9 @@ const QuestionEditDialog = ({
             label={t('questions.fields.displayOrder')}
             type="number"
             value={formData.displayOrder}
-            onChange={(e) => onFormChange('displayOrder', Number(e.target.value))}
+            onChange={(e) =>
+              onFormChange('displayOrder', Number(e.target.value))
+            }
             fullWidth
           />
           <FormControlLabel

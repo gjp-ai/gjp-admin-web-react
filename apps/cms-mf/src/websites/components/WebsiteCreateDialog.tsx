@@ -30,6 +30,7 @@ import { Plus } from 'lucide-react';
 import type { WebsiteFormData } from '../types/website.types';
 import { LANGUAGE_OPTIONS } from '../constants';
 import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
+import { getAppSettingTags } from '../../common/utils/appSettingsTags';
 
 export interface WebsiteCreateDialogProps {
   open: boolean;
@@ -40,7 +41,6 @@ export interface WebsiteCreateDialogProps {
   loading: boolean;
   formErrors: Record<string, string[] | string>;
 }
-
 
 export const WebsiteCreateDialog = ({
   open,
@@ -53,22 +53,11 @@ export const WebsiteCreateDialog = ({
 }: WebsiteCreateDialogProps) => {
   const { t, i18n } = useTranslation();
 
-  const availableTags = useMemo(() => {
-    try {
-      const settings = localStorage.getItem('gjp_app_settings');
-      if (!settings) return [];
-      const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
-      const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
-      const websiteTagsSetting = appSettings.find(
-        (setting) => setting.name === 'website_tags' && setting.lang === currentLang
-      );
-      if (!websiteTagsSetting) return [];
-      return websiteTagsSetting.value.split(',').map((tag) => tag.trim()).filter(Boolean);
-    } catch (error) {
-      console.error('[WebsiteCreateDialog] Error loading tags:', error);
-      return [];
-    }
-  }, [i18n.language]);
+  const availableTags = useMemo(
+    () => getAppSettingTags('website_tags', i18n.language, formData.channel),
+
+    [i18n.language, formData.channel],
+  );
 
   const getFieldError = (field: string): string => {
     const error = formErrors[field];
@@ -76,6 +65,11 @@ export const WebsiteCreateDialog = ({
       return error.join(', ');
     }
     return error || '';
+  };
+
+  const handleChannelChange = (value: string) => {
+    onFormChange('channel', value);
+    onFormChange('tags', '');
   };
 
   return (
@@ -89,126 +83,381 @@ export const WebsiteCreateDialog = ({
       maxWidth="md"
       fullWidth
     >
-      <DialogTitle sx={{ pb: 2, display: 'flex', alignItems: 'center', gap: 1.5, borderBottom: '1px solid', borderColor: 'divider' }}>
+      <DialogTitle
+        sx={{
+          pb: 2,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1.5,
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
         <Plus size={20} />
-        <Typography variant="h6" component="span">{t('websites.create')}</Typography>
+        <Typography variant="h6" component="span">
+          {t('websites.create')}
+        </Typography>
       </DialogTitle>
       <DialogContent sx={{ pt: 3 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pt: 2 }}>
           <Box>
-            <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>{t('websites.form.basicInformation') || 'Basic Information'}</Typography>
+            <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
+              {t('websites.form.basicInformation') || 'Basic Information'}
+            </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
               {/* Website Name */}
-              <TextField label={t('websites.form.name')} value={formData.name} onChange={(e) => onFormChange('name', e.target.value)} fullWidth variant="outlined" placeholder={t('websites.form.namePlaceholder')} error={!!getFieldError('name')} helperText={getFieldError('name') || t('websites.form.nameHelper')} sx={{ '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }} />
+              <TextField
+                label={t('websites.form.name')}
+                value={formData.name}
+                onChange={(e) => onFormChange('name', e.target.value)}
+                fullWidth
+                variant="outlined"
+                placeholder={t('websites.form.namePlaceholder')}
+                error={!!getFieldError('name')}
+                helperText={
+                  getFieldError('name') || t('websites.form.nameHelper')
+                }
+                sx={{
+                  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                    { borderColor: 'primary.main', borderWidth: '2px' },
+                }}
+              />
               {/* Website URL */}
-              <TextField label={t('websites.form.url')} value={formData.url} onChange={(e) => onFormChange('url', e.target.value)} fullWidth variant="outlined" placeholder={t('websites.form.urlPlaceholder')} error={!!getFieldError('url')} helperText={getFieldError('url') || t('websites.form.urlHelper')} sx={{ '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }} />
-              
+              <TextField
+                label={t('websites.form.url')}
+                value={formData.url}
+                onChange={(e) => onFormChange('url', e.target.value)}
+                fullWidth
+                variant="outlined"
+                placeholder={t('websites.form.urlPlaceholder')}
+                error={!!getFieldError('url')}
+                helperText={
+                  getFieldError('url') || t('websites.form.urlHelper')
+                }
+                sx={{
+                  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                    { borderColor: 'primary.main', borderWidth: '2px' },
+                }}
+              />
+
               {/* Logo Upload Method (RadioGroup) */}
               <FormControl component="fieldset" sx={{ mb: 2 }}>
-                <FormLabel component="legend">{t('websites.form.logoUploadMethod')}</FormLabel>
-                <RadioGroup row value={formData.logoUploadMethod || 'url'} onChange={(e) => onFormChange('logoUploadMethod', e.target.value as 'url' | 'file' | 'none')}>
-                  <FormControlLabel value="none" control={<Radio />} label={t('websites.form.logoUploadByNone') || 'None'} />
-                  <FormControlLabel value="url" control={<Radio />} label={t('websites.form.logoUploadByUrl')} />
-                  <FormControlLabel value="file" control={<Radio />} label={t('websites.form.logoUploadByFile')} />
+                <FormLabel component="legend">
+                  {t('websites.form.logoUploadMethod')}
+                </FormLabel>
+                <RadioGroup
+                  row
+                  value={formData.logoUploadMethod || 'url'}
+                  onChange={(e) =>
+                    onFormChange(
+                      'logoUploadMethod',
+                      e.target.value as 'url' | 'file' | 'none',
+                    )
+                  }
+                >
+                  <FormControlLabel
+                    value="none"
+                    control={<Radio />}
+                    label={t('websites.form.logoUploadByNone') || 'None'}
+                  />
+                  <FormControlLabel
+                    value="url"
+                    control={<Radio />}
+                    label={t('websites.form.logoUploadByUrl')}
+                  />
+                  <FormControlLabel
+                    value="file"
+                    control={<Radio />}
+                    label={t('websites.form.logoUploadByFile')}
+                  />
                 </RadioGroup>
               </FormControl>
               {/* Logo File Upload */}
               {formData.logoUploadMethod === 'file' && (
                 <Box>
-                  <Button variant="outlined" component="label" fullWidth sx={{ mb: 1 }}>
-                    {formData.logoFile ? formData.logoFile.name : 'Choose Logo File'}
-                    <input type="file" hidden accept="image/*" onChange={(e) => {
-                      const file = e.target.files?.[0] ?? null;
-                      onFormChange('logoFile', file);
-                    }} />
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    fullWidth
+                    sx={{ mb: 1 }}
+                  >
+                    {formData.logoFile
+                      ? formData.logoFile.name
+                      : 'Choose Logo File'}
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] ?? null;
+                        onFormChange('logoFile', file);
+                      }}
+                    />
                   </Button>
                   {formData.logoFile && (
                     <Alert severity="info" sx={{ mt: 1 }}>
-                      Selected file: {formData.logoFile.name} ({(formData.logoFile.size / 1024).toFixed(2)} KB)
+                      Selected file: {formData.logoFile.name} (
+                      {(formData.logoFile.size / 1024).toFixed(2)} KB)
                     </Alert>
                   )}
                   {getFieldError('logoFile') && (
-                    <Alert severity="error" sx={{ mt: 1 }}>{getFieldError('logoFile')}</Alert>
+                    <Alert severity="error" sx={{ mt: 1 }}>
+                      {getFieldError('logoFile')}
+                    </Alert>
                   )}
                 </Box>
               )}
               {/* Logo URL Input */}
               {formData.logoUploadMethod === 'url' && (
-                <TextField label={t('websites.form.logoUrl') || 'Logo URL'} value={formData.logoUrl} onChange={(e) => onFormChange('logoUrl', e.target.value)} fullWidth variant="outlined" placeholder={t('websites.form.logoUrlPlaceholder') || 'Enter the logo URL'} error={!!getFieldError('logoUrl')} helperText={getFieldError('logoUrl') || t('websites.form.logoUrlHelper')} sx={{ '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }} />
+                <TextField
+                  label={t('websites.form.logoUrl') || 'Logo URL'}
+                  value={formData.logoUrl}
+                  onChange={(e) => onFormChange('logoUrl', e.target.value)}
+                  fullWidth
+                  variant="outlined"
+                  placeholder={
+                    t('websites.form.logoUrlPlaceholder') ||
+                    'Enter the logo URL'
+                  }
+                  error={!!getFieldError('logoUrl')}
+                  helperText={
+                    getFieldError('logoUrl') || t('websites.form.logoUrlHelper')
+                  }
+                  sx={{
+                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                      { borderColor: 'primary.main', borderWidth: '2px' },
+                  }}
+                />
               )}
               {/* None option info */}
               {formData.logoUploadMethod === 'none' && (
                 <Alert severity="info">
-                  {t('websites.form.logoNoneInfo') || 'No logo will be saved for this website'}
+                  {t('websites.form.logoNoneInfo') ||
+                    'No logo will be saved for this website'}
                 </Alert>
               )}
 
-              {/* Tags */}
-              <FormControl fullWidth error={!!getFieldError('tags')}>
-                <FormLabel sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}>{t('websites.form.tags')}</FormLabel>
-                <Select<string[]> multiple value={formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : []} onChange={(e) => { const value = e.target.value; const tagsArray = typeof value === 'string' ? value.split(',') : value; onFormChange('tags', tagsArray.join(',')); }} input={<OutlinedInput />} renderValue={(selected) => (<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>{selected.map((value) => (<Chip key={value} label={value} size="small" />))}</Box>)} sx={{ '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }}>
-                  {availableTags.length > 0 ? (
-                    availableTags.map((tag) => (
-                      <MenuItem key={tag} value={tag}>{tag}</MenuItem>
-                    ))
-                  ) : (
-                    <MenuItem disabled><Typography variant="body2" color="text.secondary">No tags available for current language</Typography></MenuItem>
-                  )}
-                </Select>
-                {getFieldError('tags') ? (
-                  <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>{getFieldError('tags')}</Typography>
-                ) : (
-                  <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, ml: 1.5 }}>{t('websites.form.tagsHelper')}</Typography>
-                )}
-              </FormControl>
               {/* Channel */}
-              <FormControl fullWidth variant="outlined" error={!!getFieldError('channel')}>
-                <InputLabel>{t('websites.form.channel') || 'Channel'}</InputLabel>
+              <FormControl
+                fullWidth
+                variant="outlined"
+                error={!!getFieldError('channel')}
+              >
+                <InputLabel>
+                  {t('websites.form.channel') || 'Channel'}
+                </InputLabel>
                 <Select
                   value={formData.channel || ''}
-                  onChange={(e) => onFormChange('channel', e.target.value)}
+                  onChange={(e) => handleChannelChange(e.target.value)}
                   label={t('websites.form.channel') || 'Channel'}
-                  sx={{ '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }}
+                  sx={{
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'primary.main',
+                      borderWidth: '2px',
+                    },
+                  }}
                 >
-                  <MenuItem value=""><em>None</em></MenuItem>
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
                   {CHANNEL_OPTIONS.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText>{getFieldError('channel') || 'Select channel identifier'}</FormHelperText>
+                <FormHelperText>
+                  {getFieldError('channel') || 'Select channel identifier'}
+                </FormHelperText>
+              </FormControl>
+
+              {/* Tags */}
+              <FormControl fullWidth error={!!getFieldError('tags')}>
+                <FormLabel
+                  sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}
+                >
+                  {t('websites.form.tags')}
+                </FormLabel>
+                <Select<string[]>
+                  multiple
+                  value={
+                    formData.tags
+                      ? formData.tags
+                          .split(',')
+                          .map((t) => t.trim())
+                          .filter(Boolean)
+                      : []
+                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    const tagsArray =
+                      typeof value === 'string' ? value.split(',') : value;
+                    onFormChange('tags', tagsArray.join(','));
+                  }}
+                  disabled={!formData.channel}
+                  input={<OutlinedInput />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} size="small" />
+                      ))}
+                    </Box>
+                  )}
+                  sx={{
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'primary.main',
+                      borderWidth: '2px',
+                    },
+                  }}
+                >
+                  {availableTags.length > 0 ? (
+                    availableTags.map((tag) => (
+                      <MenuItem key={tag} value={tag}>
+                        {tag}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>
+                      <Typography variant="body2" color="text.secondary">
+                        Select a channel to load tags
+                      </Typography>
+                    </MenuItem>
+                  )}
+                </Select>
+                {getFieldError('tags') ? (
+                  <Typography
+                    variant="caption"
+                    color="error"
+                    sx={{ mt: 0.5, ml: 1.5 }}
+                  >
+                    {getFieldError('tags')}
+                  </Typography>
+                ) : (
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ mt: 0.5, ml: 1.5 }}
+                  >
+                    {t('websites.form.tagsHelper')}
+                  </Typography>
+                )}
               </FormControl>
               {/* Language */}
               <FormControl fullWidth error={!!getFieldError('lang')}>
-                <FormLabel sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}>{t('websites.form.lang')}</FormLabel>
-                <Select value={formData.lang} onChange={(e) => onFormChange('lang', e.target.value)} displayEmpty sx={{ '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }}>
+                <FormLabel
+                  sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}
+                >
+                  {t('websites.form.lang')}
+                </FormLabel>
+                <Select
+                  value={formData.lang}
+                  onChange={(e) => onFormChange('lang', e.target.value)}
+                  displayEmpty
+                  sx={{
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'primary.main',
+                      borderWidth: '2px',
+                    },
+                  }}
+                >
                   {LANGUAGE_OPTIONS.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
                   ))}
                 </Select>
                 {getFieldError('lang') && (
-                  <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>{getFieldError('lang')}</Typography>
+                  <Typography
+                    variant="caption"
+                    color="error"
+                    sx={{ mt: 0.5, ml: 1.5 }}
+                  >
+                    {getFieldError('lang')}
+                  </Typography>
                 )}
               </FormControl>
               {/* Display Order */}
-              <TextField label={t('websites.form.displayOrder')} type="number" value={formData.displayOrder} onChange={(e) => onFormChange('displayOrder', parseInt(e.target.value) || 0)} fullWidth variant="outlined" placeholder={t('websites.form.displayOrderPlaceholder')} error={!!getFieldError('displayOrder')} helperText={getFieldError('displayOrder') || t('websites.form.displayOrderHelper')} sx={{ '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }} />
-              <TextField label={t('websites.form.description')} value={formData.description} onChange={(e) => onFormChange('description', e.target.value)} fullWidth multiline rows={4} variant="outlined" placeholder={t('websites.form.descriptionPlaceholder')} error={!!getFieldError('description')} helperText={getFieldError('description') || t('websites.form.descriptionHelper')} sx={{ '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }} />
+              <TextField
+                label={t('websites.form.displayOrder')}
+                type="number"
+                value={formData.displayOrder}
+                onChange={(e) =>
+                  onFormChange('displayOrder', parseInt(e.target.value) || 0)
+                }
+                fullWidth
+                variant="outlined"
+                placeholder={t('websites.form.displayOrderPlaceholder')}
+                error={!!getFieldError('displayOrder')}
+                helperText={
+                  getFieldError('displayOrder') ||
+                  t('websites.form.displayOrderHelper')
+                }
+                sx={{
+                  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                    { borderColor: 'primary.main', borderWidth: '2px' },
+                }}
+              />
+              <TextField
+                label={t('websites.form.description')}
+                value={formData.description}
+                onChange={(e) => onFormChange('description', e.target.value)}
+                fullWidth
+                multiline
+                rows={4}
+                variant="outlined"
+                placeholder={t('websites.form.descriptionPlaceholder')}
+                error={!!getFieldError('description')}
+                helperText={
+                  getFieldError('description') ||
+                  t('websites.form.descriptionHelper')
+                }
+                sx={{
+                  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                    { borderColor: 'primary.main', borderWidth: '2px' },
+                }}
+              />
             </Box>
           </Box>
           <Divider />
           <Box>
-            <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>{t('websites.form.settings') || 'Settings'}</Typography>
+            <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
+              {t('websites.form.settings') || 'Settings'}
+            </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <FormControlLabel control={<Switch checked={formData.isActive} onChange={(e) => onFormChange('isActive', e.target.checked)} color="primary" />} label={<Box sx={{ display: 'flex', flexDirection: 'column' }}><Typography variant="body2" sx={{ fontWeight: 500 }}>{t('websites.form.isActive')}</Typography><Typography variant="caption" color="text.secondary">Active websites are visible to users</Typography></Box>} sx={{ alignItems: 'flex-start', ml: 0 }} />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={formData.isActive}
+                    onChange={(e) => onFormChange('isActive', e.target.checked)}
+                    color="primary"
+                  />
+                }
+                label={
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      {t('websites.form.isActive')}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Active websites are visible to users
+                    </Typography>
+                  </Box>
+                }
+                sx={{ alignItems: 'flex-start', ml: 0 }}
+              />
             </Box>
           </Box>
           {Object.keys(formErrors).length > 0 && (
             <Alert severity="error" sx={{ mt: 2 }}>
-              <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>{t('websites.form.correctErrors')}</Typography>
+              <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+                {t('websites.form.correctErrors')}
+              </Typography>
               <Box component="ul" sx={{ pl: 2, m: 0 }}>
                 {Object.entries(formErrors).map(([field, error]) => (
-                  <li key={field}><Typography variant="body2">{Array.isArray(error) ? error.join(', ') : error}</Typography></li>
+                  <li key={field}>
+                    <Typography variant="body2">
+                      {Array.isArray(error) ? error.join(', ') : error}
+                    </Typography>
+                  </li>
                 ))}
               </Box>
             </Alert>
@@ -216,9 +465,40 @@ export const WebsiteCreateDialog = ({
         </Box>
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 3, pt: 2, gap: 1 }}>
-        <Button onClick={onClose} variant="outlined" disabled={loading} sx={{ borderRadius: 2, px: 3, textTransform: 'none', fontWeight: 600 }}>{t('websites.actions.cancel')}</Button>
-        <Button onClick={onSubmit} variant="contained" disabled={loading} startIcon={loading ? <CircularProgress size={16} /> : null} sx={{ borderRadius: 2, px: 3, textTransform: 'none', fontWeight: 600, minWidth: 120 }}>{(() => { if (loading) { return 'Creating...'; } return t('websites.actions.save'); })()}</Button>
+        <Button
+          onClick={onClose}
+          variant="outlined"
+          disabled={loading}
+          sx={{
+            borderRadius: 2,
+            px: 3,
+            textTransform: 'none',
+            fontWeight: 600,
+          }}
+        >
+          {t('websites.actions.cancel')}
+        </Button>
+        <Button
+          onClick={onSubmit}
+          variant="contained"
+          disabled={loading}
+          startIcon={loading ? <CircularProgress size={16} /> : null}
+          sx={{
+            borderRadius: 2,
+            px: 3,
+            textTransform: 'none',
+            fontWeight: 600,
+            minWidth: 120,
+          }}
+        >
+          {(() => {
+            if (loading) {
+              return 'Creating...';
+            }
+            return t('websites.actions.save');
+          })()}
+        </Button>
       </DialogActions>
     </Dialog>
   );
-}
+};

@@ -27,6 +27,7 @@ import { Plus, Upload } from 'lucide-react';
 import type { FileFormData } from '../types/file.types';
 import { LANGUAGE_OPTIONS } from '../constants';
 import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
+import { getAppSettingTags } from '../../common/utils/appSettingsTags';
 
 interface FileCreateDialogProps {
   open: boolean;
@@ -50,29 +51,24 @@ const FileCreateDialog = ({
   const { t, i18n } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const availableTags = useMemo(() => {
-    try {
-      const settings = localStorage.getItem('gjp_app_settings');
-      if (!settings) return [];
-      const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
-      const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
-      const fileTagsSetting = appSettings.find(
-        (setting) => setting.name === 'file_tags' && setting.lang === currentLang
-      );
-      if (!fileTagsSetting) return [];
-      return fileTagsSetting.value.split(',').map((tag) => tag.trim()).filter(Boolean);
-    } catch (error) {
-      console.error('[FileCreateDialog] Error loading tags:', error);
-      return [];
-    }
-  }, [i18n.language]);
+  const availableTags = useMemo(
+    () => getAppSettingTags('file_tags', i18n.language, formData.channel),
+
+    [i18n.language, formData.channel],
+  );
 
   const availableLangOptions = useMemo(() => {
     try {
       const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return LANGUAGE_OPTIONS;
-      const appSettings = JSON.parse(settings) as Array<{ name: string; value: string; lang: string }>;
-      const currentLang = i18n.language.toUpperCase().startsWith('ZH') ? 'ZH' : 'EN';
+      const appSettings = JSON.parse(settings) as Array<{
+        name: string;
+        value: string;
+        lang: string;
+      }>;
+      const currentLang = i18n.language.toUpperCase().startsWith('ZH')
+        ? 'ZH'
+        : 'EN';
       const langSetting =
         appSettings.find((s) => s.name === 'lang' && s.lang === currentLang) ||
         appSettings.find((s) => s.name === 'lang');
@@ -97,6 +93,11 @@ const FileCreateDialog = ({
     return error || '';
   };
 
+  const handleChannelChange = (value: string) => {
+    onFormChange('channel', value);
+    onFormChange('tags', '');
+  };
+
   const [localSaving, setLocalSaving] = useState(false);
 
   useEffect(() => {
@@ -105,7 +106,11 @@ const FileCreateDialog = ({
 
   // If user enters an originalUrl and filename is empty, try to infer a filename
   useEffect(() => {
-    if (formData.uploadMethod === 'url' && formData.originalUrl && !formData.filename) {
+    if (
+      formData.uploadMethod === 'url' &&
+      formData.originalUrl &&
+      !formData.filename
+    ) {
       try {
         const parsed = new URL(formData.originalUrl);
         const segments = parsed.pathname.split('/').filter(Boolean);
@@ -117,7 +122,10 @@ const FileCreateDialog = ({
       } catch (err) {
         // invalid URL — log for debugging but don't block the user
         // eslint-disable-next-line no-console
-        console.debug('[FileCreateDialog] failed to parse originalUrl for filename', err);
+        console.debug(
+          '[FileCreateDialog] failed to parse originalUrl for filename',
+          err,
+        );
       }
     }
     // we only want to run when user switches to url upload or originalUrl changes
@@ -136,11 +144,20 @@ const FileCreateDialog = ({
       fullWidth
     >
       {loading && (
-        <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1 }}>
+        <Box
+          sx={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1 }}
+        >
           <LinearProgress />
         </Box>
       )}
-      <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1.5, pt: loading ? 3 : 2 }}>
+      <DialogTitle
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1.5,
+          pt: loading ? 3 : 2,
+        }}
+      >
         <Plus size={20} />
         <Typography variant="h6" component="span">
           {t('files.create')}
@@ -166,14 +183,26 @@ const FileCreateDialog = ({
           />
 
           <FormControl component="fieldset">
-            <FormLabel component="legend">{t('files.form.uploadMethod')}</FormLabel>
+            <FormLabel component="legend">
+              {t('files.form.uploadMethod')}
+            </FormLabel>
             <RadioGroup
               row
               value={formData.uploadMethod}
-              onChange={(e) => onFormChange('uploadMethod', e.target.value as 'url' | 'file')}
+              onChange={(e) =>
+                onFormChange('uploadMethod', e.target.value as 'url' | 'file')
+              }
             >
-              <FormControlLabel value="url" control={<Radio />} label={t('files.form.byUrl')} />
-              <FormControlLabel value="file" control={<Radio />} label={t('files.form.uploadFile')} />
+              <FormControlLabel
+                value="url"
+                control={<Radio />}
+                label={t('files.form.byUrl')}
+              />
+              <FormControlLabel
+                value="file"
+                control={<Radio />}
+                label={t('files.form.uploadFile')}
+              />
             </RadioGroup>
           </FormControl>
 
@@ -186,7 +215,9 @@ const FileCreateDialog = ({
                 sx={{ mb: 1 }}
                 onClick={() => fileInputRef.current?.click()}
               >
-                {formData.file ? formData.file.name : t('files.form.chooseFile')}
+                {formData.file
+                  ? formData.file.name
+                  : t('files.form.chooseFile')}
               </Button>
               <input
                 ref={fileInputRef}
@@ -243,18 +274,48 @@ const FileCreateDialog = ({
             </>
           )}
 
+          <FormControl fullWidth>
+            <FormLabel sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}>
+              {t('files.form.channel') || 'Channel'}
+            </FormLabel>
+            <Select
+              value={formData.channel || ''}
+              onChange={(e) => handleChannelChange(e.target.value)}
+              size="small"
+              sx={{ borderRadius: 2 }}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {CHANNEL_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
           <FormControl fullWidth error={!!getFieldError('tags')}>
             <FormLabel sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}>
               {t('files.form.tags')}
             </FormLabel>
             <Select<string[]>
               multiple
-              value={formData.tags ? formData.tags.split(',').map((tag) => tag.trim()).filter(Boolean) : []}
+              value={
+                formData.tags
+                  ? formData.tags
+                      .split(',')
+                      .map((tag) => tag.trim())
+                      .filter(Boolean)
+                  : []
+              }
               onChange={(e) => {
                 const value = e.target.value;
-                const tagsArray = typeof value === 'string' ? value.split(',') : value;
+                const tagsArray =
+                  typeof value === 'string' ? value.split(',') : value;
                 onFormChange('tags', tagsArray.join(','));
               }}
+              disabled={!formData.channel}
               input={<OutlinedInput />}
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -263,7 +324,12 @@ const FileCreateDialog = ({
                   ))}
                 </Box>
               )}
-              sx={{ '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main', borderWidth: '2px' } }}
+              sx={{
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'primary.main',
+                  borderWidth: '2px',
+                },
+              }}
             >
               {availableTags.length > 0 ? (
                 availableTags.map((tag) => (
@@ -274,28 +340,20 @@ const FileCreateDialog = ({
               ) : (
                 <MenuItem disabled>
                   <Typography variant="body2" color="text.secondary">
-                    {t('files.form.noTags')}
+                    Select a channel to load tags
                   </Typography>
                 </MenuItem>
               )}
             </Select>
             {getFieldError('tags') && (
-              <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
+              <Typography
+                variant="caption"
+                color="error"
+                sx={{ mt: 0.5, ml: 1.5 }}
+              >
                 {getFieldError('tags')}
               </Typography>
             )}
-          </FormControl>
-
-          <FormControl fullWidth>
-            <FormLabel sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}>
-              {t('files.form.channel') || 'Channel'}
-            </FormLabel>
-            <Select value={formData.channel || ''} onChange={(e) => onFormChange('channel', e.target.value)} size="small" sx={{ borderRadius: 2 }}>
-              <MenuItem value=""><em>None</em></MenuItem>
-              {CHANNEL_OPTIONS.map((option) => (
-                <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-              ))}
-            </Select>
           </FormControl>
 
           <FormControl fullWidth>
@@ -321,7 +379,9 @@ const FileCreateDialog = ({
               label={t('files.form.displayOrder')}
               type="number"
               value={formData.displayOrder}
-              onChange={(e) => onFormChange('displayOrder', Number(e.target.value))}
+              onChange={(e) =>
+                onFormChange('displayOrder', Number(e.target.value))
+              }
               sx={{ flex: 1, minWidth: 160 }}
             />
             <FormControlLabel
@@ -353,7 +413,9 @@ const FileCreateDialog = ({
           }}
           disabled={loading}
         >
-          {localSaving ? t('files.messages.savingFile') : t('files.actions.save')}
+          {localSaving
+            ? t('files.messages.savingFile')
+            : t('files.actions.save')}
         </Button>
       </DialogActions>
     </Dialog>

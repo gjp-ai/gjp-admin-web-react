@@ -236,7 +236,9 @@ const ImagesPage: React.FC = () => {
         actionType={dialog.actionType}
         formData={dialog.formData}
         selectedImage={dialog.selectedImage}
-        onFormChange={(field, value) => dialog.setFormData({ ...dialog.formData, [field]: value })}
+        onFormChange={(field, value) =>
+          dialog.setFormData((prev) => ({ ...prev, [field]: value }))
+        }
         onSubmit={async () => {
           try {
             dialog.setLoading(true);

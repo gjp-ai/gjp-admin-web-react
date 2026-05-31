@@ -92,6 +92,23 @@ const QuestionSearchPanel: React.FC<QuestionSearchPanelProps> = ({
             </Select>
           </FormControl>
 
+           <FormControl fullWidth size='small'>
+            <FormLabel sx={{ mb: 1, fontSize: '0.875rem', fontWeight: 500 }}>{t('questions.fields.channel') || 'Channel'}</FormLabel>
+            <Select
+              value={searchFormData.channel || ''}
+              onChange={(e) => onFormChange('channel', e.target.value)}
+              displayEmpty
+              sx={{ borderRadius: 1.5 }}
+            >
+              <MenuItem value=''>{t('common.all')}</MenuItem>
+              {CHANNEL_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
           <FormControl fullWidth size='small'>
             <FormLabel sx={{ mb: 1, fontSize: '0.875rem', fontWeight: 500 }}>{t('questions.fields.tags')}</FormLabel>
             <Select
@@ -104,23 +121,6 @@ const QuestionSearchPanel: React.FC<QuestionSearchPanelProps> = ({
               {availableTags.map((tag) => (
                 <MenuItem key={tag} value={tag}>
                   {tag}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth size='small'>
-            <FormLabel sx={{ mb: 1, fontSize: '0.875rem', fontWeight: 500 }}>{t('questions.fields.channel') || 'Channel'}</FormLabel>
-            <Select
-              value={searchFormData.channel || ''}
-              onChange={(e) => onFormChange('channel', e.target.value)}
-              displayEmpty
-              sx={{ borderRadius: 1.5 }}
-            >
-              <MenuItem value=''>{t('common.all')}</MenuItem>
-              {CHANNEL_OPTIONS.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
                 </MenuItem>
               ))}
             </Select>

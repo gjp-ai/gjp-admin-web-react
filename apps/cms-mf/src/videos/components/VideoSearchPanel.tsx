@@ -173,6 +173,18 @@ const VideoSearchPanel: React.FC<VideoSearchPanelProps> = ({ searchFormData, loa
           </Box>
 
           <Box>
+            <FormLabel sx={{ fontWeight: 500, color: 'text.primary', mb: 1, display: 'block' }}>{t('videos.form.channel') || 'Channel'}</FormLabel>
+            <FormControl fullWidth size="small">
+              <Select value={searchFormData.channel || ''} onChange={(e) => onFormChange('channel', e.target.value)} disabled={loading} displayEmpty sx={{ borderRadius: 2 }}>
+                <MenuItem value="">{t('videos.filters.all')}</MenuItem>
+                {CHANNEL_OPTIONS.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box>
             <FormLabel sx={{ fontWeight: 500, color: 'text.primary', mb: 1, display: 'block' }}>{t('videos.form.tags')}</FormLabel>
             <FormControl fullWidth size="small">
               <Select<string[]>
@@ -193,18 +205,6 @@ const VideoSearchPanel: React.FC<VideoSearchPanelProps> = ({ searchFormData, loa
                 sx={{ borderRadius: 2 }}
               >
                 {availableTags.length > 0 ? availableTags.map(tag => (<MenuItem key={tag} value={tag}>{tag}</MenuItem>)) : (<MenuItem disabled><Typography variant="body2" color="text.secondary">No tags available</Typography></MenuItem>)}
-              </Select>
-            </FormControl>
-          </Box>
-
-          <Box>
-            <FormLabel sx={{ fontWeight: 500, color: 'text.primary', mb: 1, display: 'block' }}>{t('videos.form.channel') || 'Channel'}</FormLabel>
-            <FormControl fullWidth size="small">
-              <Select value={searchFormData.channel || ''} onChange={(e) => onFormChange('channel', e.target.value)} disabled={loading} displayEmpty sx={{ borderRadius: 2 }}>
-                <MenuItem value="">{t('videos.filters.all')}</MenuItem>
-                {CHANNEL_OPTIONS.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                ))}
               </Select>
             </FormControl>
           </Box>

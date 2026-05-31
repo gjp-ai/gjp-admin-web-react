@@ -229,6 +229,26 @@ const ArticleSearchPanel: React.FC<ArticleSearchPanelProps> = ({
 
           <Box>
             <FormLabel sx={{ fontWeight: 500, color: 'text.primary', mb: 1, display: 'block' }}>
+              {t('articles.form.channel') || 'Channel'}
+            </FormLabel>
+            <FormControl fullWidth size='small'>
+              <Select
+                value={searchFormData.channel || ''}
+                onChange={(e) => onFormChange('channel', e.target.value)}
+                disabled={loading}
+                displayEmpty
+                sx={{ borderRadius: 2 }}
+              >
+                <MenuItem value=''>{t('articles.filters.all')}</MenuItem>
+                {CHANNEL_OPTIONS.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box>
+            <FormLabel sx={{ fontWeight: 500, color: 'text.primary', mb: 1, display: 'block' }}>
               {t('articles.form.tags')}
             </FormLabel>
             <FormControl fullWidth size='small'>
@@ -270,26 +290,6 @@ const ArticleSearchPanel: React.FC<ArticleSearchPanelProps> = ({
                     </Typography>
                   </MenuItem>
                 )}
-              </Select>
-            </FormControl>
-          </Box>
-
-          <Box>
-            <FormLabel sx={{ fontWeight: 500, color: 'text.primary', mb: 1, display: 'block' }}>
-              {t('articles.form.channel') || 'Channel'}
-            </FormLabel>
-            <FormControl fullWidth size='small'>
-              <Select
-                value={searchFormData.channel || ''}
-                onChange={(e) => onFormChange('channel', e.target.value)}
-                disabled={loading}
-                displayEmpty
-                sx={{ borderRadius: 2 }}
-              >
-                <MenuItem value=''>{t('articles.filters.all')}</MenuItem>
-                {CHANNEL_OPTIONS.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                ))}
               </Select>
             </FormControl>
           </Box>

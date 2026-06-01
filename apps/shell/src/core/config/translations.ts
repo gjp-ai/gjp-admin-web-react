@@ -37,6 +37,7 @@ const shellResources = {
         roles: 'Roles',
         accessControl: 'Access',
         content: 'CMS',
+        edu: 'EDU',
         media: 'Media',
         system: 'System'
       },
@@ -180,6 +181,7 @@ const shellResources = {
         roles: '角色管理',
         accessControl: '访问控制',
         content: '内容管理',
+        edu: '教育',
         media: '媒体库',
         system: '系统设置',
       },

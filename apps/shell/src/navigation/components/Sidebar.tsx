@@ -35,6 +35,7 @@ import {
   Folder,
   Lock,
   HelpCircle,
+  BookOpen,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -164,6 +165,19 @@ const Sidebar = ({ drawerWidth, collapsedWidth, open, onClose, variant }: Sideba
           icon: FileText,
         },
       ]
+    },
+    {
+      key: 'edu',
+      title: t('navigation.edu'),
+      icon: BookOpen,
+      children: [
+        {
+          key: 'edu-vocabulary',
+          title: t('vocabulary.title', 'Vocabulary'),
+          path: '/edu-vocabulary',
+          icon: BookOpen,
+        },
+      ],
     },
     {
       key: 'system',

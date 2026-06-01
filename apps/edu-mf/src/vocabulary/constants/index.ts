@@ -1,0 +1,40 @@
+export const STATUS_MAPS: {
+  active: Record<string, { label: string; color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' }>;
+} = {
+  active: {
+    true: { label: 'Active', color: 'success' },
+    false: { label: 'Inactive', color: 'default' },
+  },
+};
+
+export const LANGUAGE_OPTIONS = [
+  { value: 'EN', label: 'English' },
+  { value: 'ZH', label: 'Chinese' },
+];
+
+export const DIFFICULTY_LEVEL_OPTIONS = [
+  { value: 'easy', label: 'Easy' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'hard', label: 'Hard' },
+];
+
+export const PART_OF_SPEECH_OPTIONS = [
+  { value: 'noun', label: 'Noun' },
+  { value: 'verb', label: 'Verb' },
+  { value: 'adjective', label: 'Adjective' },
+  { value: 'adverb', label: 'Adverb' },
+  { value: 'preposition', label: 'Preposition' },
+  { value: 'pronoun', label: 'Pronoun' },
+  { value: 'conjunction', label: 'Conjunction' },
+  { value: 'interjection', label: 'Interjection' },
+];
+
+export const PART_OF_SPEECH_SETTING_KEY = 'part_of_speech';
+export const DIFFICULTY_LEVEL_SETTING_KEY = 'difficulty_level';
+export const VOCABULARY_TAG_SETTING_KEY = 'vocabulary_tags';
+
+export const VOCABULARY_CONSTANTS = {
+  DEFAULT_PAGE_SIZE: 20,
+  SORT_FIELD: 'updatedAt',
+  SORT_DIRECTION: 'desc' as const,
+};

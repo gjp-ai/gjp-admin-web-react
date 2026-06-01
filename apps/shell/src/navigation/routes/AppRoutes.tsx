@@ -77,6 +77,11 @@ const QuestionsPage = lazy(() =>
     default: module.default,
   })),
 );
+const VocabularyPage = lazy(() =>
+  import("../../../../edu-mf/src/public-api").then((module) => ({
+    default: module.VocabularyPage,
+  })),
+);
 
 import "../../dashboard";
 import DashboardPage from "../../dashboard/pages/DashboardPage";
@@ -381,6 +386,16 @@ const AppRoutes = () => {
             element={
               <Suspense fallback={<AppLoading />}>
                 <QuestionsPage />
+              </Suspense>
+            }
+          />
+
+          {/* Education Vocabulary */}
+          <Route
+            path="edu-vocabulary"
+            element={
+              <Suspense fallback={<AppLoading />}>
+                <VocabularyPage />
               </Suspense>
             }
           />

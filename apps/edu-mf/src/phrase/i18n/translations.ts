@@ -1,0 +1,116 @@
+import i18n from '../../../../shared-lib/src/i18n/i18n';
+
+const enTranslations = {
+  phrase: {
+    title: 'Phrase',
+    subtitle: 'Manage education phrases, meanings, examples, and audio',
+    pageTitle: 'Phrase Management',
+    create: 'Create Phrase',
+    edit: 'Edit Phrase',
+    delete: 'Delete Phrase',
+    view: 'View Phrase',
+    noRecordsFound: 'No phrases found',
+    fields: {
+      name: 'Phrase Text',
+      phonetic: 'Phonetic',
+      phoneticAudio: 'Phonetic Audio',
+      phoneticAudioFilename: 'Audio Filename',
+      phoneticAudioOriginalUrl: 'Audio Original URL',
+      uploadMethod: 'Audio Upload Method',
+      byUrl: 'By URL',
+      uploadFile: 'Upload File',
+      chooseAudioFile: 'Choose Audio File',
+      selectedFile: 'Selected file',
+      synonyms: 'Synonyms',
+      translation: 'Translation',
+      meaningClue: 'Meaning Clue',
+      meaning: 'Meaning',
+      easyMeaning: 'Easy Meaning',
+      sentenceOne: 'Sentence One',
+      sentenceTwo: 'Sentence Two',
+      difficultyLevel: 'Difficulty Level',
+      dictionaryUrl: 'Dictionary URL',
+      term: 'Term',
+      week: 'Week',
+      channel: 'Channel',
+      tags: 'Tags',
+      language: 'Language',
+      displayOrder: 'Order',
+      status: 'Status',
+      isActive: 'Active',
+      updatedAt: 'Updated At',
+    },
+    placeholders: {
+      searchName: 'Search by phrase name',
+      searchTags: 'Search by tags',
+    },
+    actions: {
+      view: 'View',
+      edit: 'Edit',
+      delete: 'Delete',
+    },
+    messages: {
+      deleteConfirm: 'Are you sure you want to delete the phrase',
+    },
+  },
+};
+
+const zhTranslations = {
+  phrase: {
+    title: '短语管理',
+    subtitle: '管理教育短语、释义、例句和音频',
+    pageTitle: '短语管理',
+    create: '创建短语',
+    edit: '编辑短语',
+    delete: '删除短语',
+    view: '查看短语',
+    noRecordsFound: '未找到短语',
+    fields: {
+      name: '短语名称',
+      phonetic: '音标',
+      phoneticAudio: '发音音频',
+      phoneticAudioFilename: '音频文件名',
+      phoneticAudioOriginalUrl: '音频原始 URL',
+      uploadMethod: '音频上传方式',
+      byUrl: '通过 URL',
+      uploadFile: '上传文件',
+      chooseAudioFile: '选择音频文件',
+      selectedFile: '已选择文件',
+      synonyms: '同义词',
+      translation: '翻译',
+      meaningClue: '含义提示',
+      meaning: '含义',
+      easyMeaning: '简易含义',
+      sentenceOne: '例句一',
+      sentenceTwo: '例句二',
+      difficultyLevel: '难度',
+      dictionaryUrl: '词典链接',
+      term: '学期',
+      week: '周',
+      channel: '频道',
+      tags: '标签',
+      language: '语言',
+      displayOrder: '排序',
+      status: '状态',
+      isActive: '激活',
+      updatedAt: '更新时间',
+    },
+    placeholders: {
+      searchName: '按短语名称搜索',
+      searchTags: '按标签搜索',
+    },
+    actions: {
+      view: '查看',
+      edit: '编辑',
+      delete: '删除',
+    },
+    messages: {
+      deleteConfirm: '您确定要删除短语',
+    },
+  },
+};
+
+i18n.addResourceBundle('en', 'translation', enTranslations, true, true);
+i18n.addResourceBundle('zh', 'translation', zhTranslations, true, true);
+
+export default i18n;

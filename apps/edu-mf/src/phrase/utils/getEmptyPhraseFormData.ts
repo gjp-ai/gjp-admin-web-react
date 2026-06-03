@@ -1,0 +1,26 @@
+import type { PhraseFormData } from '../types/phrase.types';
+
+export const getEmptyPhraseFormData = (defaultLang = 'EN'): PhraseFormData => ({
+  name: '',
+  phonetic: '',
+  phoneticAudioFilename: '',
+  phoneticAudioOriginalUrl: '',
+  phoneticAudioUploadMethod: 'url',
+  phoneticAudioFile: null,
+  synonyms: '',
+  translation: '',
+  meaningClue: '',
+  meaning: '',
+  easyMeaning: '',
+  sentenceOne: '',
+  sentenceTwo: '',
+  difficultyLevel: '',
+  dictionaryUrl: '',
+  term: undefined,
+  week: undefined,
+  channel: 'All',
+  tags: '',
+  lang: defaultLang,
+  displayOrder: 0,
+  isActive: true,
+});

@@ -177,6 +177,18 @@ const Sidebar = ({ drawerWidth, collapsedWidth, open, onClose, variant }: Sideba
           path: '/edu-vocabulary',
           icon: BookOpen,
         },
+        {
+          key: 'edu-phrase',
+          title: t('phrase.title', 'Phrase'),
+          path: '/edu-phrase',
+          icon: BookOpen,
+        },
+        {
+          key: 'edu-sentence',
+          title: t('sentence.title', 'Sentence'),
+          path: '/edu-sentence',
+          icon: BookOpen,
+        },
       ],
     },
     {

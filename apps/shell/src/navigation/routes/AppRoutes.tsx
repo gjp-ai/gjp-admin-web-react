@@ -82,6 +82,16 @@ const VocabularyPage = lazy(() =>
     default: module.VocabularyPage,
   })),
 );
+const PhrasePage = lazy(() =>
+  import("../../../../edu-mf/src/public-api").then((module) => ({
+    default: module.PhrasePage,
+  })),
+);
+const SentencePage = lazy(() =>
+  import("../../../../edu-mf/src/public-api").then((module) => ({
+    default: module.SentencePage,
+  })),
+);
 
 import "../../dashboard";
 import DashboardPage from "../../dashboard/pages/DashboardPage";
@@ -396,6 +406,26 @@ const AppRoutes = () => {
             element={
               <Suspense fallback={<AppLoading />}>
                 <VocabularyPage />
+              </Suspense>
+            }
+          />
+
+          {/* Education Phrase */}
+          <Route
+            path="edu-phrase"
+            element={
+              <Suspense fallback={<AppLoading />}>
+                <PhrasePage />
+              </Suspense>
+            }
+          />
+
+          {/* Education Sentence */}
+          <Route
+            path="edu-sentence"
+            element={
+              <Suspense fallback={<AppLoading />}>
+                <SentencePage />
               </Suspense>
             }
           />

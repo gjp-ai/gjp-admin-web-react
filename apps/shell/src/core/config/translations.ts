@@ -112,6 +112,18 @@ const shellResources = {
       trueFalseQuestionRus: {
         title: 'T/FQ',
       },
+      multipleChoiceQuestion: {
+        title: 'Multiple Choice Question',
+      },
+      fillBlankQuestion: {
+        title: 'Fill Blank Question',
+      },
+      freeTextQuestion: {
+        title: 'Free Text Question',
+      },
+      trueFalseQuestion: {
+        title: 'True/False Question',
+      },
       imageRus: {
         title: 'Images',
       },
@@ -254,6 +266,18 @@ const shellResources = {
         title: '填空题',
       },
       trueFalseQuestionRus: {
+        title: '判断题',
+      },
+      multipleChoiceQuestion: {
+        title: '选择题',
+      },
+      fillBlankQuestion: {
+        title: '填空题',
+      },
+      freeTextQuestion: {
+        title: '问答题',
+      },
+      trueFalseQuestion: {
         title: '判断题',
       },
       imageRus: {

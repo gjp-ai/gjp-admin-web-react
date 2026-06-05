@@ -92,6 +92,26 @@ const SentencePage = lazy(() =>
     default: module.SentencePage,
   })),
 );
+const MultipleChoiceQuestionPage = lazy(() =>
+  import("../../../../edu-mf/src/public-api").then((module) => ({
+    default: module.MultipleChoiceQuestionPage,
+  })),
+);
+const FillBlankQuestionPage = lazy(() =>
+  import("../../../../edu-mf/src/public-api").then((module) => ({
+    default: module.FillBlankQuestionPage,
+  })),
+);
+const FreeTextQuestionPage = lazy(() =>
+  import("../../../../edu-mf/src/public-api").then((module) => ({
+    default: module.FreeTextQuestionPage,
+  })),
+);
+const TrueFalseQuestionPage = lazy(() =>
+  import("../../../../edu-mf/src/public-api").then((module) => ({
+    default: module.TrueFalseQuestionPage,
+  })),
+);
 
 import "../../dashboard";
 import DashboardPage from "../../dashboard/pages/DashboardPage";
@@ -426,6 +446,46 @@ const AppRoutes = () => {
             element={
               <Suspense fallback={<AppLoading />}>
                 <SentencePage />
+              </Suspense>
+            }
+          />
+
+          {/* Education Multiple Choice Questions */}
+          <Route
+            path="edu-multiple-choice-question"
+            element={
+              <Suspense fallback={<AppLoading />}>
+                <MultipleChoiceQuestionPage />
+              </Suspense>
+            }
+          />
+
+          {/* Education Fill Blank Questions */}
+          <Route
+            path="edu-fill-blank-question"
+            element={
+              <Suspense fallback={<AppLoading />}>
+                <FillBlankQuestionPage />
+              </Suspense>
+            }
+          />
+
+          {/* Education Free Text Questions */}
+          <Route
+            path="edu-free-text-question"
+            element={
+              <Suspense fallback={<AppLoading />}>
+                <FreeTextQuestionPage />
+              </Suspense>
+            }
+          />
+
+          {/* Education True/False Questions */}
+          <Route
+            path="edu-true-false-question"
+            element={
+              <Suspense fallback={<AppLoading />}>
+                <TrueFalseQuestionPage />
               </Suspense>
             }
           />

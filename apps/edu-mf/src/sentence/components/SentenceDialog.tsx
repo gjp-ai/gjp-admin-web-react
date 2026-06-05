@@ -21,6 +21,7 @@ import { Upload } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
+import TiptapTextEditor from '../../../../shared-lib/src/ui-components/rich-text/tiptap/tiptapTextEditor';
 import {
   DIFFICULTY_LEVEL_SETTING_KEY,
   LANGUAGE_OPTIONS,
@@ -149,13 +150,17 @@ const SentenceDialog = ({
         <Typography variant="subtitle2" sx={{ mb: 1 }}>
           {t('sentence.fields.phoneticAudio')}
         </Typography>
-        <TextField
-          label={t('sentence.fields.phonetic')}
-          value={formData.phonetic}
-          onChange={(e) => onFormChange('phonetic', e.target.value)}
-          fullWidth
-          sx={{ mb: 2 }}
-        />
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+            {t('sentence.fields.phonetic')}
+          </Typography>
+          <TiptapTextEditor
+            value={formData.phonetic}
+            onChange={(html: string) => onFormChange('phonetic', html)}
+            placeholder={t('sentence.fields.phonetic')}
+            initialRows={1}
+          />
+        </Box>
         <RadioGroup
           row
           value={uploadMethod}
@@ -278,22 +283,28 @@ const SentenceDialog = ({
             </FormControl>
           </Box>
 
-          <TextField
-            label={t('sentence.fields.translation')}
-            value={formData.translation}
-            onChange={(e) => onFormChange('translation', e.target.value)}
-            fullWidth
-            multiline
-            rows={2}
-          />
-          <TextField
-            label={t('sentence.fields.explanation')}
-            value={formData.explanation}
-            onChange={(e) => onFormChange('explanation', e.target.value)}
-            fullWidth
-            multiline
-            rows={3}
-          />
+          <Box>
+            <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+              {t('sentence.fields.translation')}
+            </Typography>
+            <TiptapTextEditor
+              value={formData.translation}
+              onChange={(html: string) => onFormChange('translation', html)}
+              placeholder={t('sentence.fields.translation')}
+              initialRows={2}
+            />
+          </Box>
+          <Box>
+            <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+              {t('sentence.fields.explanation')}
+            </Typography>
+            <TiptapTextEditor
+              value={formData.explanation}
+              onChange={(html: string) => onFormChange('explanation', html)}
+              placeholder={t('sentence.fields.explanation')}
+              initialRows={3}
+            />
+          </Box>
 
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
             <TextField

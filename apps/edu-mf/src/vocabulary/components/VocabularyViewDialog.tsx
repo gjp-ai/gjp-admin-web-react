@@ -14,6 +14,7 @@ import { Volume2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { createStatusChip } from '../../../../shared-lib/src/data-management/DataTable';
 import RichHtmlView from '../../question-common/RichHtmlView';
+import { hasViewValue } from '../../question-common/viewValue';
 import { STATUS_MAPS } from '../constants';
 import '../i18n/translations';
 import type { Vocabulary } from '../types/vocabulary.types';
@@ -49,7 +50,21 @@ const VocabularyViewDialog = ({ open, vocabulary, onClose }: VocabularyViewDialo
     [t('vocabulary.fields.term'), vocabulary.term],
     [t('vocabulary.fields.week'), vocabulary.week],
     [t('vocabulary.fields.displayOrder'), vocabulary.displayOrder],
-  ];
+  ].filter(([, value]) => hasViewValue(value));
+
+  const contentFields = [
+    [t('vocabulary.fields.translation'), vocabulary.translation, true],
+    [t('vocabulary.fields.synonyms'), vocabulary.synonyms, false],
+  ].filter(([, value]) => hasViewValue(value));
+
+  const detailFields = [
+    [t('vocabulary.fields.easyMeaning'), vocabulary.easyMeaning],
+    [t('vocabulary.fields.meaningClue'), vocabulary.meaningClue],
+    [t('vocabulary.fields.meaning'), vocabulary.meaning],
+    [t('vocabulary.fields.sentenceOne'), vocabulary.sentenceOne],
+    [t('vocabulary.fields.sentenceTwo'), vocabulary.sentenceTwo],
+    [t('vocabulary.fields.additionalInfo'), vocabulary.additionalInfo],
+  ].filter(([, value]) => hasViewValue(value));
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -60,70 +75,52 @@ const VocabularyViewDialog = ({ open, vocabulary, onClose }: VocabularyViewDialo
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               {vocabulary.name}
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
-              <Typography variant="body1" color="text.secondary">
-                US {vocabulary.phoneticUs ? `/${vocabulary.phoneticUs}/` : '-'}
-              </Typography>
-              {vocabulary.phoneticUsAudioUrl && (
-                <IconButton size="small" onClick={playAudio}>
-                  <Volume2 size={18} />
-                </IconButton>
+            {(hasViewValue(vocabulary.phoneticUs) || hasViewValue(vocabulary.phoneticUk) || vocabulary.phoneticUsAudioUrl || vocabulary.phoneticUkAudioUrl) && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                {hasViewValue(vocabulary.phoneticUs) && (
+                  <Typography variant="body1" color="text.secondary">
+                    US /{vocabulary.phoneticUs}/
+                  </Typography>
+                )}
+                {vocabulary.phoneticUsAudioUrl && (
+                  <IconButton size="small" onClick={playAudio}>
+                    <Volume2 size={18} />
+                  </IconButton>
+                )}
+                {hasViewValue(vocabulary.phoneticUk) && (
+                  <Typography variant="body1" color="text.secondary" sx={{ ml: 2 }}>
+                    UK /{vocabulary.phoneticUk}/
+                  </Typography>
+                )}
+                {vocabulary.phoneticUkAudioUrl && (
+                  <IconButton size="small" onClick={playUkAudio}>
+                    <Volume2 size={18} />
+                  </IconButton>
+                )}
+              </Box>
               )}
-              <Typography variant="body1" color="text.secondary" sx={{ ml: 2 }}>
-                UK {vocabulary.phoneticUk ? `/${vocabulary.phoneticUk}/` : '-'}
-              </Typography>
-              {vocabulary.phoneticUkAudioUrl && (
-                <IconButton size="small" onClick={playUkAudio}>
-                  <Volume2 size={18} />
-                </IconButton>
-              )}
+          </Box>
+
+          {contentFields.length > 0 && (
+            <>
+              <Divider />
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+                {contentFields.map(([label, value, rich]) => (
+                  <Box key={String(label)}>
+                    <Typography variant="subtitle2" color="text.secondary">{label}</Typography>
+                    {rich ? <RichHtmlView value={value} /> : <Typography>{String(value)}</Typography>}
+                  </Box>
+                ))}
+              </Box>
+            </>
+          )}
+
+          {detailFields.map(([label, value]) => (
+            <Box key={String(label)}>
+              <Typography variant="subtitle2" color="text.secondary">{label}</Typography>
+              <RichHtmlView value={value} />
             </Box>
-          </Box>
-
-          <Divider />
-
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.translation')}</Typography>
-              <RichHtmlView value={vocabulary.translation} />
-            </Box>
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.synonyms')}</Typography>
-              <Typography>{vocabulary.synonyms || '-'}</Typography>
-            </Box>
-           
-            
-          </Box>
-
-           <Box>
-            <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.easyMeaning')}</Typography>
-            <RichHtmlView value={vocabulary.easyMeaning} />
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.meaningClue')}</Typography>
-            <RichHtmlView value={vocabulary.meaningClue} />
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.meaning')}</Typography>
-            <RichHtmlView value={vocabulary.meaning} />
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.sentenceOne')}</Typography>
-            <RichHtmlView value={vocabulary.sentenceOne} />
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.sentenceTwo')}</Typography>
-            <RichHtmlView value={vocabulary.sentenceTwo} />
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.additionalInfo')}</Typography>
-            <RichHtmlView value={vocabulary.additionalInfo} />
-          </Box>
+          ))}
 
           <Divider />
 

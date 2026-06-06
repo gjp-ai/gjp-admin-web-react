@@ -11,6 +11,14 @@ import type { Sentence } from '../types/sentence.types';
 
 const columnHelper = createColumnHelper<Sentence>();
 
+const stripHtmlTags = (value: unknown) => String(value || '')
+  .replace(/<[^>]*>/g, '')
+  .replace(/&nbsp;/g, ' ')
+  .replace(/&amp;/g, '&')
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>')
+  .trim();
+
 interface SentenceTableProps {
   sentences: Sentence[];
   pagination: any;
@@ -41,10 +49,7 @@ const SentenceTable = memo(({
         cell: (info) => (
           <Box sx={{ maxWidth: 300 }}>
             <Typography variant="body2" sx={{ fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-              {info.getValue()}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical' }}>
-              {info.row.original.translation || '-'}
+              {stripHtmlTags(info.getValue()) || '-'}
             </Typography>
           </Box>
         ),
@@ -63,7 +68,7 @@ const SentenceTable = memo(({
           return (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <Typography variant="body2" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 120 }}>
-                {info.getValue() || '-'}
+                {stripHtmlTags(info.getValue()) || '-'}
               </Typography>
               {sentence.phoneticAudioUrl && (
                 <Box component="button" onClick={playAudio} sx={{ border: 0, bgcolor: 'transparent', p: 0, display: 'flex', cursor: 'pointer' }}>

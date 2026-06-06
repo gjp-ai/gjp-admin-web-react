@@ -13,6 +13,7 @@ import { createStatusChip } from '../../../shared-lib/src/data-management/DataTa
 import { STATUS_MAPS } from './constants';
 import RichHtmlView from './RichHtmlView';
 import type { EduQuestionBase, EduQuestionFieldConfig, EduQuestionFormData } from './types';
+import { hasViewValue } from './viewValue';
 
 interface QuestionViewDialogProps<T extends EduQuestionBase, F extends EduQuestionFormData> {
   open: boolean;
@@ -41,23 +42,24 @@ const QuestionViewDialog = <T extends EduQuestionBase, F extends EduQuestionForm
     ['Order', question.displayOrder],
     ['Success', question.successCount],
     ['Fail', question.failCount],
-  ];
+  ].filter(([, value]) => hasViewValue(value));
 
-  const visibleFields = fields.filter((field) => ![
-    'question',
-    'answer',
-    'explanation',
-    'difficultyLevel',
-    'gradeLevel',
-    'subject',
-    'topic',
-    'channel',
-    'lang',
-    'term',
-    'week',
-    'displayOrder',
-    'tags',
-  ].includes(String(field.key)));
+  const visibleFields = fields.filter((field) =>
+    ![
+      'question',
+      'answer',
+      'explanation',
+      'difficultyLevel',
+      'gradeLevel',
+      'subject',
+      'topic',
+      'channel',
+      'lang',
+      'term',
+      'week',
+      'displayOrder',
+      'tags',
+    ].includes(String(field.key)) && hasViewValue(question[String(field.key)]));
   const fieldsByKey = Object.fromEntries(fields.map((field) => [String(field.key), field]));
 
   const renderValue = (fieldKey: string, value: unknown) => (
@@ -74,8 +76,12 @@ const QuestionViewDialog = <T extends EduQuestionBase, F extends EduQuestionForm
           <Box>
             <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>Question</Typography>
             <RichHtmlView value={question.question} />
-            <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 1 }}>Answer</Typography>
-            {renderValue('answer', question.answer)}
+            {hasViewValue(question.answer) && (
+              <>
+                <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 1 }}>Answer</Typography>
+                {renderValue('answer', question.answer)}
+              </>
+            )}
           </Box>
 
           {visibleFields.length > 0 && (
@@ -89,12 +95,15 @@ const QuestionViewDialog = <T extends EduQuestionBase, F extends EduQuestionForm
             </Box>
           )}
 
-          <Divider />
-
-          <Box>
-            <Typography variant="subtitle2" color="text.secondary">Explanation</Typography>
-            <RichHtmlView value={question.explanation} />
-          </Box>
+          {hasViewValue(question.explanation) && (
+            <>
+              <Divider />
+              <Box>
+                <Typography variant="subtitle2" color="text.secondary">Explanation</Typography>
+                <RichHtmlView value={question.explanation} />
+              </Box>
+            </>
+          )}
 
           <Divider />
 

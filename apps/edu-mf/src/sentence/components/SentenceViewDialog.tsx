@@ -14,6 +14,7 @@ import { Volume2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { createStatusChip } from '../../../../shared-lib/src/data-management/DataTable';
 import RichHtmlView from '../../question-common/RichHtmlView';
+import { hasViewValue } from '../../question-common/viewValue';
 import { STATUS_MAPS } from '../constants';
 import '../i18n/translations';
 import type { Sentence } from '../types/sentence.types';
@@ -41,7 +42,12 @@ const SentenceViewDialog = ({ open, sentence, onClose }: SentenceViewDialogProps
     [t('sentence.fields.term'), sentence.term],
     [t('sentence.fields.week'), sentence.week],
     [t('sentence.fields.displayOrder'), sentence.displayOrder],
-  ];
+  ].filter(([, value]) => hasViewValue(value));
+
+  const contentFields = [
+    [t('sentence.fields.translation'), sentence.translation],
+    [t('sentence.fields.explanation'), sentence.explanation],
+  ].filter(([, value]) => hasViewValue(value));
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -49,33 +55,38 @@ const SentenceViewDialog = ({ open, sentence, onClose }: SentenceViewDialogProps
       <DialogContent>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Box>
-            <Typography variant="h5" sx={{ fontWeight: 700, whiteSpace: 'pre-wrap' }}>
-              {sentence.name}
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
-              <Typography variant="body1" color="text.secondary">
-                Phonetic: {sentence.phonetic ? `/${sentence.phonetic}/` : '-'}
-              </Typography>
-              {sentence.phoneticAudioUrl && (
-                <IconButton size="small" onClick={playAudio}>
-                  <Volume2 size={18} />
-                </IconButton>
+            <Box sx={{ '& > *': { typography: 'h5', fontWeight: 700 } }}>
+              <RichHtmlView value={sentence.name} />
+            </Box>
+            {(hasViewValue(sentence.phonetic) || sentence.phoneticAudioUrl) && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                {hasViewValue(sentence.phonetic) && (
+                  <Box sx={{ color: 'text.secondary', '& > *': { typography: 'body1' } }}>
+                    <RichHtmlView value={`/${sentence.phonetic}/`} />
+                  </Box>
+                )}
+                {sentence.phoneticAudioUrl && (
+                  <IconButton size="small" onClick={playAudio}>
+                    <Volume2 size={18} />
+                  </IconButton>
+                )}
+              </Box>
               )}
-            </Box>
           </Box>
 
-          <Divider />
-
-          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', gap: 2 }}>
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">{t('sentence.fields.translation')}</Typography>
-              <RichHtmlView value={sentence.translation} />
-            </Box>
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">{t('sentence.fields.explanation')}</Typography>
-              <RichHtmlView value={sentence.explanation} />
-            </Box>
-          </Box>
+          {contentFields.length > 0 && (
+            <>
+              <Divider />
+              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', gap: 2 }}>
+                {contentFields.map(([label, value]) => (
+                  <Box key={String(label)}>
+                    <Typography variant="subtitle2" color="text.secondary">{label}</Typography>
+                    <RichHtmlView value={value} />
+                  </Box>
+                ))}
+              </Box>
+            </>
+          )}
 
           <Divider />
 

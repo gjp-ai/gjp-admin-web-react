@@ -43,9 +43,6 @@ const VocabularyTable = memo(({
             <Typography variant="body2" sx={{ fontWeight: 600 }}>
               {info.getValue()}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
-              {info.row.original.translation || info.row.original.easyMeaning || '-'}
-            </Typography>
           </Box>
         ),
         size: 220,

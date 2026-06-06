@@ -62,6 +62,14 @@ const SentenceDialog = ({
   const { t } = useTranslation();
   const channelSelected = Boolean(formData.channel);
 
+  const stripHtmlTags = (value: unknown) => String(value || '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .trim();
+
   const normalize = (value?: string | null) => (value || '').trim().toLowerCase();
 
   const normalizeLang = (value?: string | null) => {
@@ -184,7 +192,7 @@ const SentenceDialog = ({
             value={formData.phonetic}
             onChange={(html: string) => onFormChange('phonetic', html)}
             placeholder={t('sentence.fields.phonetic')}
-            initialRows={1}
+            initialRows={0}
           />
         </Box>
         <RadioGroup
@@ -257,27 +265,64 @@ const SentenceDialog = ({
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
-          <TextField
-            label={t('sentence.fields.name')}
-            value={formData.name}
-            onChange={(e) => handleNameOrLangChange('name', e.target.value)}
-            fullWidth
-            multiline
-            rows={2}
-            required
-          />
+          <Box>
+            <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+              {t('sentence.fields.name')}
+            </Typography>
+            <TiptapTextEditor
+              value={formData.name}
+              onChange={(html: string) => handleNameOrLangChange('name', html)}
+              placeholder={t('sentence.fields.name')}
+              initialRows={0}
+            />
+          </Box>
 
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', gap: 2 }}>
             {renderAudioSection()}
           </Box>
 
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+          <Box>
+            <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+              {t('sentence.fields.translation')}
+            </Typography>
+            <TiptapTextEditor
+              value={formData.translation}
+              onChange={(html: string) => onFormChange('translation', html)}
+              placeholder={t('sentence.fields.translation')}
+              initialRows={0}
+            />
+          </Box>
+          <Box>
+            <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+              {t('sentence.fields.explanation')}
+            </Typography>
+            <TiptapTextEditor
+              value={formData.explanation}
+              onChange={(html: string) => onFormChange('explanation', html)}
+              placeholder={t('sentence.fields.explanation')}
+              initialRows={0}
+            />
+          </Box>
+
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
             <FormControl fullWidth>
               <Typography variant="caption" sx={{ mb: 0.5 }}>
                 {t('sentence.fields.channel')}
               </Typography>
               <Select value={formData.channel} onChange={(e) => handleChannelChange(e.target.value)}>
                 {CHANNEL_OPTIONS.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <Typography variant="caption" sx={{ mb: 0.5 }}>
+                {t('sentence.fields.language')}
+              </Typography>
+              <Select value={formData.lang} onChange={(e) => handleNameOrLangChange('lang', e.target.value)}>
+                {LANGUAGE_OPTIONS.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
@@ -309,42 +354,7 @@ const SentenceDialog = ({
             </FormControl>
           </Box>
 
-          <Box>
-            <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
-              {t('sentence.fields.translation')}
-            </Typography>
-            <TiptapTextEditor
-              value={formData.translation}
-              onChange={(html: string) => onFormChange('translation', html)}
-              placeholder={t('sentence.fields.translation')}
-              initialRows={2}
-            />
-          </Box>
-          <Box>
-            <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
-              {t('sentence.fields.explanation')}
-            </Typography>
-            <TiptapTextEditor
-              value={formData.explanation}
-              onChange={(html: string) => onFormChange('explanation', html)}
-              placeholder={t('sentence.fields.explanation')}
-              initialRows={3}
-            />
-          </Box>
-
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
-            {renderNumberSelect('term', t('sentence.fields.term'), TERM_OPTIONS)}
-            {renderNumberSelect('week', t('sentence.fields.week'), WEEK_OPTIONS)}
-            <TextField
-              label={t('sentence.fields.displayOrder')}
-              type="number"
-              value={formData.displayOrder}
-              onChange={(e) => onFormChange('displayOrder', Number(e.target.value))}
-              fullWidth
-            />
-          </Box>
-
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1.5fr' }, gap: 2 }}>
             <FormControl fullWidth>
               <Typography variant="caption" sx={{ mb: 0.5 }}>
                 {t('sentence.fields.tags')}
@@ -372,19 +382,17 @@ const SentenceDialog = ({
                 )}
               </Select>
             </FormControl>
-            <FormControl fullWidth>
-              <Typography variant="caption" sx={{ mb: 0.5 }}>
-                {t('sentence.fields.language')}
-              </Typography>
-              <Select value={formData.lang} onChange={(e) => handleNameOrLangChange('lang', e.target.value)}>
-                {LANGUAGE_OPTIONS.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {renderNumberSelect('term', t('sentence.fields.term'), TERM_OPTIONS)}
+            {renderNumberSelect('week', t('sentence.fields.week'), WEEK_OPTIONS)}
           </Box>
+
+          <TextField
+              label={t('sentence.fields.displayOrder')}
+              type="number"
+              value={formData.displayOrder}
+              onChange={(e) => onFormChange('displayOrder', Number(e.target.value))}
+              fullWidth
+            />
 
           <FormControlLabel
             control={<Switch checked={formData.isActive} onChange={(e) => onFormChange('isActive', e.target.checked)} />}
@@ -396,7 +404,7 @@ const SentenceDialog = ({
         <Button onClick={onClose} disabled={loading}>
           {t('common.cancel')}
         </Button>
-        <Button onClick={onSubmit} variant="contained" disabled={loading || !formData.name.trim()}>
+        <Button onClick={onSubmit} variant="contained" disabled={loading || !stripHtmlTags(formData.name)}>
           {submitLabel}
         </Button>
       </DialogActions>

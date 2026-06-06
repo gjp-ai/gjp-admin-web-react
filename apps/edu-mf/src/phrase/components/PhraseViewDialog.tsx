@@ -14,6 +14,7 @@ import { Volume2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { createStatusChip } from '../../../../shared-lib/src/data-management/DataTable';
 import RichHtmlView from '../../question-common/RichHtmlView';
+import { hasViewValue } from '../../question-common/viewValue';
 import { STATUS_MAPS } from '../constants';
 import '../i18n/translations';
 import type { Phrase } from '../types/phrase.types';
@@ -41,7 +42,20 @@ const PhraseViewDialog = ({ open, phrase, onClose }: PhraseViewDialogProps) => {
     [t('phrase.fields.term'), phrase.term],
     [t('phrase.fields.week'), phrase.week],
     [t('phrase.fields.displayOrder'), phrase.displayOrder],
-  ];
+  ].filter(([, value]) => hasViewValue(value));
+
+  const contentFields = [
+    [t('phrase.fields.translation'), phrase.translation, true],
+    [t('phrase.fields.synonyms'), phrase.synonyms, false],
+    [t('phrase.fields.easyMeaning'), phrase.easyMeaning, true],
+    [t('phrase.fields.meaningClue'), phrase.meaningClue, true],
+  ].filter(([, value]) => hasViewValue(value));
+
+  const detailFields = [
+    [t('phrase.fields.meaning'), phrase.meaning],
+    [t('phrase.fields.sentenceOne'), phrase.sentenceOne],
+    [t('phrase.fields.sentenceTwo'), phrase.sentenceTwo],
+  ].filter(([, value]) => hasViewValue(value));
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -52,52 +66,42 @@ const PhraseViewDialog = ({ open, phrase, onClose }: PhraseViewDialogProps) => {
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               {phrase.name}
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
-              <Typography variant="body1" color="text.secondary">
-                Phonetic: {phrase.phonetic ? `/${phrase.phonetic}/` : '-'}
-              </Typography>
-              {phrase.phoneticAudioUrl && (
-                <IconButton size="small" onClick={playAudio}>
-                  <Volume2 size={18} />
-                </IconButton>
+            {(hasViewValue(phrase.phonetic) || phrase.phoneticAudioUrl) && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                {hasViewValue(phrase.phonetic) && (
+                  <Typography variant="body1" color="text.secondary">
+                    Phonetic: /{phrase.phonetic}/
+                  </Typography>
+                )}
+                {phrase.phoneticAudioUrl && (
+                  <IconButton size="small" onClick={playAudio}>
+                    <Volume2 size={18} />
+                  </IconButton>
+                )}
+              </Box>
               )}
-            </Box>
           </Box>
 
-          <Divider />
+          {contentFields.length > 0 && (
+            <>
+              <Divider />
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+                {contentFields.map(([label, value, rich]) => (
+                  <Box key={String(label)}>
+                    <Typography variant="subtitle2" color="text.secondary">{label}</Typography>
+                    {rich ? <RichHtmlView value={value} /> : <Typography>{String(value)}</Typography>}
+                  </Box>
+                ))}
+              </Box>
+            </>
+          )}
 
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.translation')}</Typography>
-              <RichHtmlView value={phrase.translation} />
+          {detailFields.map(([label, value]) => (
+            <Box key={String(label)}>
+              <Typography variant="subtitle2" color="text.secondary">{label}</Typography>
+              <RichHtmlView value={value} />
             </Box>
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.synonyms')}</Typography>
-              <Typography>{phrase.synonyms || '-'}</Typography>
-            </Box>
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.easyMeaning')}</Typography>
-              <RichHtmlView value={phrase.easyMeaning} />
-            </Box>
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.meaningClue')}</Typography>
-              <RichHtmlView value={phrase.meaningClue} />
-            </Box>
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.meaning')}</Typography>
-            <RichHtmlView value={phrase.meaning} />
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.sentenceOne')}</Typography>
-            <RichHtmlView value={phrase.sentenceOne} />
-          </Box>
-          <Box>
-            <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.sentenceTwo')}</Typography>
-            <RichHtmlView value={phrase.sentenceTwo} />
-          </Box>
+          ))}
 
           <Divider />
 

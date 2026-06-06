@@ -28,6 +28,7 @@ const TrueFalseQuestionPage = createQuestionCrudPage<TrueFalseQuestion, TrueFals
   service: trueFalseQuestionService,
   defaultFormData: getEmptyTrueFalseQuestionFormData(),
   fields,
+  questionImageReferenceKey: 'trueFalseQuestionId',
 });
 
 export default TrueFalseQuestionPage;

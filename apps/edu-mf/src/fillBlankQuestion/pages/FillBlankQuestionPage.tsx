@@ -28,6 +28,7 @@ const FillBlankQuestionPage = createQuestionCrudPage<FillBlankQuestion, FillBlan
   service: fillBlankQuestionService,
   defaultFormData: getEmptyFillBlankQuestionFormData(),
   fields,
+  questionImageReferenceKey: 'fillBlankQuestionId',
 });
 
 export default FillBlankQuestionPage;

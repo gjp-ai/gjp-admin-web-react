@@ -244,6 +244,8 @@ export const createQuestionCrudPage = <T extends EduQuestionBase, F extends EduQ
             title={actionType === 'create' ? `Create ${config.entityName}` : `Edit ${config.entityName}`}
             formData={formData}
             fields={config.fields}
+            questionId={actionType === 'edit' ? selectedQuestion?.id : undefined}
+            questionImageReferenceKey={config.questionImageReferenceKey}
             loading={saving}
             submitLabel={actionType === 'create' ? 'Create' : 'Save'}
             onClose={() => setDialogOpen(false)}

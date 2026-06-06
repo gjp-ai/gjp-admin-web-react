@@ -37,6 +37,7 @@ const MultipleChoiceQuestionPage = createQuestionCrudPage<MultipleChoiceQuestion
   defaultFormData: getEmptyMultipleChoiceQuestionFormData(),
   fields,
   tableFields: ['optionA', 'optionB'],
+  questionImageReferenceKey: 'multipleChoiceQuestionId',
 });
 
 export default MultipleChoiceQuestionPage;

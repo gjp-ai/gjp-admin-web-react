@@ -110,7 +110,26 @@ export interface EduQuestionCrudConfig<T extends EduQuestionBase, F extends EduQ
   defaultFormData: F;
   fields: EduQuestionFieldConfig<F>[];
   tableFields?: string[];
+  questionImageReferenceKey?: 'multipleChoiceQuestionId' | 'fillBlankQuestionId' | 'freeTextQuestionId' | 'trueFalseQuestionId';
   questionPreviewField?: keyof T;
   sortField?: string;
   defaultPageSize?: number;
+}
+
+export interface QuestionImage {
+  id: string;
+  multipleChoiceQuestionId?: string | null;
+  fillBlankQuestionId?: string | null;
+  freeTextQuestionId?: string | null;
+  trueFalseQuestionId?: string | null;
+  filename: string;
+  fileUrl?: string | null;
+  originalUrl?: string | null;
+  width?: number | null;
+  height?: number | null;
+  lang?: string | null;
+  displayOrder?: number | null;
+  isActive?: boolean | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
 }

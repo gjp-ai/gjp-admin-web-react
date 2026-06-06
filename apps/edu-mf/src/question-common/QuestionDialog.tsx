@@ -22,13 +22,16 @@ import {
   LANGUAGE_OPTIONS,
 } from './constants';
 import curriculumOptions from './curriculum-options.json';
-import type { EduQuestionFieldConfig, EduQuestionFormData } from './types';
+import QuestionImageSection from './QuestionImageSection';
+import type { EduQuestionFieldConfig, EduQuestionFormData, EduQuestionCrudConfig } from './types';
 
 interface QuestionDialogProps<F extends EduQuestionFormData> {
   open: boolean;
   title: string;
   formData: F;
   fields: EduQuestionFieldConfig<F>[];
+  questionId?: string;
+  questionImageReferenceKey?: EduQuestionCrudConfig<any, F>['questionImageReferenceKey'];
   loading?: boolean;
   submitLabel: string;
   onClose: () => void;
@@ -51,6 +54,8 @@ const QuestionDialog = <F extends EduQuestionFormData>({
   title,
   formData,
   fields,
+  questionId,
+  questionImageReferenceKey,
   loading,
   submitLabel,
   onClose,
@@ -340,6 +345,14 @@ const QuestionDialog = <F extends EduQuestionFormData>({
             control={<Switch checked={Boolean(formData.isActive)} onChange={(event) => onFormChange('isActive', event.target.checked)} />}
             label="Active"
           />
+
+          {questionId && questionImageReferenceKey && (
+            <QuestionImageSection
+              questionId={questionId}
+              referenceKey={questionImageReferenceKey}
+              lang={String(formData.lang || 'EN')}
+            />
+          )}
         </Box>
       </DialogContent>
       <DialogActions>

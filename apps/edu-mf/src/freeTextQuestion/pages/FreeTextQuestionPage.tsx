@@ -44,6 +44,7 @@ const FreeTextQuestionPage = createQuestionCrudPage<FreeTextQuestion, FreeTextQu
   defaultFormData: getEmptyFreeTextQuestionFormData(),
   fields,
   tableFields: ['description'],
+  questionImageReferenceKey: 'freeTextQuestionId',
 });
 
 export default FreeTextQuestionPage;

@@ -110,6 +110,10 @@ export interface EduQuestionCrudConfig<T extends EduQuestionBase, F extends EduQ
   defaultFormData: F;
   fields: EduQuestionFieldConfig<F>[];
   tableFields?: string[];
+  tableColumns?: string[];
+  searchFields?: (keyof EduQuestionSearchFormData)[];
+  filterOnSearchChange?: boolean;
+  showQuestionImageInTable?: boolean;
   questionImageReferenceKey?: 'multipleChoiceQuestionId' | 'fillBlankQuestionId' | 'freeTextQuestionId' | 'trueFalseQuestionId';
   questionPreviewField?: keyof T;
   sortField?: string;

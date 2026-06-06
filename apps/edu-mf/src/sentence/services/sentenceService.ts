@@ -1,5 +1,6 @@
 import { apiClient } from '../../../../shared-lib/src/api/api-client';
 import type { ApiResponse } from '../../../../shared-lib/src/api/api.types';
+import { sanitizeRichTextPayload } from '../../question-common/richTextPayload';
 import type {
   Sentence,
   SentenceFormData,
@@ -34,19 +35,19 @@ class SentenceService {
   }
 
   async createSentence(data: SentencePayload): Promise<ApiResponse<Sentence>> {
-    return apiClient.post(this.crudUrl, data);
+    return apiClient.post(this.crudUrl, sanitizeRichTextPayload(data));
   }
 
   async createSentenceByUpload(data: SentenceFormData): Promise<ApiResponse<Sentence>> {
-    return apiClient.post(this.crudUrl, this.toFormData(data));
+    return apiClient.post(this.crudUrl, this.toFormData(sanitizeRichTextPayload(data)));
   }
 
   async updateSentence(id: string, data: SentencePayload): Promise<ApiResponse<Sentence>> {
-    return apiClient.put(`${this.crudUrl}/${id}`, data);
+    return apiClient.put(`${this.crudUrl}/${id}`, sanitizeRichTextPayload(data));
   }
 
   async updateSentenceWithFile(id: string, data: SentenceFormData): Promise<ApiResponse<Sentence>> {
-    return apiClient.put(`${this.crudUrl}/${id}`, this.toFormData(data));
+    return apiClient.put(`${this.crudUrl}/${id}`, this.toFormData(sanitizeRichTextPayload(data)));
   }
 
   async deleteSentence(id: string): Promise<ApiResponse<void>> {

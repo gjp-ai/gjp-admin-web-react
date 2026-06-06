@@ -13,6 +13,7 @@ import {
 import { Volume2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { createStatusChip } from '../../../../shared-lib/src/data-management/DataTable';
+import RichHtmlView from '../../question-common/RichHtmlView';
 import { STATUS_MAPS } from '../constants';
 import '../i18n/translations';
 import type { Phrase } from '../types/phrase.types';
@@ -68,7 +69,7 @@ const PhraseViewDialog = ({ open, phrase, onClose }: PhraseViewDialogProps) => {
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
             <Box>
               <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.translation')}</Typography>
-              <Typography>{phrase.translation || '-'}</Typography>
+              <RichHtmlView value={phrase.translation} />
             </Box>
             <Box>
               <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.synonyms')}</Typography>
@@ -76,26 +77,26 @@ const PhraseViewDialog = ({ open, phrase, onClose }: PhraseViewDialogProps) => {
             </Box>
             <Box>
               <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.easyMeaning')}</Typography>
-              <Typography>{phrase.easyMeaning || '-'}</Typography>
+              <RichHtmlView value={phrase.easyMeaning} />
             </Box>
             <Box>
               <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.meaningClue')}</Typography>
-              <Typography>{phrase.meaningClue || '-'}</Typography>
+              <RichHtmlView value={phrase.meaningClue} />
             </Box>
           </Box>
 
           <Box>
             <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.meaning')}</Typography>
-            <Typography sx={{ whiteSpace: 'pre-wrap' }}>{phrase.meaning || '-'}</Typography>
+            <RichHtmlView value={phrase.meaning} />
           </Box>
 
           <Box>
             <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.sentenceOne')}</Typography>
-            <Typography>{phrase.sentenceOne || '-'}</Typography>
+            <RichHtmlView value={phrase.sentenceOne} />
           </Box>
           <Box>
             <Typography variant="subtitle2" color="text.secondary">{t('phrase.fields.sentenceTwo')}</Typography>
-            <Typography>{phrase.sentenceTwo || '-'}</Typography>
+            <RichHtmlView value={phrase.sentenceTwo} />
           </Box>
 
           <Divider />

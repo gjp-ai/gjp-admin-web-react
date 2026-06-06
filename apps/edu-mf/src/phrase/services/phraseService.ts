@@ -1,5 +1,6 @@
 import { apiClient } from '../../../../shared-lib/src/api/api-client';
 import type { ApiResponse } from '../../../../shared-lib/src/api/api.types';
+import { sanitizeRichTextPayload } from '../../question-common/richTextPayload';
 import type {
   Phrase,
   PhraseFormData,
@@ -34,19 +35,19 @@ class PhraseService {
   }
 
   async createPhrase(data: PhrasePayload): Promise<ApiResponse<Phrase>> {
-    return apiClient.post(this.crudUrl, data);
+    return apiClient.post(this.crudUrl, sanitizeRichTextPayload(data));
   }
 
   async createPhraseByUpload(data: PhraseFormData): Promise<ApiResponse<Phrase>> {
-    return apiClient.post(this.crudUrl, this.toFormData(data));
+    return apiClient.post(this.crudUrl, this.toFormData(sanitizeRichTextPayload(data)));
   }
 
   async updatePhrase(id: string, data: PhrasePayload): Promise<ApiResponse<Phrase>> {
-    return apiClient.put(`${this.crudUrl}/${id}`, data);
+    return apiClient.put(`${this.crudUrl}/${id}`, sanitizeRichTextPayload(data));
   }
 
   async updatePhraseWithFile(id: string, data: PhraseFormData): Promise<ApiResponse<Phrase>> {
-    return apiClient.put(`${this.crudUrl}/${id}`, this.toFormData(data));
+    return apiClient.put(`${this.crudUrl}/${id}`, this.toFormData(sanitizeRichTextPayload(data)));
   }
 
   async deletePhrase(id: string): Promise<ApiResponse<void>> {

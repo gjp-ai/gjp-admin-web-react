@@ -13,6 +13,7 @@ import {
 import { Volume2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { createStatusChip } from '../../../../shared-lib/src/data-management/DataTable';
+import RichHtmlView from '../../question-common/RichHtmlView';
 import { STATUS_MAPS } from '../constants';
 import '../i18n/translations';
 import type { Vocabulary } from '../types/vocabulary.types';
@@ -84,34 +85,44 @@ const VocabularyViewDialog = ({ open, vocabulary, onClose }: VocabularyViewDialo
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
             <Box>
               <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.translation')}</Typography>
-              <Typography>{vocabulary.translation || '-'}</Typography>
+              <RichHtmlView value={vocabulary.translation} />
             </Box>
             <Box>
               <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.synonyms')}</Typography>
               <Typography>{vocabulary.synonyms || '-'}</Typography>
             </Box>
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.easyMeaning')}</Typography>
-              <Typography>{vocabulary.easyMeaning || '-'}</Typography>
-            </Box>
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.meaningClue')}</Typography>
-              <Typography>{vocabulary.meaningClue || '-'}</Typography>
-            </Box>
+           
+            
+          </Box>
+
+           <Box>
+            <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.easyMeaning')}</Typography>
+            <RichHtmlView value={vocabulary.easyMeaning} />
+          </Box>
+
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.meaningClue')}</Typography>
+            <RichHtmlView value={vocabulary.meaningClue} />
           </Box>
 
           <Box>
             <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.meaning')}</Typography>
-            <Typography sx={{ whiteSpace: 'pre-wrap' }}>{vocabulary.meaning || '-'}</Typography>
+            <RichHtmlView value={vocabulary.meaning} />
           </Box>
 
           <Box>
             <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.sentenceOne')}</Typography>
-            <Typography>{vocabulary.sentenceOne || '-'}</Typography>
+            <RichHtmlView value={vocabulary.sentenceOne} />
           </Box>
+
           <Box>
             <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.sentenceTwo')}</Typography>
-            <Typography>{vocabulary.sentenceTwo || '-'}</Typography>
+            <RichHtmlView value={vocabulary.sentenceTwo} />
+          </Box>
+
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary">{t('vocabulary.fields.additionalInfo')}</Typography>
+            <RichHtmlView value={vocabulary.additionalInfo} />
           </Box>
 
           <Divider />

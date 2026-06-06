@@ -13,6 +13,7 @@ import {
 import { Volume2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { createStatusChip } from '../../../../shared-lib/src/data-management/DataTable';
+import RichHtmlView from '../../question-common/RichHtmlView';
 import { STATUS_MAPS } from '../constants';
 import '../i18n/translations';
 import type { Sentence } from '../types/sentence.types';
@@ -68,11 +69,11 @@ const SentenceViewDialog = ({ open, sentence, onClose }: SentenceViewDialogProps
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', gap: 2 }}>
             <Box>
               <Typography variant="subtitle2" color="text.secondary">{t('sentence.fields.translation')}</Typography>
-              <Typography sx={{ whiteSpace: 'pre-wrap' }}>{sentence.translation || '-'}</Typography>
+              <RichHtmlView value={sentence.translation} />
             </Box>
             <Box>
               <Typography variant="subtitle2" color="text.secondary">{t('sentence.fields.explanation')}</Typography>
-              <Typography sx={{ whiteSpace: 'pre-wrap' }}>{sentence.explanation || '-'}</Typography>
+              <RichHtmlView value={sentence.explanation} />
             </Box>
           </Box>
 

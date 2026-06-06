@@ -4,7 +4,7 @@ const enTranslations = {
   phrase: {
     title: 'Phrase',
     subtitle: 'Manage education phrases, meanings, examples, and audio',
-    pageTitle: 'Phrase Management',
+    pageTitle: 'Phrase',
     create: 'Create Phrase',
     edit: 'Edit Phrase',
     delete: 'Delete Phrase',
@@ -38,7 +38,7 @@ const enTranslations = {
       displayOrder: 'Order',
       status: 'Status',
       isActive: 'Active',
-      updatedAt: 'Updated At',
+      updatedAt: 'Updated',
     },
     placeholders: {
       searchName: 'Search by phrase name',

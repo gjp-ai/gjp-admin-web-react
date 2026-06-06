@@ -68,7 +68,7 @@ const VocabularyPage: React.FC = () => {
     channel: vocabulary.channel || 'All',
     tags: vocabulary.tags || '',
     lang: vocabulary.lang || dialog.getCurrentLanguage(),
-    displayOrder: vocabulary.displayOrder ?? 0,
+    displayOrder: vocabulary.displayOrder ?? 999,
     isActive: vocabulary.isActive ?? true,
   });
 
@@ -89,6 +89,11 @@ const VocabularyPage: React.FC = () => {
 
   const handleSearchFieldChange = (field: keyof VocabularySearchFormData, value: string | null) => {
     const nextFormData = { ...searchFormData, [field]: value };
+    if (field === 'channel' || field === 'lang') {
+      nextFormData.difficultyLevel = '';
+      nextFormData.partOfSpeech = '';
+      nextFormData.tags = '';
+    }
     setFilteredVocabularies(applyClientSideFiltersWithData(nextFormData));
     handleSearchFormChange(field, value);
   };

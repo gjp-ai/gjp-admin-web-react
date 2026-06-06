@@ -1,8 +1,10 @@
 import {
+  Autocomplete,
   Box,
   Button,
   Card,
   CardContent,
+  Chip,
   FormControl,
   FormLabel,
   MenuItem,
@@ -13,7 +15,16 @@ import {
 import { Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
-import { DIFFICULTY_LEVEL_OPTIONS, LANGUAGE_OPTIONS, PART_OF_SPEECH_OPTIONS } from '../constants';
+import { TERM_OPTIONS, WEEK_OPTIONS } from '../../question-common/constants';
+import { getStoredAppSettingOptions } from '../../question-common/appSettingOptions';
+import {
+  DIFFICULTY_LEVEL_OPTIONS,
+  DIFFICULTY_LEVEL_SETTING_KEY,
+  LANGUAGE_OPTIONS,
+  PART_OF_SPEECH_OPTIONS,
+  PART_OF_SPEECH_SETTING_KEY,
+  VOCABULARY_TAG_SETTING_KEY,
+} from '../constants';
 import '../i18n/translations';
 import type { VocabularySearchFormData } from '../types/vocabulary.types';
 
@@ -25,6 +36,8 @@ interface VocabularySearchPanelProps {
   onClear: () => void;
 }
 
+const normalizeOptions = (options: { value: string; label: string }[] | readonly { value: string; label: string }[]) => options;
+
 const VocabularySearchPanel = ({
   searchFormData,
   loading,
@@ -34,6 +47,43 @@ const VocabularySearchPanel = ({
 }: VocabularySearchPanelProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const dependenciesSelected = Boolean(searchFormData.channel && searchFormData.lang);
+  const difficultyOptions = getStoredAppSettingOptions(DIFFICULTY_LEVEL_SETTING_KEY, searchFormData.channel, searchFormData.lang);
+  const partOfSpeechOptions = getStoredAppSettingOptions(PART_OF_SPEECH_SETTING_KEY, searchFormData.channel, searchFormData.lang);
+  const selectedTags = String(searchFormData.tags || '').split(',').map((tag) => tag.trim()).filter(Boolean);
+  const tagOptions = [...new Set([
+    ...selectedTags,
+    ...getStoredAppSettingOptions(VOCABULARY_TAG_SETTING_KEY, searchFormData.channel, searchFormData.lang),
+  ])];
+
+  const handleFormChange = (field: keyof VocabularySearchFormData, value: string | null) => {
+    onFormChange(field, value);
+    if (field === 'channel' || field === 'lang') {
+      onFormChange('difficultyLevel', '');
+      onFormChange('partOfSpeech', '');
+      onFormChange('tags', '');
+    }
+  };
+
+  const renderSelect = (
+    field: keyof VocabularySearchFormData,
+    label: string,
+    options: { value: string; label: string }[] | readonly { value: string; label: string }[],
+    disabled = false,
+    emptyLabel = t('common.all'),
+  ) => (
+    <FormControl fullWidth size="small">
+      <FormLabel sx={{ mb: 1 }}>{label}</FormLabel>
+      <Select value={searchFormData[field] || ''} disabled={disabled} onChange={(e) => handleFormChange(field, e.target.value)}>
+        <MenuItem value="">{emptyLabel}</MenuItem>
+        {options.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
 
   return (
     <Card
@@ -54,81 +104,58 @@ const VocabularySearchPanel = ({
               size="small"
               placeholder={t('vocabulary.placeholders.searchName')}
               value={searchFormData.name || ''}
-              onChange={(e) => onFormChange('name', e.target.value)}
+              onChange={(e) => handleFormChange('name', e.target.value)}
             />
           </FormControl>
+          {renderSelect('channel', t('vocabulary.fields.channel'), normalizeOptions(CHANNEL_OPTIONS))}
+          {renderSelect('lang', t('vocabulary.fields.language'), LANGUAGE_OPTIONS)}
+          {renderSelect(
+            'difficultyLevel',
+            t('vocabulary.fields.difficultyLevel'),
+            (difficultyOptions.length ? difficultyOptions.map((option) => ({ value: option, label: option })) : DIFFICULTY_LEVEL_OPTIONS),
+            !dependenciesSelected,
+          )}
+          {renderSelect(
+            'partOfSpeech',
+            t('vocabulary.fields.partOfSpeech'),
+            (partOfSpeechOptions.length ? partOfSpeechOptions.map((option) => ({ value: option, label: option })) : PART_OF_SPEECH_OPTIONS),
+            !dependenciesSelected,
+          )}
           <FormControl fullWidth size="small">
-            <FormLabel sx={{ mb: 1 }}>{t('vocabulary.fields.channel')}</FormLabel>
-            <Select value={searchFormData.channel || ''} onChange={(e) => onFormChange('channel', e.target.value)}>
-              <MenuItem value="">{t('common.all')}</MenuItem>
-              {CHANNEL_OPTIONS.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
+            <FormLabel sx={{ mb: 1 }}>{t('vocabulary.fields.tags')}</FormLabel>
+            <Autocomplete
+              multiple
+              size="small"
+              options={tagOptions}
+              value={selectedTags}
+              disabled={!dependenciesSelected}
+              onChange={(_event, nextValue) => {
+                const normalizedTags = nextValue
+                  .flatMap((tag) => String(tag).split(','))
+                  .map((tag) => tag.trim())
+                  .filter(Boolean);
+                handleFormChange('tags', [...new Set(normalizedTags)].join(','));
+              }}
+              renderTags={(selected, getTagProps) => (
+                selected.map((tag, index) => {
+                  const { key: tagKey, ...tagProps } = getTagProps({ index });
+                  return <Chip key={tagKey} label={String(tag)} size="small" {...tagProps} />;
+                })
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder={!dependenciesSelected ? 'Select channel and language first' : selectedTags.length ? '' : 'Select tags'}
+                />
+              )}
+            />
           </FormControl>
-          <FormControl fullWidth size="small">
-            <FormLabel sx={{ mb: 1 }}>{t('vocabulary.fields.language')}</FormLabel>
-            <Select value={searchFormData.lang || ''} onChange={(e) => onFormChange('lang', e.target.value)}>
-              <MenuItem value="">{t('common.all')}</MenuItem>
-              {LANGUAGE_OPTIONS.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth size="small">
-            <FormLabel sx={{ mb: 1 }}>{t('vocabulary.fields.partOfSpeech')}</FormLabel>
-            <Select value={searchFormData.partOfSpeech || ''} onChange={(e) => onFormChange('partOfSpeech', e.target.value)}>
-              <MenuItem value="">{t('common.all')}</MenuItem>
-              {PART_OF_SPEECH_OPTIONS.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth size="small">
-            <FormLabel sx={{ mb: 1 }}>{t('vocabulary.fields.difficultyLevel')}</FormLabel>
-            <Select value={searchFormData.difficultyLevel || ''} onChange={(e) => onFormChange('difficultyLevel', e.target.value)}>
-              <MenuItem value="">{t('common.all')}</MenuItem>
-              {DIFFICULTY_LEVEL_OPTIONS.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth size="small">
-            <FormLabel sx={{ mb: 1 }}>{t('vocabulary.fields.status')}</FormLabel>
-            <Select value={searchFormData.isActive || ''} onChange={(e) => onFormChange('isActive', e.target.value)}>
-              <MenuItem value="">{t('common.all')}</MenuItem>
-              <MenuItem value="true">{t('vocabulary.fields.isActive')}</MenuItem>
-              <MenuItem value="false">{t('common.inactive')}</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            size="small"
-            label={t('vocabulary.fields.tags')}
-            value={searchFormData.tags || ''}
-            onChange={(e) => onFormChange('tags', e.target.value)}
-          />
-          <TextField
-            size="small"
-            label={t('vocabulary.fields.term')}
-            type="number"
-            value={searchFormData.term || ''}
-            onChange={(e) => onFormChange('term', e.target.value)}
-          />
-          <TextField
-            size="small"
-            label={t('vocabulary.fields.week')}
-            type="number"
-            value={searchFormData.week || ''}
-            onChange={(e) => onFormChange('week', e.target.value)}
-          />
+          {renderSelect('term', t('vocabulary.fields.term'), TERM_OPTIONS, false, 'None')}
+          {renderSelect('week', t('vocabulary.fields.week'), WEEK_OPTIONS, false, 'None')}
+          {renderSelect('isActive', t('vocabulary.fields.status'), [
+            { value: 'true', label: t('vocabulary.fields.isActive') },
+            { value: 'false', label: t('common.inactive') },
+          ])}
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1.5, mt: 3 }}>
           <Button onClick={onClear} disabled={loading}>

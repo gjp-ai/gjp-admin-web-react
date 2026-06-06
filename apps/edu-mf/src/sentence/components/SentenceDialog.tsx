@@ -22,6 +22,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
 import TiptapTextEditor from '../../../../shared-lib/src/ui-components/rich-text/tiptap/tiptapTextEditor';
+import { TERM_OPTIONS, WEEK_OPTIONS } from '../../question-common/constants';
 import {
   DIFFICULTY_LEVEL_SETTING_KEY,
   LANGUAGE_OPTIONS,
@@ -141,6 +142,31 @@ const SentenceDialog = ({
       onFormChange('difficultyLevel', '');
     }
   };
+
+  const renderNumberSelect = (
+    field: 'term' | 'week',
+    label: string,
+    options: { value: string; label: string }[],
+  ) => (
+    <FormControl fullWidth>
+      <Typography variant="caption" sx={{ mb: 0.5 }}>
+        {label}
+      </Typography>
+      <Select
+        value={formData[field] === undefined ? '' : String(formData[field])}
+        onChange={(event) => onFormChange(field, event.target.value === '' ? undefined : Number(event.target.value))}
+      >
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+        {options.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
 
   const renderAudioSection = () => {
     const uploadMethod = formData.phoneticAudioUploadMethod;
@@ -307,20 +333,8 @@ const SentenceDialog = ({
           </Box>
 
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
-            <TextField
-              label={t('sentence.fields.term')}
-              type="number"
-              value={formData.term ?? ''}
-              onChange={(e) => onFormChange('term', e.target.value === '' ? undefined : Number(e.target.value))}
-              fullWidth
-            />
-            <TextField
-              label={t('sentence.fields.week')}
-              type="number"
-              value={formData.week ?? ''}
-              onChange={(e) => onFormChange('week', e.target.value === '' ? undefined : Number(e.target.value))}
-              fullWidth
-            />
+            {renderNumberSelect('term', t('sentence.fields.term'), TERM_OPTIONS)}
+            {renderNumberSelect('week', t('sentence.fields.week'), WEEK_OPTIONS)}
             <TextField
               label={t('sentence.fields.displayOrder')}
               type="number"

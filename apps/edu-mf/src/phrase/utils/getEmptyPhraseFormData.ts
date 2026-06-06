@@ -21,6 +21,6 @@ export const getEmptyPhraseFormData = (defaultLang = 'EN'): PhraseFormData => ({
   channel: 'All',
   tags: '',
   lang: defaultLang,
-  displayOrder: 0,
+  displayOrder: 999,
   isActive: true,
 });

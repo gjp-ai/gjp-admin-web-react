@@ -17,6 +17,6 @@ export const getEmptyMultipleChoiceQuestionFormData = (): MultipleChoiceQuestion
   channel: 'All',
   tags: '',
   lang: 'EN',
-  displayOrder: 0,
+  displayOrder: 999,
   isActive: true,
 });

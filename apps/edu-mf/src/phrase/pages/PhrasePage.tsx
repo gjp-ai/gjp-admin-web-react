@@ -61,7 +61,7 @@ const PhrasePage: React.FC = () => {
     channel: phrase.channel || 'All',
     tags: phrase.tags || '',
     lang: phrase.lang || dialog.getCurrentLanguage(),
-    displayOrder: phrase.displayOrder ?? 0,
+    displayOrder: phrase.displayOrder ?? 999,
     isActive: phrase.isActive ?? true,
   });
 
@@ -81,6 +81,10 @@ const PhrasePage: React.FC = () => {
 
   const handleSearchFieldChange = (field: keyof PhraseSearchFormData, value: string | null) => {
     const nextFormData = { ...searchFormData, [field]: value };
+    if (field === 'channel' || field === 'lang') {
+      nextFormData.difficultyLevel = '';
+      nextFormData.tags = '';
+    }
     setFilteredPhrases(applyClientSideFiltersWithData(nextFormData));
     handleSearchFormChange(field, value);
   };

@@ -4,7 +4,7 @@ const enTranslations = {
   sentence: {
     title: 'Sentence',
     subtitle: 'Manage education sentences, translations, explanations, and audio',
-    pageTitle: 'Sentence Management',
+    pageTitle: 'Sentence',
     create: 'Create Sentence',
     edit: 'Edit Sentence',
     delete: 'Delete Sentence',
@@ -31,7 +31,7 @@ const enTranslations = {
       displayOrder: 'Order',
       status: 'Status',
       isActive: 'Active',
-      updatedAt: 'Updated At',
+      updatedAt: 'Updated',
     },
     placeholders: {
       searchName: 'Search by sentence text',

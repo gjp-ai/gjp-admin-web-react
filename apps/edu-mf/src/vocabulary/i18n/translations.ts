@@ -4,7 +4,7 @@ const enTranslations = {
   vocabulary: {
     title: 'Vocabulary',
     subtitle: 'Manage education vocabulary words, meanings, examples, and audio',
-    pageTitle: 'Vocabulary Management',
+    pageTitle: 'Vocabulary',
     create: 'Create Vocabulary',
     edit: 'Edit Vocabulary',
     delete: 'Delete Vocabulary',
@@ -44,7 +44,7 @@ const enTranslations = {
       displayOrder: 'Order',
       status: 'Status',
       isActive: 'Active',
-      updatedAt: 'Updated At',
+      updatedAt: 'Updated',
     },
     placeholders: {
       searchName: 'Search by name',

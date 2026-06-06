@@ -95,15 +95,20 @@ const SentenceTable = memo(({
         },
         size: 180,
       }),
-      columnHelper.accessor('channel', {
-        header: t('sentence.fields.channel'),
-        cell: (info) => info.getValue() || '-',
-        size: 100,
-      }),
-      columnHelper.accessor('lang', {
-        header: t('sentence.fields.language'),
-        cell: (info) => info.getValue() || '-',
-        size: 90,
+      columnHelper.display({
+        id: 'channelLanguage',
+        header: 'Source',
+        cell: (info) => (
+          <Box>
+            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+              {info.row.original.channel || '-'}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {info.row.original.lang || '-'}
+            </Typography>
+          </Box>
+        ),
+        size: 140,
       }),
       columnHelper.accessor('displayOrder', {
         header: t('sentence.fields.displayOrder'),

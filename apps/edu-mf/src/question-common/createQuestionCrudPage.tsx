@@ -7,6 +7,7 @@ import QuestionDialog from './QuestionDialog';
 import QuestionSearchPanel from './QuestionSearchPanel';
 import QuestionTable from './QuestionTable';
 import QuestionViewDialog from './QuestionViewDialog';
+import { sanitizeRichTextPayload } from './richTextPayload';
 import type {
   EduQuestionActionType,
   EduQuestionBase,
@@ -59,6 +60,8 @@ const applyClientSideFilters = <T extends EduQuestionBase>(
   if (formData.gradeLevel && question.gradeLevel !== formData.gradeLevel) return false;
   if (formData.subject && question.subject !== formData.subject) return false;
   if (formData.topic && question.topic !== formData.topic) return false;
+  if (formData.term && Number(question.term) !== Number(formData.term)) return false;
+  if (formData.week && Number(question.week) !== Number(formData.week)) return false;
   if (formData.isActive === 'true' && !question.isActive) return false;
   if (formData.isActive === 'false' && question.isActive) return false;
   return true;
@@ -140,9 +143,13 @@ export const createQuestionCrudPage = <T extends EduQuestionBase, F extends EduQ
     }, [loadQuestions]);
 
     const handleSearchFormChange = (field: keyof EduQuestionSearchFormData, value: string | null) => {
-      const nextFormData = { ...searchFormData, [field]: value };
-      setSearchFormData(nextFormData);
-      setFilteredQuestions(applyClientSideFilters(allQuestions, nextFormData));
+      setSearchFormData((previousFormData) => {
+        const nextFormData = { ...previousFormData, [field]: value };
+        if (config.filterOnSearchChange !== false) {
+          setFilteredQuestions(applyClientSideFilters(allQuestions, nextFormData));
+        }
+        return nextFormData;
+      });
     };
 
     const handleClearFilters = () => {
@@ -175,10 +182,11 @@ export const createQuestionCrudPage = <T extends EduQuestionBase, F extends EduQ
     const handleSubmit = async () => {
       try {
         setSaving(true);
+        const payload = sanitizeRichTextPayload(formData);
         if (actionType === 'create') {
-          await config.service.createQuestion(formData);
+          await config.service.createQuestion(payload);
         } else if (actionType === 'edit' && selectedQuestion) {
-          await config.service.updateQuestion(selectedQuestion.id, formData);
+          await config.service.updateQuestion(selectedQuestion.id, payload);
         }
         await loadQuestions(buildSearchParams(searchFormData));
         setDialogOpen(false);
@@ -209,6 +217,8 @@ export const createQuestionCrudPage = <T extends EduQuestionBase, F extends EduQ
         <Collapse in={searchPanelOpen}>
           <QuestionSearchPanel
             searchFormData={searchFormData}
+            fields={config.fields}
+            searchFields={config.searchFields}
             loading={loading}
             onFormChange={handleSearchFormChange}
             onSearch={handleApiSearch}
@@ -221,6 +231,8 @@ export const createQuestionCrudPage = <T extends EduQuestionBase, F extends EduQ
           questions={filteredQuestions}
           pagination={pagination}
           tableFields={config.tableFields}
+          tableColumns={config.tableColumns}
+          questionImageReferenceKey={config.showQuestionImageInTable ? config.questionImageReferenceKey : undefined}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
           onQuestionAction={(question, action) => {

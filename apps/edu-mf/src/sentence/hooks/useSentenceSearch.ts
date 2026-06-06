@@ -16,7 +16,7 @@ export const useSentenceSearch = (allSentences: Sentence[]) => {
 
   const handleSearchPanelToggle = () => setSearchPanelOpen(!searchPanelOpen);
   const handleSearchFormChange = (field: keyof SentenceSearchFormData, value: string | null) =>
-    setSearchFormData({ ...searchFormData, [field]: value });
+    setSearchFormData((previousFormData) => ({ ...previousFormData, [field]: value }));
   const handleClearSearch = () =>
     setSearchFormData({
       name: '',

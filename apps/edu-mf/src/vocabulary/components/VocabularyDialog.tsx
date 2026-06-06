@@ -21,6 +21,8 @@ import { Link, Upload } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
+import TiptapTextEditor from '../../../../shared-lib/src/ui-components/rich-text/tiptap/tiptapTextEditor';
+import { TERM_OPTIONS, WEEK_OPTIONS } from '../../question-common/constants';
 import {
   DIFFICULTY_LEVEL_SETTING_KEY,
   LANGUAGE_OPTIONS,
@@ -157,6 +159,45 @@ const VocabularyDialog = ({
     onFormChange('dictionaryUrl', url);
   };
 
+  const renderRichTextField = (field: keyof VocabularyFormData, label: string) => (
+    <Box>
+      <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+        {label}
+      </Typography>
+      <TiptapTextEditor
+        value={String(formData[field] || '')}
+        onChange={(html: string) => onFormChange(field, html)}
+        placeholder={label}
+        initialRows={0}
+      />
+    </Box>
+  );
+
+  const renderNumberSelect = (
+    field: 'term' | 'week',
+    label: string,
+    options: { value: string; label: string }[],
+  ) => (
+    <FormControl fullWidth>
+      <Typography variant="caption" sx={{ mb: 0.5 }}>
+        {label}
+      </Typography>
+      <Select
+        value={formData[field] === undefined ? '' : String(formData[field])}
+        onChange={(event) => onFormChange(field, event.target.value === '' ? undefined : Number(event.target.value))}
+      >
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+        {options.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+
   const renderAudioSection = (
     phoneticKey: 'phoneticUs' | 'phoneticUk',
     phoneticLabelKey: 'phoneticUs' | 'phoneticUk',
@@ -276,7 +317,7 @@ const VocabularyDialog = ({
             fullWidth
           />
 
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
             <FormControl fullWidth>
               <Typography variant="caption" sx={{ mb: 0.5 }}>
                 {t('vocabulary.fields.channel')}
@@ -289,6 +330,21 @@ const VocabularyDialog = ({
                 ))}
               </Select>
             </FormControl>
+            <FormControl fullWidth>
+              <Typography variant="caption" sx={{ mb: 0.5 }}>
+                {t('vocabulary.fields.language')}
+              </Typography>
+              <Select value={formData.lang} onChange={(e) => handleNameOrLangChange('lang', e.target.value)}>
+                {LANGUAGE_OPTIONS.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
             <FormControl fullWidth>
               <Typography variant="caption" sx={{ mb: 0.5 }}>
                 {t('vocabulary.fields.partOfSpeech')}
@@ -337,83 +393,15 @@ const VocabularyDialog = ({
             </FormControl>
           </Box>
 
-          <TextField
-            label={t('vocabulary.fields.translation')}
-            value={formData.translation}
-            onChange={(e) => onFormChange('translation', e.target.value)}
-            fullWidth
-          />
-          <TextField
-            label={t('vocabulary.fields.meaningClue')}
-            value={formData.meaningClue}
-            onChange={(e) => onFormChange('meaningClue', e.target.value)}
-            fullWidth
-          />
-          <TextField
-            label={t('vocabulary.fields.easyMeaning')}
-            value={formData.easyMeaning}
-            onChange={(e) => onFormChange('easyMeaning', e.target.value)}
-            fullWidth
-          />
-
-          <TextField
-            label={t('vocabulary.fields.meaning')}
-            value={formData.meaning}
-            onChange={(e) => onFormChange('meaning', e.target.value)}
-            fullWidth
-            multiline
-            rows={3}
-          />
-          <TextField
-            label={t('vocabulary.fields.sentenceOne')}
-            value={formData.sentenceOne}
-            onChange={(e) => onFormChange('sentenceOne', e.target.value)}
-            fullWidth
-            multiline
-            rows={2}
-          />
-          <TextField
-            label={t('vocabulary.fields.sentenceTwo')}
-            value={formData.sentenceTwo}
-            onChange={(e) => onFormChange('sentenceTwo', e.target.value)}
-            fullWidth
-            multiline
-            rows={2}
-          />
-          <TextField
-            label={t('vocabulary.fields.additionalInfo')}
-            value={formData.additionalInfo}
-            onChange={(e) => onFormChange('additionalInfo', e.target.value)}
-            fullWidth
-            multiline
-            rows={2}
-          />
+          {renderRichTextField('translation', t('vocabulary.fields.translation'))}
+          {renderRichTextField('meaningClue', t('vocabulary.fields.meaningClue'))}
+          {renderRichTextField('easyMeaning', t('vocabulary.fields.easyMeaning'))}
+          {renderRichTextField('meaning', t('vocabulary.fields.meaning'))}
+          {renderRichTextField('sentenceOne', t('vocabulary.fields.sentenceOne'))}
+          {renderRichTextField('sentenceTwo', t('vocabulary.fields.sentenceTwo'))}
+          {renderRichTextField('additionalInfo', t('vocabulary.fields.additionalInfo'))}
 
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
-            <TextField
-              label={t('vocabulary.fields.term')}
-              type="number"
-              value={formData.term ?? ''}
-              onChange={(e) => onFormChange('term', e.target.value === '' ? undefined : Number(e.target.value))}
-              fullWidth
-            />
-            <TextField
-              label={t('vocabulary.fields.week')}
-              type="number"
-              value={formData.week ?? ''}
-              onChange={(e) => onFormChange('week', e.target.value === '' ? undefined : Number(e.target.value))}
-              fullWidth
-            />
-            <TextField
-              label={t('vocabulary.fields.displayOrder')}
-              type="number"
-              value={formData.displayOrder}
-              onChange={(e) => onFormChange('displayOrder', Number(e.target.value))}
-              fullWidth
-            />
-          </Box>
-
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1.5fr' }, gap: 2 }}>
             <FormControl fullWidth>
               <Typography variant="caption" sx={{ mb: 0.5 }}>
                 {t('vocabulary.fields.tags')}
@@ -441,18 +429,19 @@ const VocabularyDialog = ({
                 )}
               </Select>
             </FormControl>
-            <FormControl fullWidth>
-              <Typography variant="caption" sx={{ mb: 0.5 }}>
-                {t('vocabulary.fields.language')}
-              </Typography>
-              <Select value={formData.lang} onChange={(e) => handleNameOrLangChange('lang', e.target.value)}>
-                {LANGUAGE_OPTIONS.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {renderNumberSelect('term', t('vocabulary.fields.term'), TERM_OPTIONS)}
+            {renderNumberSelect('week', t('vocabulary.fields.week'), WEEK_OPTIONS)}
+            
+          </Box>
+
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr' }, gap: 2 }}>
+            <TextField
+              label={t('vocabulary.fields.displayOrder')}
+              type="number"
+              value={formData.displayOrder}
+              onChange={(e) => onFormChange('displayOrder', Number(e.target.value))}
+              fullWidth
+            />
           </Box>
 
           <FormControlLabel

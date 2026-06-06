@@ -21,6 +21,8 @@ import { Link, Upload } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CHANNEL_OPTIONS } from '../../../../shared-lib/src';
+import TiptapTextEditor from '../../../../shared-lib/src/ui-components/rich-text/tiptap/tiptapTextEditor';
+import { TERM_OPTIONS, WEEK_OPTIONS } from '../../question-common/constants';
 import {
   DIFFICULTY_LEVEL_SETTING_KEY,
   LANGUAGE_OPTIONS,
@@ -149,6 +151,45 @@ const PhraseDialog = ({
     onFormChange('dictionaryUrl', url);
   };
 
+  const renderRichTextField = (field: keyof PhraseFormData, label: string) => (
+    <Box>
+      <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+        {label}
+      </Typography>
+      <TiptapTextEditor
+        value={String(formData[field] || '')}
+        onChange={(html: string) => onFormChange(field, html)}
+        placeholder={label}
+        initialRows={0}
+      />
+    </Box>
+  );
+
+  const renderNumberSelect = (
+    field: 'term' | 'week',
+    label: string,
+    options: { value: string; label: string }[],
+  ) => (
+    <FormControl fullWidth>
+      <Typography variant="caption" sx={{ mb: 0.5 }}>
+        {label}
+      </Typography>
+      <Select
+        value={formData[field] === undefined ? '' : String(formData[field])}
+        onChange={(event) => onFormChange(field, event.target.value === '' ? undefined : Number(event.target.value))}
+      >
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+        {options.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+
   const renderAudioSection = () => {
     const uploadMethod = formData.phoneticAudioUploadMethod;
     const selectedFile = formData.phoneticAudioFile;
@@ -259,6 +300,13 @@ const PhraseDialog = ({
             fullWidth
           />
 
+          {renderRichTextField('translation', t('phrase.fields.translation'))}
+          {renderRichTextField('meaningClue', t('phrase.fields.meaningClue'))}
+          {renderRichTextField('easyMeaning', t('phrase.fields.easyMeaning'))}
+          {renderRichTextField('meaning', t('phrase.fields.meaning'))}
+          {renderRichTextField('sentenceOne', t('phrase.fields.sentenceOne'))}
+          {renderRichTextField('sentenceTwo', t('phrase.fields.sentenceTwo'))}
+
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
             <FormControl fullWidth>
               <Typography variant="caption" sx={{ mb: 0.5 }}>
@@ -272,6 +320,21 @@ const PhraseDialog = ({
                 ))}
               </Select>
             </FormControl>
+            <FormControl fullWidth>
+              <Typography variant="caption" sx={{ mb: 0.5 }}>
+                {t('phrase.fields.language')}
+              </Typography>
+              <Select value={formData.lang} onChange={(e) => handleNameOrLangChange('lang', e.target.value)}>
+                {LANGUAGE_OPTIONS.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
             <FormControl fullWidth>
               <Typography variant="caption" sx={{ mb: 0.5 }}>
                 {t('phrase.fields.difficultyLevel')}
@@ -295,77 +358,6 @@ const PhraseDialog = ({
                 )}
               </Select>
             </FormControl>
-          </Box>
-
-          <TextField
-            label={t('phrase.fields.translation')}
-            value={formData.translation}
-            onChange={(e) => onFormChange('translation', e.target.value)}
-            fullWidth
-          />
-          <TextField
-            label={t('phrase.fields.meaningClue')}
-            value={formData.meaningClue}
-            onChange={(e) => onFormChange('meaningClue', e.target.value)}
-            fullWidth
-          />
-          <TextField
-            label={t('phrase.fields.easyMeaning')}
-            value={formData.easyMeaning}
-            onChange={(e) => onFormChange('easyMeaning', e.target.value)}
-            fullWidth
-          />
-
-          <TextField
-            label={t('phrase.fields.meaning')}
-            value={formData.meaning}
-            onChange={(e) => onFormChange('meaning', e.target.value)}
-            fullWidth
-            multiline
-            rows={3}
-          />
-          <TextField
-            label={t('phrase.fields.sentenceOne')}
-            value={formData.sentenceOne}
-            onChange={(e) => onFormChange('sentenceOne', e.target.value)}
-            fullWidth
-            multiline
-            rows={2}
-          />
-          <TextField
-            label={t('phrase.fields.sentenceTwo')}
-            value={formData.sentenceTwo}
-            onChange={(e) => onFormChange('sentenceTwo', e.target.value)}
-            fullWidth
-            multiline
-            rows={2}
-          />
-
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
-            <TextField
-              label={t('phrase.fields.term')}
-              type="number"
-              value={formData.term ?? ''}
-              onChange={(e) => onFormChange('term', e.target.value === '' ? undefined : Number(e.target.value))}
-              fullWidth
-            />
-            <TextField
-              label={t('phrase.fields.week')}
-              type="number"
-              value={formData.week ?? ''}
-              onChange={(e) => onFormChange('week', e.target.value === '' ? undefined : Number(e.target.value))}
-              fullWidth
-            />
-            <TextField
-              label={t('phrase.fields.displayOrder')}
-              type="number"
-              value={formData.displayOrder}
-              onChange={(e) => onFormChange('displayOrder', Number(e.target.value))}
-              fullWidth
-            />
-          </Box>
-
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1.5fr' }, gap: 2 }}>
             <FormControl fullWidth>
               <Typography variant="caption" sx={{ mb: 0.5 }}>
                 {t('phrase.fields.tags')}
@@ -393,19 +385,20 @@ const PhraseDialog = ({
                 )}
               </Select>
             </FormControl>
-            <FormControl fullWidth>
-              <Typography variant="caption" sx={{ mb: 0.5 }}>
-                {t('phrase.fields.language')}
-              </Typography>
-              <Select value={formData.lang} onChange={(e) => handleNameOrLangChange('lang', e.target.value)}>
-                {LANGUAGE_OPTIONS.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
           </Box>
+
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+            {renderNumberSelect('term', t('phrase.fields.term'), TERM_OPTIONS)}
+            {renderNumberSelect('week', t('phrase.fields.week'), WEEK_OPTIONS)}
+          </Box>
+
+          <TextField
+              label={t('phrase.fields.displayOrder')}
+              type="number"
+              value={formData.displayOrder}
+              onChange={(e) => onFormChange('displayOrder', Number(e.target.value))}
+              fullWidth
+            />
 
           <FormControlLabel
             control={<Switch checked={formData.isActive} onChange={(e) => onFormChange('isActive', e.target.checked)} />}

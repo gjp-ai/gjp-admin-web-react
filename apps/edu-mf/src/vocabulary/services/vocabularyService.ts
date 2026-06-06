@@ -1,5 +1,6 @@
 import { apiClient } from '../../../../shared-lib/src/api/api-client';
 import type { ApiResponse } from '../../../../shared-lib/src/api/api.types';
+import { sanitizeRichTextPayload } from '../../question-common/richTextPayload';
 import type {
   Vocabulary,
   VocabularyFormData,
@@ -35,19 +36,19 @@ class VocabularyService {
   }
 
   async createVocabulary(data: VocabularyPayload): Promise<ApiResponse<Vocabulary>> {
-    return apiClient.post(this.crudUrl, data);
+    return apiClient.post(this.crudUrl, sanitizeRichTextPayload(data));
   }
 
   async createVocabularyByUpload(data: VocabularyFormData): Promise<ApiResponse<Vocabulary>> {
-    return apiClient.post(this.crudUrl, this.toFormData(data));
+    return apiClient.post(this.crudUrl, this.toFormData(sanitizeRichTextPayload(data)));
   }
 
   async updateVocabulary(id: string, data: VocabularyPayload): Promise<ApiResponse<Vocabulary>> {
-    return apiClient.put(`${this.crudUrl}/${id}`, data);
+    return apiClient.put(`${this.crudUrl}/${id}`, sanitizeRichTextPayload(data));
   }
 
   async updateVocabularyWithFile(id: string, data: VocabularyFormData): Promise<ApiResponse<Vocabulary>> {
-    return apiClient.put(`${this.crudUrl}/${id}`, this.toFormData(data));
+    return apiClient.put(`${this.crudUrl}/${id}`, this.toFormData(sanitizeRichTextPayload(data)));
   }
 
   async deleteVocabulary(id: string): Promise<ApiResponse<void>> {

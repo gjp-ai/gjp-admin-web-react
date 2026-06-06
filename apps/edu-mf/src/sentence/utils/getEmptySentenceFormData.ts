@@ -14,6 +14,6 @@ export const getEmptySentenceFormData = (defaultLang = 'EN'): SentenceFormData =
   channel: 'All',
   tags: '',
   lang: defaultLang,
-  displayOrder: 0,
+  displayOrder: 999,
   isActive: true,
 });

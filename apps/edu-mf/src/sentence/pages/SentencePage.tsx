@@ -54,7 +54,7 @@ const SentencePage: React.FC = () => {
     channel: sentence.channel || 'All',
     tags: sentence.tags || '',
     lang: sentence.lang || dialog.getCurrentLanguage(),
-    displayOrder: sentence.displayOrder ?? 0,
+    displayOrder: sentence.displayOrder ?? 999,
     isActive: sentence.isActive ?? true,
   });
 
@@ -74,6 +74,10 @@ const SentencePage: React.FC = () => {
 
   const handleSearchFieldChange = (field: keyof SentenceSearchFormData, value: string | null) => {
     const nextFormData = { ...searchFormData, [field]: value };
+    if (field === 'channel' || field === 'lang') {
+      nextFormData.difficultyLevel = '';
+      nextFormData.tags = '';
+    }
     setFilteredSentences(applyClientSideFiltersWithData(nextFormData));
     handleSearchFormChange(field, value);
   };

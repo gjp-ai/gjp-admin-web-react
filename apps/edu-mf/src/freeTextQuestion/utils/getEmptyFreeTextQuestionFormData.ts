@@ -26,6 +26,6 @@ export const getEmptyFreeTextQuestionFormData = (): FreeTextQuestionFormData => 
   channel: 'All',
   tags: '',
   lang: 'EN',
-  displayOrder: 0,
+  displayOrder: 999,
   isActive: true,
 });

@@ -50,54 +50,58 @@ const VocabularyTable = memo(({
         ),
         size: 220,
       }),
-      columnHelper.accessor('phoneticUs', {
-        header: t('vocabulary.fields.phoneticUs'),
+      columnHelper.display({
+        id: 'phonetics',
+        header: 'Phonetics',
         cell: (info) => {
           const vocabulary = info.row.original;
-          const playAudio = () => {
-            if (!vocabulary.phoneticUsAudioUrl) return;
-            new Audio(vocabulary.phoneticUsAudioUrl).play().catch((error) => {
-              console.error('Failed to play vocabulary audio', error);
-            });
+          const renderPhonetic = (label: string, value?: string | null, audioUrl?: string | null) => {
+            const playAudio = () => {
+              if (!audioUrl) return;
+              new Audio(audioUrl).play().catch((error) => {
+                console.error('Failed to play vocabulary audio', error);
+              });
+            };
+            return (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, minHeight: 20 }}>
+                <Typography variant="caption" color="text.secondary" sx={{ width: 20 }}>
+                  {label}
+                </Typography>
+                <Typography variant="body2">{value || '-'}</Typography>
+                {audioUrl && (
+                  <Box component="button" onClick={playAudio} sx={{ border: 0, bgcolor: 'transparent', p: 0, display: 'flex', cursor: 'pointer' }}>
+                    <Volume2 size={14} />
+                  </Box>
+                )}
+              </Box>
+            );
           };
           return (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Typography variant="body2">{info.getValue() || '-'}</Typography>
-              {vocabulary.phoneticUsAudioUrl && (
-                <Box component="button" onClick={playAudio} sx={{ border: 0, bgcolor: 'transparent', p: 0, display: 'flex', cursor: 'pointer' }}>
-                  <Volume2 size={14} />
-                </Box>
-              )}
+            <Box>
+              {renderPhonetic('US', vocabulary.phoneticUs, vocabulary.phoneticUsAudioUrl)}
+              {renderPhonetic('UK', vocabulary.phoneticUk, vocabulary.phoneticUkAudioUrl)}
             </Box>
           );
         },
-        size: 140,
+        size: 170,
       }),
-      columnHelper.accessor('phoneticUk', {
-        header: t('vocabulary.fields.phoneticUk'),
-        cell: (info) => {
-          const vocabulary = info.row.original;
-          const playAudio = () => {
-            if (!vocabulary.phoneticUkAudioUrl) return;
-            new Audio(vocabulary.phoneticUkAudioUrl).play().catch((error) => {
-              console.error('Failed to play vocabulary audio', error);
-            });
-          };
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Typography variant="body2">{info.getValue() || '-'}</Typography>
-              {vocabulary.phoneticUkAudioUrl && (
-                <Box component="button" onClick={playAudio} sx={{ border: 0, bgcolor: 'transparent', p: 0, display: 'flex', cursor: 'pointer' }}>
-                  <Volume2 size={14} />
-                </Box>
-              )}
-            </Box>
-          );
-        },
+      columnHelper.display({
+        id: 'channelLanguage',
+        header: 'Source',
+        cell: (info) => (
+          <Box>
+            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+              {info.row.original.channel || '-'}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {info.row.original.lang || '-'}
+            </Typography>
+          </Box>
+        ),
         size: 140,
       }),
       columnHelper.accessor('partOfSpeech', {
-        header: t('vocabulary.fields.partOfSpeech'),
+        header: 'POS',
         cell: (info) => info.getValue() || '-',
         size: 120,
       }),
@@ -115,16 +119,6 @@ const VocabularyTable = memo(({
           );
         },
         size: 180,
-      }),
-      columnHelper.accessor('channel', {
-        header: t('vocabulary.fields.channel'),
-        cell: (info) => info.getValue() || '-',
-        size: 100,
-      }),
-      columnHelper.accessor('lang', {
-        header: t('vocabulary.fields.language'),
-        cell: (info) => info.getValue() || '-',
-        size: 90,
       }),
       columnHelper.accessor('displayOrder', {
         header: t('vocabulary.fields.displayOrder'),

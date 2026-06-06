@@ -17,7 +17,7 @@ export const useVocabularySearch = (allVocabularies: Vocabulary[]) => {
 
   const handleSearchPanelToggle = () => setSearchPanelOpen(!searchPanelOpen);
   const handleSearchFormChange = (field: keyof VocabularySearchFormData, value: string | null) =>
-    setSearchFormData({ ...searchFormData, [field]: value });
+    setSearchFormData((previousFormData) => ({ ...previousFormData, [field]: value }));
   const handleClearSearch = () =>
     setSearchFormData({
       name: '',

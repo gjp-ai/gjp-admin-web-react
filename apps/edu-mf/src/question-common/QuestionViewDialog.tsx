@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { createStatusChip } from '../../../shared-lib/src/data-management/DataTable';
 import { STATUS_MAPS } from './constants';
+import RichHtmlView from './RichHtmlView';
 import type { EduQuestionBase, EduQuestionFieldConfig, EduQuestionFormData } from './types';
 
 interface QuestionViewDialogProps<T extends EduQuestionBase, F extends EduQuestionFormData> {
@@ -57,6 +58,13 @@ const QuestionViewDialog = <T extends EduQuestionBase, F extends EduQuestionForm
     'displayOrder',
     'tags',
   ].includes(String(field.key)));
+  const fieldsByKey = Object.fromEntries(fields.map((field) => [String(field.key), field]));
+
+  const renderValue = (fieldKey: string, value: unknown) => (
+    fieldsByKey[fieldKey]?.type === 'richText'
+      ? <RichHtmlView value={value} />
+      : <Typography sx={{ whiteSpace: 'pre-wrap' }}>{String(value ?? '-')}</Typography>
+  );
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -64,12 +72,10 @@ const QuestionViewDialog = <T extends EduQuestionBase, F extends EduQuestionForm
       <DialogContent>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Box>
-            <Typography variant="h5" sx={{ fontWeight: 700, whiteSpace: 'pre-wrap' }}>
-              {question.question}
-            </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-              Answer: {question.answer || '-'}
-            </Typography>
+            <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>Question</Typography>
+            <RichHtmlView value={question.question} />
+            <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 1 }}>Answer</Typography>
+            {renderValue('answer', question.answer)}
           </Box>
 
           {visibleFields.length > 0 && (
@@ -77,7 +83,7 @@ const QuestionViewDialog = <T extends EduQuestionBase, F extends EduQuestionForm
               {visibleFields.map((field) => (
                 <Box key={String(field.key)}>
                   <Typography variant="subtitle2" color="text.secondary">{field.label}</Typography>
-                  <Typography sx={{ whiteSpace: 'pre-wrap' }}>{String(question[String(field.key)] ?? '-')}</Typography>
+                  {renderValue(String(field.key), question[String(field.key)])}
                 </Box>
               ))}
             </Box>
@@ -87,7 +93,7 @@ const QuestionViewDialog = <T extends EduQuestionBase, F extends EduQuestionForm
 
           <Box>
             <Typography variant="subtitle2" color="text.secondary">Explanation</Typography>
-            <Typography sx={{ whiteSpace: 'pre-wrap' }}>{question.explanation || '-'}</Typography>
+            <RichHtmlView value={question.explanation} />
           </Box>
 
           <Divider />

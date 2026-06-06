@@ -20,6 +20,8 @@ import TiptapTextEditor from '../../../shared-lib/src/ui-components/rich-text/ti
 import {
   DIFFICULTY_LEVEL_OPTIONS,
   LANGUAGE_OPTIONS,
+  TERM_OPTIONS,
+  WEEK_OPTIONS,
 } from './constants';
 import curriculumOptions from './curriculum-options.json';
 import QuestionImageSection from './QuestionImageSection';
@@ -43,11 +45,18 @@ const builtinOptions = {
   channel: CHANNEL_OPTIONS,
   lang: LANGUAGE_OPTIONS,
   difficultyLevel: DIFFICULTY_LEVEL_OPTIONS,
+  term: TERM_OPTIONS,
+  week: WEEK_OPTIONS,
 };
 
 type CurriculumOptions = Record<string, Record<string, string[]>>;
 const curriculum = curriculumOptions as CurriculumOptions;
 const gradeOptions = Object.keys(curriculum).map((grade) => ({ value: grade, label: grade }));
+type SelectOption = { value: string; label: string };
+
+const normalizeOptions = (options: { value: unknown; label: unknown }[] | readonly { value: unknown; label: unknown }[]): SelectOption[] => (
+  options.map((option) => ({ value: String(option.value), label: String(option.label) }))
+);
 
 const QuestionDialog = <F extends EduQuestionFormData>({
   open,
@@ -62,25 +71,12 @@ const QuestionDialog = <F extends EduQuestionFormData>({
   onFormChange,
   onSubmit,
 }: QuestionDialogProps<F>) => {
-  const getFieldOptions = (field: EduQuestionFieldConfig<F>) => {
-    const key = String(field.key);
-    if (field.options) return field.options;
-    if (key === 'gradeLevel') return gradeOptions;
-    if (key === 'subject') {
-      const grade = String(formData.gradeLevel || '');
-      return Object.keys(curriculum[grade] || {}).map((subject) => ({ value: subject, label: subject }));
-    }
-    if (key === 'topic') {
-      const grade = String(formData.gradeLevel || '');
-      const subject = String(formData.subject || '');
-      return (curriculum[grade]?.[subject] || []).map((topic) => ({ value: topic, label: topic }));
-    }
-    return builtinOptions[key as keyof typeof builtinOptions];
-  };
-
   const handleFieldChange = (field: EduQuestionFieldConfig<F>, value: unknown) => {
     const key = String(field.key);
-    onFormChange(field.key, value);
+    const nextValue = (key === 'term' || key === 'week')
+      ? value === '' || value === undefined || value === null ? undefined : Number(value)
+      : value;
+    onFormChange(field.key, nextValue);
     if (key === 'gradeLevel') {
       onFormChange('subject', '');
       onFormChange('topic', '');
@@ -88,8 +84,9 @@ const QuestionDialog = <F extends EduQuestionFormData>({
     if (key === 'subject') {
       onFormChange('topic', '');
     }
-    if (key === 'channel') {
+    if (key === 'channel' || key === 'lang') {
       onFormChange('tags', '');
+      onFormChange('difficultyLevel', '');
     }
   };
 
@@ -102,9 +99,11 @@ const QuestionDialog = <F extends EduQuestionFormData>({
     return normalized;
   };
 
-  const getStoredTagOptions = (field: EduQuestionFieldConfig<F>) => {
+  const hasChannelAndLanguage = () => Boolean(String(formData.channel || '').trim() && String(formData.lang || '').trim());
+
+  const getStoredSettingOptions = (field: EduQuestionFieldConfig<F>, requireChannelAndLanguage = false): string[] => {
     const selectedChannel = String(formData.channel || '').trim();
-    if (!selectedChannel) return [];
+    if (!field.appSettingName || (requireChannelAndLanguage && !hasChannelAndLanguage())) return [];
 
     try {
       const settings = localStorage.getItem('gjp_app_settings');
@@ -123,11 +122,9 @@ const QuestionDialog = <F extends EduQuestionFormData>({
       const selectedLang = normalizeLang(String(formData.lang || ''));
       const settingName = field.appSettingName;
       const matchingNameAndLang = rows.filter((setting: { name?: string; lang?: string }) => {
-        const nameMatches = settingName
-          ? normalize(setting.name) === normalize(settingName)
-          : normalize(setting.name).includes('tag');
+        const nameMatches = normalize(setting.name) === normalize(settingName);
         const settingLang = normalizeLang(setting.lang);
-        return nameMatches && (!settingLang || !selectedLang || settingLang === selectedLang);
+        return nameMatches && (!settingLang || settingLang === selectedLang);
       });
 
       const selectedChannelKey = normalize(selectedChannel);
@@ -146,13 +143,32 @@ const QuestionDialog = <F extends EduQuestionFormData>({
           ? allChannelSettings
           : blankChannelSettings;
 
-      return [...new Set(matchingSettings
+      return [...new Set<string>(matchingSettings
         .flatMap((setting: { value?: string }) => String(setting.value || '').split(/[,;\n]/))
         .map((tag: string) => tag.trim())
         .filter(Boolean))];
     } catch {
       return [];
     }
+  };
+
+  const getFieldOptions = (field: EduQuestionFieldConfig<F>): SelectOption[] | undefined => {
+    const key = String(field.key);
+    const storedOptions = field.appSettingName ? getStoredSettingOptions(field, key === 'difficultyLevel') : [];
+    if (storedOptions.length) return storedOptions.map((option) => ({ value: option, label: option }));
+    if (field.options) return normalizeOptions(field.options);
+    if (key === 'gradeLevel') return gradeOptions;
+    if (key === 'subject') {
+      const grade = String(formData.gradeLevel || '');
+      return Object.keys(curriculum[grade] || {}).map((subject) => ({ value: subject, label: subject }));
+    }
+    if (key === 'topic') {
+      const grade = String(formData.gradeLevel || '');
+      const subject = String(formData.subject || '');
+      return (curriculum[grade]?.[subject] || []).map((topic) => ({ value: topic, label: topic }));
+    }
+    const options = builtinOptions[key as keyof typeof builtinOptions];
+    return options ? normalizeOptions(options) : undefined;
   };
 
   const renderField = (field: EduQuestionFieldConfig<F>) => {
@@ -165,8 +181,8 @@ const QuestionDialog = <F extends EduQuestionFormData>({
         .split(',')
         .map((tag) => tag.trim())
         .filter(Boolean);
-      const tagOptions = [...new Set([...selectedTags, ...getStoredTagOptions(field)])];
-      const channelSelected = Boolean(String(formData.channel || '').trim());
+      const tagOptions = [...new Set([...selectedTags, ...getStoredSettingOptions(field, true)])];
+      const dependenciesSelected = hasChannelAndLanguage();
       return (
         <FormControl fullWidth>
           <Typography variant="caption" sx={{ mb: 0.5 }}>
@@ -176,7 +192,7 @@ const QuestionDialog = <F extends EduQuestionFormData>({
             multiple
             options={tagOptions}
             value={selectedTags}
-            disabled={!channelSelected}
+            disabled={!dependenciesSelected}
             onChange={(_event, nextValue) => {
               const normalizedTags = nextValue
                 .flatMap((tag) => String(tag).split(','))
@@ -193,7 +209,7 @@ const QuestionDialog = <F extends EduQuestionFormData>({
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder={!channelSelected ? 'Select channel first' : selectedTags.length ? '' : 'Select tags'}
+                placeholder={!dependenciesSelected ? 'Select channel and language first' : selectedTags.length ? '' : 'Select tags'}
               />
             )}
           />
@@ -213,6 +229,7 @@ const QuestionDialog = <F extends EduQuestionFormData>({
           <Select
             multiple={field.multiple}
             value={selectedValue}
+            disabled={key === 'difficultyLevel' && field.appSettingName ? !hasChannelAndLanguage() : false}
             onChange={(event) => {
               const nextValue = field.multiple
                 ? (event.target.value as string[]).join(',')

@@ -83,9 +83,24 @@ const QuestionDialog = <F extends EduQuestionFormData>({
     if (key === 'subject') {
       onFormChange('topic', '');
     }
+    if (key === 'channel') {
+      onFormChange('tags', '');
+    }
   };
 
-  const getStoredTagOptions = () => {
+  const normalize = (value?: string | null) => String(value || '').trim().toLowerCase();
+
+  const normalizeLang = (value?: string | null) => {
+    const normalized = normalize(value);
+    if (normalized.startsWith('zh') || normalized === 'chinese') return 'zh';
+    if (normalized.startsWith('en') || normalized === 'english') return 'en';
+    return normalized;
+  };
+
+  const getStoredTagOptions = (field: EduQuestionFieldConfig<F>) => {
+    const selectedChannel = String(formData.channel || '').trim();
+    if (!selectedChannel) return [];
+
     try {
       const settings = localStorage.getItem('gjp_app_settings');
       if (!settings) return [];
@@ -100,11 +115,36 @@ const QuestionDialog = <F extends EduQuestionFormData>({
               ? parsed.data.content
               : [];
 
-      return rows
-        .filter((setting: { name?: string }) => String(setting.name || '').toLowerCase().includes('tag'))
+      const selectedLang = normalizeLang(String(formData.lang || ''));
+      const settingName = field.appSettingName;
+      const matchingNameAndLang = rows.filter((setting: { name?: string; lang?: string }) => {
+        const nameMatches = settingName
+          ? normalize(setting.name) === normalize(settingName)
+          : normalize(setting.name).includes('tag');
+        const settingLang = normalizeLang(setting.lang);
+        return nameMatches && (!settingLang || !selectedLang || settingLang === selectedLang);
+      });
+
+      const selectedChannelKey = normalize(selectedChannel);
+      const exactChannelSettings = matchingNameAndLang.filter(
+        (setting: { channel?: string | null }) => normalize(setting.channel) === selectedChannelKey,
+      );
+      const allChannelSettings = matchingNameAndLang.filter(
+        (setting: { channel?: string | null }) => normalize(setting.channel) === 'all',
+      );
+      const blankChannelSettings = matchingNameAndLang.filter(
+        (setting: { channel?: string | null }) => !normalize(setting.channel),
+      );
+      const matchingSettings = exactChannelSettings.length
+        ? exactChannelSettings
+        : allChannelSettings.length
+          ? allChannelSettings
+          : blankChannelSettings;
+
+      return [...new Set(matchingSettings
         .flatMap((setting: { value?: string }) => String(setting.value || '').split(/[,;\n]/))
         .map((tag: string) => tag.trim())
-        .filter(Boolean);
+        .filter(Boolean))];
     } catch {
       return [];
     }
@@ -120,7 +160,8 @@ const QuestionDialog = <F extends EduQuestionFormData>({
         .split(',')
         .map((tag) => tag.trim())
         .filter(Boolean);
-      const tagOptions = [...new Set([...selectedTags, ...getStoredTagOptions()])];
+      const tagOptions = [...new Set([...selectedTags, ...getStoredTagOptions(field)])];
+      const channelSelected = Boolean(String(formData.channel || '').trim());
       return (
         <FormControl fullWidth>
           <Typography variant="caption" sx={{ mb: 0.5 }}>
@@ -128,9 +169,9 @@ const QuestionDialog = <F extends EduQuestionFormData>({
           </Typography>
           <Autocomplete
             multiple
-            freeSolo
             options={tagOptions}
             value={selectedTags}
+            disabled={!channelSelected}
             onChange={(_event, nextValue) => {
               const normalizedTags = nextValue
                 .flatMap((tag) => String(tag).split(','))
@@ -141,13 +182,13 @@ const QuestionDialog = <F extends EduQuestionFormData>({
             renderTags={(selected, getTagProps) => (
               selected.map((tag, index) => {
                 const { key: tagKey, ...tagProps } = getTagProps({ index });
-                return <Chip key={tagKey} label={tag} size="small" {...tagProps} />;
+                return <Chip key={tagKey} label={String(tag)} size="small" {...tagProps} />;
               })
             )}
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder={selectedTags.length ? '' : 'tag1,tag2'}
+                placeholder={!channelSelected ? 'Select channel first' : selectedTags.length ? '' : 'Select tags'}
               />
             )}
           />

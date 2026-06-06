@@ -97,6 +97,7 @@ export interface EduQuestionFieldConfig<F extends EduQuestionFormData> {
   type?: 'text' | 'number' | 'select' | 'richText';
   options?: { value: string; label: string }[];
   multiple?: boolean;
+  appSettingName?: string;
   grid?: 'full' | 'half' | 'third';
   row?: number;
 }

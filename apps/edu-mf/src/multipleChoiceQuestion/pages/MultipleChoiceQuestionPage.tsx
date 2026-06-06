@@ -22,7 +22,7 @@ const fields: EduQuestionFieldConfig<MultipleChoiceQuestionFormData>[] = [
   { key: 'subject', label: 'Subject', type: 'select', row: 8 },
   { key: 'topic', label: 'Topic', type: 'select', row: 8 },
   { key: 'channel', label: 'Channel', type: 'select', row: 9 },
-  { key: 'tags', label: 'Tags', row: 9 },
+  { key: 'tags', label: 'Tags', appSettingName: 'edu_mcq_tags', row: 9 },
   { key: 'lang', label: 'Language', type: 'select', options: LANGUAGE_OPTIONS, row: 9 },
   { key: 'term', label: 'Term', type: 'number', row: 10 },
   { key: 'week', label: 'Week', type: 'number', row: 10 },
